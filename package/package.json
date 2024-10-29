@@ -9,7 +9,6 @@
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
     "chart.js": "^4.2.1",
-    "node-sass": "^8.0.0",
     "nouislider-react": "^3.4.1",
     "react": "^18.2.0",
     "react-bootstrap": "^2.7.0",
@@ -20,6 +19,7 @@
     "react-router-dom": "^6.4.5",
     "react-scripts": "5.0.1",
     "react-scroll-to-top": "^3.0.0",
+    "sass": "^1.80.4",
     "sweetalert2": "^11.7.3",
     "swiper": "^9.1.0",
     "web-vitals": "^2.1.4"
@@ -29,7 +29,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "sass": "node-sass --watch src/assets/scss/main.scss src/assets/css/style.css --source-map src/assets/css/style.css.map"
+    "sass": "sass --watch src/assets/scss/main.scss:src/assets/css/style.css"
   },
   "eslintConfig": {
     "extends": [
