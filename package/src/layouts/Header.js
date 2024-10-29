@@ -4,6 +4,7 @@ import {Dropdown} from 'react-bootstrap';
 //images
 
 import logo from './../assets/images/logo.png';
+import bookstore from './../assets/images/bookstore.jpg';
 import profile from './../assets/images/profile1.jpg';
 import pic1 from './../assets/images/books/small/pic1.jpg';
 import pic2 from './../assets/images/books/small/pic2.jpg';
@@ -55,7 +56,7 @@ function Header(){
 				<div className="container clearfix">
 					{/* <!-- Website Logo --> */}
 					<div className="logo-header logo-dark">
-						<Link to={"/"}><img src={logo} alt="logo" /></Link>
+						<Link to={"/"}><img src={bookstore} alt="logo" /></Link>
 					</div>
 					
 					{/* <!-- EXTRA NAV --> */}
@@ -192,7 +193,7 @@ function Header(){
 										<Dropdown.Item onClick={()=>setSelectBtn('Education')}>Education</Dropdown.Item>
 									</Dropdown.Menu>
 								</Dropdown>
-								<input type="text" className="form-control" aria-label="Text input with dropdown button" placeholder="Search Books Here" />
+								<input type="text" className="form-control" aria-label="Text input with dropdown button" placeholder="Tìm kiếm của bạn" />
 								<button className="btn" type="button"><i className="flaticon-loupe"></i></button>
 							</div>
 						</form>
