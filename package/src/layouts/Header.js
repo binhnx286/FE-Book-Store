@@ -3,7 +3,7 @@ import {Link} from 'react-router-dom';
 import {Dropdown} from 'react-bootstrap';
 //images
 
-import logo from './../assets/images/logo.png';
+import logo from './../assets/images/_logo.png';
 import bookstore from './../assets/images/bookstore.jpg';
 import profile from './../assets/images/profile1.jpg';
 import pic1 from './../assets/images/books/small/pic1.jpg';
@@ -14,7 +14,7 @@ import Collapse from 'react-bootstrap/Collapse';
 import {MenuListArray2} from './MenuListArray2';
 
 function Header(){
-	const [selectBtn, setSelectBtn] = useState('Category');
+	const [selectBtn, setSelectBtn] = useState('Tên sách');
 	/* for sticky header */
 	const [headerFix, setheaderFix] = React.useState(false);
 	useEffect(() => {
@@ -56,7 +56,7 @@ function Header(){
 				<div className="container clearfix">
 					{/* <!-- Website Logo --> */}
 					<div className="logo-header logo-dark">
-						<Link to={"/"}><img src={bookstore} alt="logo" /></Link>
+						<Link to={"/"}><img src={logo} alt="logo" /></Link>
 					</div>
 					
 					{/* <!-- EXTRA NAV --> */}
@@ -177,7 +177,11 @@ function Header(){
 									 	<i className="ms-4 font-10 fa-solid fa-chevron-down"></i>
 									</Dropdown.Toggle>
 									<Dropdown.Menu>
-										<Dropdown.Item onClick={()=>setSelectBtn('Category')}>Category</Dropdown.Item>
+										<Dropdown.Item onClick={() => setSelectBtn('Tên sách')}>Tên sách</Dropdown.Item>
+										<Dropdown.Item onClick={() => setSelectBtn('Nhà xuất bản')}>Nhà xuất bản</Dropdown.Item>
+										<Dropdown.Item onClick={() => setSelectBtn('Tác giả')}>Tác giả</Dropdown.Item>
+
+										{/* <Dropdown.Item onClick={()=>setSelectBtn('Category')}>Category</Dropdown.Item>
 										<Dropdown.Item onClick={()=>setSelectBtn('Photography')}>Photography</Dropdown.Item>
 										<Dropdown.Item onClick={()=>setSelectBtn('Arts')}>Arts</Dropdown.Item>
 										<Dropdown.Item onClick={()=>setSelectBtn('Adventure')}>Adventure</Dropdown.Item>
@@ -190,7 +194,7 @@ function Header(){
 										<Dropdown.Item onClick={()=>setSelectBtn('Historical')}>Historical</Dropdown.Item>
 										<Dropdown.Item onClick={()=>setSelectBtn('Contemporary')}>Contemporary</Dropdown.Item>
 										<Dropdown.Item onClick={()=>setSelectBtn('Classics')}>Classics</Dropdown.Item>
-										<Dropdown.Item onClick={()=>setSelectBtn('Education')}>Education</Dropdown.Item>
+										<Dropdown.Item onClick={()=>setSelectBtn('Education')}>Education</Dropdown.Item> */}
 									</Dropdown.Menu>
 								</Dropdown>
 								<input type="text" className="form-control" aria-label="Text input with dropdown button" placeholder="Tìm kiếm của bạn" />

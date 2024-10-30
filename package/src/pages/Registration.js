@@ -8,7 +8,7 @@ function Registration(){
     return(
         <>
             <div className="page-content">
-                <PageTitle  parentPage="Shop" childPage="Registration" />               
+                <PageTitle  parentPage="Trang chủ" childPage="Tạo tài khoản" />               
                 <section className="content-inner shop-account">
 				
                     <div className="container">
@@ -16,25 +16,33 @@ function Registration(){
                             <div className="col-lg-6 col-md-6 mb-4">
                                 <div className="login-area">
                                     <form onSubmit={(e) => e.preventDefault()}> 
-                                        <h4 className="text-secondary">Registration</h4>
-                                        <p className="font-weight-600">If you don't have an account with us, please Registration.</p>
+                                        <h4 className="text-secondary">Tạo tài khoản</h4>
+                                        <p className="font-weight-600">Nếu bạn chưa có tài khoản, hãy đăng ký ngay để trải nghiệm những tiện ích tuyệt vời cùng chúng tôi.</p>
                                         <div className="mb-4">
-                                            <label className="label-title">Username *</label>
-                                            <input name="dzName" required="" className="form-control" placeholder="Your Username" type="text" />
+                                            <label className="label-title">Họ và tên *</label>
+                                            <input name="dzName" required="" className="form-control" placeholder="Nhập họ và tên" type="text" />
                                         </div>
                                         <div className="mb-4">
-                                            <label className="label-title">Email address *</label>
-                                            <input name="dzName" required="" className="form-control" placeholder="Your Email address" type="email" />
+                                            <label className="label-title">Số điện thoại *</label>
+                                            <input name="dzName" required="" className="form-control" placeholder="Nhập số điện thoại" type="phone" />
                                         </div>
                                         <div className="mb-4">
-                                            <label className="label-title">Password *</label>
-                                            <input name="dzName" required="" className="form-control " placeholder="Type Password" type="password" />
+                                            <label className="label-title">Địa chỉ email *</label>
+                                            <input name="dzName" required="" className="form-control" placeholder="Nhập Email" type="email" />
+                                        </div>
+                                        <div className="mb-4">
+                                            <label className="label-title">Mật khẩu *</label>
+                                            <input name="dzName" required="" className="form-control " placeholder="Nhập mật khẩu" type="password" />
+                                        </div>
+                                        <div className="mb-4">
+                                            <label className="label-title">Xác nhận mật khẩu *</label>
+                                            <input name="dzName" required="" className="form-control" placeholder="Nhập lại mật khẩu" type="password" />
                                         </div>
                                         <div className="mb-5">
-                                            <small>Your personal data will be used to support your experience throughout this website, to manage access to your account, and for other purposes described in our <Link to={"/privacy-policy"}>privacy policy</Link>.</small>
+                                            <small>Dữ liệu cá nhân của bạn sẽ được sử dụng để cải thiện trải nghiệm của bạn trên trang web này, quản lý quyền truy cập vào tài khoản của bạn và cho các mục đích khác được mô tả trong chính sách bảo mật của chúng tôi.<br/><Link to={"/privacy-policy"}>Chính sách bảo mật</Link>.</small>
                                         </div>
                                         <div className="text-left">
-                                            <button type="submit" className="btn btn-primary btnhover w-100 me-2">Register</button>
+                                            <button type="submit" className="btn btn-primary btnhover w-100 me-2">Tạo</button>
                                         </div>
                                     </form>
                                 </div>

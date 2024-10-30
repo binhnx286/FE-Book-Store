@@ -2,10 +2,10 @@ import React from 'react';
 import CountUp from 'react-countup';
 
 const counterBlog = [
-	{iconClass:'fa-users', number:'125663', title:'Happy Customers'},
-	{iconClass:'fa-book', number:'50672', title:'Book Collections'},
-	{iconClass:'fa-store', number:'1562', title:'Our Stores'},
-	{iconClass:'fa-leaf', number:'457', title:'Famous Writers'},
+	{iconClass:'fa-users', number:'125663', title:'Khách hàng hài lòng'},
+	{iconClass:'fa-book', number:'2000', title:'Bộ sưu tập sách'},
+	{iconClass:'fa-store', number:'9', title:'Cửa hàng của chúng tôi'},
+	{iconClass:'fa-leaf', number:'267', title:'Tác giả nổi tiếng'},
 ];
 
 

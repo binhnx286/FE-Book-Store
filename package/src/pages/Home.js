@@ -15,10 +15,26 @@ import NewsLetter from './../components/NewsLetter';
 import CounterSection from './../elements/CounterSection';
 
 const iconBlog = [
-    {title:'Quick Delivery', iconClass:'flaticon-power'}, 
-    {title:'Secure Payment', iconClass:'flaticon-shield '}, 
-    {title:'Best Quality', iconClass:'flaticon-like'}, 
-    {title:'Return Guarantee', iconClass:'flaticon-star'}, 
+	{ 
+        title: 'Giao hàng nhanh chóng', 
+        iconClass: 'flaticon-power', 
+        description: 'Đảm bảo hàng hóa được giao đến tay bạn một cách nhanh chóng và thuận tiện, giúp bạn tiết kiệm thời gian và trải nghiệm mua sắm dễ dàng hơn.'
+    },
+    { 
+        title: 'Thanh toán bảo mật', 
+        iconClass: 'flaticon-shield', 
+        description: 'Chúng tôi sử dụng công nghệ bảo mật tiên tiến để bảo vệ thông tin thanh toán của bạn, giúp bạn an tâm khi thực hiện giao dịch.'
+    },
+    { 
+        title: 'Chất lượng tin cậy', 
+        iconClass: 'flaticon-like', 
+        description: 'Sản phẩm của chúng tôi được lựa chọn cẩn thận, đảm bảo chất lượng cao và độ tin cậy, mang đến sự hài lòng cho khách hàng.'
+    },
+    { 
+        title: 'Chính sách hoàn trả', 
+        iconClass: 'flaticon-star', 
+        description: 'Nếu bạn không hài lòng với sản phẩm, chúng tôi có chính sách hoàn trả linh hoạt, giúp bạn yên tâm khi mua sắm.'
+    },
 ];
 
 function Index1(){	
@@ -37,8 +53,8 @@ function Index1(){
 				<section className="content-inner-1 bg-grey reccomend">
 					<div className="container">
 						<div className="section-head text-center">
-							<h2 className="title">Recomended For You</h2>
-							<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris</p>
+							<h2 className="title">Bán chạy nhất</h2>
+							<p>Những cuốn sách nổi bật này không chỉ thu hút sự chú ý mà còn được đánh giá cao bởi khách hàng vì chất lượng và nội dung tuyệt vời.</p>
 						</div>
 						<RecomendedSlider />
 					</div>
@@ -55,7 +71,7 @@ function Index1(){
                                         </div>
                                         <div className="icon-content">
                                             <h5 className="dz-title m-b10">{data.title}</h5>
-                                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor</p>
+                                            <p>{data.description}</p>
                                         </div>
                                     </div>
                                 </div>
@@ -63,11 +79,11 @@ function Index1(){
 						</div>
 					</div>
 				</section>
-				<section className="content-inner-1">
+				{/* <section className="content-inner-1">
 					<div className="container">
 						<BookSaleSlider />
 					</div>
-				</section>
+				</section> */}
 				<section className="content-inner-1 bg-grey reccomend">
 					<div className="container">
 						<div className="section-head text-center">
@@ -85,9 +101,9 @@ function Index1(){
 						<OfferSlider />
 					</div>
 				</section>	
-				<section className="content-inner-2 testimonial-wrapper">
+				{/* <section className="content-inner-2 testimonial-wrapper">
 					<TestimonialSlider />	
-				</section>	
+				</section>	 */}
 				<section className="content-inner-2">
 					<div className="container">
 						<div className="section-head text-center">

@@ -1,22 +1,27 @@
 export const MenuListArray2 = [
-    {
-        title: 'Home',	
-        classsChange: 'sub-menu-down',		
-        content: [
-            {
-                title: 'Home-1',
-                to: '/',					
-            },
-            {
-                title: 'Home-2',
-                to: '/index-2',
+    // {
+    //     title: 'Trang Chủ',	
+    //     classsChange: 'sub-menu-down',		
+    //     content: [
+    //         {
+    //             title: 'Home-1',
+    //             to: '/',					
+    //         },
+    //         {
+    //             title: 'Home-2',
+    //             to: '/index-2',
                 
-            },            
+    //         },            
             
-        ],
+    //     ],
+    // },
+    {
+        title: 'Trang Chủ',	
+        to: '/',					
+          
     },
     {   
-        title: 'About Us',	
+        title: 'Về Chúng Tôi',	
         to: '/about-us',
     },
     {
@@ -132,7 +137,7 @@ export const MenuListArray2 = [
         ],
     },
     {
-        title: 'Contact Us',	
+        title: 'Liên Hệ',	
         to: '/contact-us',
     },
 ]

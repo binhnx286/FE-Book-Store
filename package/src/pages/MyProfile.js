@@ -4,28 +4,31 @@ import {Link} from 'react-router-dom';
 import profile from './../assets/images/profile3.jpg';
 
 const proiflePages = [
-    {to:'/shop-cart', icons:'flaticon-shopping-cart-1', name:'My Cart'},
-    {to:'/wishlist', icons:'far fa-heart', name:'Wishlist'},
-    {to:'/books-grid-view', icons:'fa fa-briefcase', name:'Shop'},
-    {to:'/services', icons:'far fa-bell', name:'Services'},
-    {to:'/help-desk', icons:'far fa-id-card', name:'Help Desk'},
-    {to:'/privacy-policy', icons:'fa fa-key', name:'Privacy Policy'},
-    {to:'/shop-login', icons:'fas fa-sign-out-alt', name:'Log Out'},
+    {to:'/shop-cart', icons:'flaticon-shopping-cart-1', name:'Giỏ hàng của tôi'},
+    {to:'/wishlist', icons:'far fa-heart', name:'Danh sách yêu thích'},
+    {to:'/books-grid-view', icons:'fa fa-briefcase', name:'Cửa hàng'},
+    {to:'/services', icons:'far fa-bell', name:'Dịch vụ'},
+    {to:'/help-desk', icons:'far fa-id-card', name:'Bảng trợ giúp'},
+    {to:'/privacy-policy', icons:'fa fa-key', name:'Chính sách bảo mật'},
+    {to:'/shop-login', icons:'fas fa-sign-out-alt', name:'Đăng xuất'},
+    
 ];
 
 const inputBlock = [
-    {labelName:'Your Name', placeHoldName:'Alexander Weir', },
-    {labelName:'Professional title', placeHoldName:'Web Designer', },
-    {labelName:'Languages', placeHoldName:'Language', },
-    {labelName:'Age', placeHoldName:'Age', },
+    {labelName:'Tên của bạn', placeHoldName:'Alexander Weir', },
+    {labelName:'Chức danh nghề nghiệp', placeHoldName:'Nhà thiết kế web', },
+    {labelName:'Ngôn ngữ', placeHoldName:'Ngôn ngữ', },
+    {labelName:'Tuổi', placeHoldName:'Tuổi', },
+
 ];
 const inputBlockContact = [
-    {labelName:'Contact Number', placeHoldName:'+1 123 456 7890', },
-    {labelName:'Email Address', placeHoldName:'info@example.com', },
-    {labelName:'Country', placeHoldName:'Country Name', },
-    {labelName:'Postcode', placeHoldName:'112233', },
-    {labelName:'City', placeHoldName:'City Name', },
-    {labelName:'Full Address', placeHoldName:'New York City', },
+    {labelName:'Số điện thoại liên hệ', placeHoldName:'+1 123 456 7890', },
+    {labelName:'Địa chỉ email', placeHoldName:'info@example.com', },
+    {labelName:'Quốc gia', placeHoldName:'Tên quốc gia', },
+    {labelName:'Mã bưu điện', placeHoldName:'112233', },
+    {labelName:'Thành phố', placeHoldName:'Tên thành phố', },
+    {labelName:'Địa chỉ đầy đủ', placeHoldName:'Thành phố New York', },
+    
 ];
 
 function MyProfile(){
@@ -71,7 +74,7 @@ function MyProfile(){
                                 <div className="col-xl-9 col-lg-8 m-b30">
                                     <div className="shop-bx shop-profile">
                                         <div className="shop-bx-title clearfix">
-                                            <h5 className="text-uppercase">Basic Information</h5>
+                                            <h5 className="text-uppercase">Thông tin cơ bản</h5>
                                         </div>
                                         <form onSubmit={(e) => e.preventDefault()}>
                                             <div className="row m-b30">
@@ -85,13 +88,13 @@ function MyProfile(){
                                                 ))}   
                                                 <div className="col-lg-12 col-md-12">                                                    
                                                     <div className="mb-3">
-                                                        <label htmlFor="exampleFormControlTextarea" className="form-label">Description:</label>
+                                                        <label htmlFor="exampleFormControlTextarea" className="form-label">Mô tả:</label>
                                                         <textarea className="form-control"  id="exampleFormControlTextarea" rows="5">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s.</textarea>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div className="shop-bx-title clearfix">
-                                                <h5 className="text-uppercase">Contact Information</h5>
+                                                <h5 className="text-uppercase">Thông tin liên hệ</h5>
                                             </div>
                                             <div className="row">
                                                 {inputBlockContact.map((data, ind)=>(
