@@ -40,10 +40,9 @@ import ComingSoon from './ComingSoon';
 //images
 import logo from './../assets/images/logo.png';
 
-function Index(props){
-	var baseName = 'react/demo';
+function Index(){
 	return(
-		<BrowserRouter basename={baseName}>
+		<BrowserRouter>
 			{/* 
 			<Route path="/index-2" exact>
 				<Header />
@@ -74,8 +73,8 @@ function Index(props){
 					<Route path='/books-list-view-sidebar' exact element={<BooksListViewSidebar/>} />
 					<Route path='/shop-cart' exact element={<ShopCart/>} />
 					<Route path='/wishlist' exact element={<Wishlist/>} />
-					<Route path='/shop-login' exact element={<Login/>} />
-					<Route path='/shop-registration' exact element={<Registration/>} />
+					<Route path='/login' exact element={<Login/>} />
+					<Route path='/signup' exact element={<Registration/>} />
 					<Route path='/shop-checkout' exact element={<ShopCheckout/>} />
 					<Route path='/books-detail' exact element={<ShopDetail/>} />
 					<Route path='/blog-grid' exact element={<BlogGrid/>} />
