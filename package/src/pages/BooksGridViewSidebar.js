@@ -1,4 +1,7 @@
-import React,{useState} from 'react';
+import React,{useState, useEffect} from 'react';
+import { Environment } from '../Environment';
+import { useOutletContext } from 'react-router-dom';
+
 import {Link} from 'react-router-dom';
 import {Collapse, Dropdown} from 'react-bootstrap';
 
@@ -22,6 +25,7 @@ import book7 from './../assets/images/books/grid/book7.jpg';
 import book13 from './../assets/images/books/grid/book13.jpg';
 import book10 from './../assets/images/books/grid/book10.jpg';
 import book11 from './../assets/images/books/grid/book11.jpg';
+import SearchModel from '../models/SearchModel';
 
 const lableBlogData = [
     {name:'Architecture'},
@@ -51,26 +55,57 @@ const lableBlogData = [
     {name:'Mathematics'}
 ];
 
+// mock data
 const cardDetials = [
-    {image:book16, title:'Thunder Stunt', subtitle1:'ADVANTURE',subtitle2:'SCIENCE', price1:'54.78', price2:'70.00' },
-    {image:book14, title:'A Heavy Lift', subtitle1:'RACING',subtitle2:'DRAMA', price1:'25.18', price2:'68.00' },
-    {image:book15, title:'Terrible Madness', subtitle1:'SPORTS',subtitle2:'GAME', price1:'25.30', price2:'38.00' },
-    {image:book4, title:'Such Fun Age', subtitle1:'ADVANTURE', price1:'20.15', price2:'33.00' },
-    {image:book9, title:'Pushing Clouds', subtitle1:'ADVANTURE', price1:'30.12', price2:'40.00' },
-    {image:book2, title:'Homie', subtitle1:'HORROR',subtitle2:'DRAMA', price1:'15.25', price2:'45.00' },
-    {image:book7, title:'SECONDS', subtitle1:'SPORTS',subtitle2:'GAME', price1:'21.78', price2:'36.00' },
-    {image:book13, title:'REWORK', subtitle1:'THRILLER', price1:'23.20', price2:'49.00' },
-    {image:book11, title:'ALL GOOD NEWS', subtitle1:'DRAMA',subtitle2:'COMEDY', price1:'40.78', price2:'68.00' },
-    {image:book10, title:'Emily The Back', subtitle1:'DRAMA',subtitle2:'SIRIAL', price1:'54.78', price2:'63.00' },
-    {image:book8, title:'The Adventure', subtitle1:'BIOGRAPHY', price1:'37.00', price2:'47.00' },
-    {image:book14, title:'A Heavy Lift', subtitle1:'STORY',subtitle2:'BIOGRAPHY', price1:'22.00', price2:'51.00' },
+    // {image:book16, name:'Thunder Stunt', sub_category:'ADVANTURE',publisher:'SCIENCE', price_origin:'54.78', new_price:'70.00' },
+    // {image:book14, name:'A Heavy Lift', sub_category:'RACING',publisher:'DRAMA', price_origin:'25.18', new_price:'68.00' },
+    // {image:book15, name:'Terrible Madness', sub_category:'SPORTS',publisher:'GAME', price_origin:'25.30', new_price:'38.00' },
+    // {image:book4, name:'Such Fun Age', sub_category:'ADVANTURE', price_origin:'20.15', new_price:'33.00' },
+    // {image:book9, name:'Pushing Clouds', sub_category:'ADVANTURE', price_origin:'30.12', new_price:'40.00' },
+    // {image:book2, name:'Homie', sub_category:'HORROR',publisher:'DRAMA', price_origin:'15.25', new_price:'45.00' },
+    // {image:book7, name:'SECONDS', sub_category:'SPORTS',publisher:'GAME', price_origin:'21.78', new_price:'36.00' },
+    // {image:book13, name:'REWORK', sub_category:'THRILLER', price_origin:'23.20', new_price:'49.00' },
+    // {image:book11, name:'ALL GOOD NEWS', sub_category:'DRAMA',publisher:'COMEDY', price_origin:'40.78', new_price:'68.00' },
+    // {image:book10, name:'Emily The Back', sub_category:'DRAMA',publisher:'SIRIAL', price_origin:'54.78', new_price:'63.00' },
+    // {image:book8, name:'The Adventure', sub_category:'BIOGRAPHY', price_origin:'37.00', new_price:'47.00' },
+    // {image:book14, name:'A Heavy Lift', sub_category:'STORY',publisher:'BIOGRAPHY', price_origin:'22.00', new_price:'51.00' },
 ];
-
 
 
 function BooksGridViewSidebar(){
     const [accordBtn, setAccordBtn] = useState();
     const [selectBtn, setSelectBtn] = useState('Newest');
+    
+    // Tim kiem
+    const { searchParams } = useOutletContext();
+    const [ cardBookDetails, setBooks] = useState(cardDetials); // data test mac dinh
+
+    useEffect(() => {
+        const fetchBooks = async () => {
+            let url = `${Environment.getSearchEndpoint()}/${searchParams.toQueryString()}`;
+            const response = await fetch(url,{
+                headers : { 
+                  'Content-Type': 'application/json',
+                  'Accept': 'application/json'
+                 }
+              });
+            const data = await response.json();         
+            if(data && data.products) 
+            {
+                setBooks(data.products);
+            }
+            else
+            {
+                // khong tim thay
+            }
+            
+        };
+
+        if (searchParams) {
+            fetchBooks();
+        }
+    }, [searchParams]);
+
     return(
         <>
             <div className="page-content bg-grey">
@@ -78,12 +113,12 @@ function BooksGridViewSidebar(){
                     <div className="container">
                         <div className="row ">  
                             <div className="col-xl-3">
-                                <ShopSidebar />
+                               <ShopSidebar />
                             </div>
                            
                             <div className="col-xl-9">
                                 <div className="d-flex justify-content-between align-items-center">
-                                    <h4 className="title">Books</h4>
+                                    <h4 className="name">Books</h4>
                                     <Link to={"#"} className="btn btn-primary panel-btn">Filter</Link>
                                 </div>
                                 <div className="filter-area m-b30">
@@ -158,7 +193,7 @@ function BooksGridViewSidebar(){
                                     </div>
                                 </Collapse>
                                 <div className="row book-grid-row">
-                                    {cardDetials.map((data, i)=>(
+                                    { cardBookDetails.map((data, i)=>(
                                         <div className="col-book style-2" key={i}>
                                             <div className="dz-shop-card style-1">
                                                 <div className="dz-media">
@@ -171,10 +206,10 @@ function BooksGridViewSidebar(){
                                                     </label>
                                                 </div> 
                                                 <div className="dz-content">
-                                                    <h5 className="title"><Link to={"books-grid-view"}>{data.title}</Link></h5>
+                                                    <h5 className="name"><Link to={"books-grid-view"}>{data.name}</Link></h5>
                                                     <ul className="dz-tags">
-                                                        <li><Link to={"/books-grid-view"}>{data.subtitle1},</Link></li>
-                                                        <li><Link to={"/books-grid-view"}>{data.subtitle2}</Link></li>
+                                                        <li><Link to={"/books-grid-view"}>{data.sub_category},</Link></li>
+                                                        <li><Link to={"/books-grid-view"}>{data.publisher}</Link></li>
                                                     </ul>
                                                     <ul className="dz-rating">
                                                         <li><i className="flaticon-star text-yellow"></i></li>	
@@ -185,8 +220,8 @@ function BooksGridViewSidebar(){
                                                     </ul>
                                                     <div className="book-footer">
                                                         <div className="price">
-                                                            <span className="price-num">${data.price1}</span>
-                                                            <del>${data.price2}</del>
+                                                            <span className="price-num">${data.price_origin}</span>
+                                                            <del>${data.new_price}</del>
                                                         </div>
                                                         <Link to={"/shop-cart"} className="btn btn-secondary box-btn btnhover btnhover2"><i className="flaticon-shopping-cart-1 m-r10"></i> Add to cart</Link>
                                                     </div>

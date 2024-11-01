@@ -1,3 +1,4 @@
+import React, { useState } from 'react';
 import { BrowserRouter, Route, Routes, Outlet } from 'react-router-dom';
 import ScrollToTop2 from "react-scroll-to-top";
 
@@ -39,6 +40,7 @@ import ComingSoon from './ComingSoon';
 
 //images
 import logo from './../assets/images/logo.png';
+import SearchModel from '../models/SearchModel';
 
 function Index(){
 	return(
@@ -91,11 +93,22 @@ function Index(){
 } 
 
 function MainLayout(){
-	
+
+	const [searchParams, setSearchParams] = useState(new SearchModel());
+
+	const handleSearch = (params) => {
+		
+		const newSearchParams = SearchModel.fromObject({      
+			...searchParams,      
+			...params
+		  });
+	  setSearchParams(newSearchParams);
+	};
+
 	return (
 		<div className="page-wraper">			
-			<Header />
-			<Outlet />                
+			<Header onSearch={handleSearch}/>
+			<Outlet context={{searchParams}}/>                
 			<Footer  footerChange="style-1" logoImage={logo}/>
 	  </div>
 	)

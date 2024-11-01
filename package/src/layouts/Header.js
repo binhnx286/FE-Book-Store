@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Dropdown } from "react-bootstrap";
 import Cookies from "js-cookie";
+import SearchModel from "../models/SearchModel";
 //images
 
 import logo from "./../assets/images/_logo.png";
@@ -13,9 +14,10 @@ import pic3 from "./../assets/images/books/small/pic3.jpg";
 import Collapse from "react-bootstrap/Collapse";
 import { MenuListArray2 } from "./MenuListArray2";
 
-function Header() {
-  const [selectBtn, setSelectBtn] = useState("Tên sách");
+function Header({onSearch}) {
+  const [selectBtn, setSelectBtn] = useState("name");//Tên sách
   const [userEmail, setUserEmail] = useState(null);
+ 
   /* for sticky header */
   const [headerFix, setheaderFix] = React.useState(false);
   const navigate = useNavigate();
@@ -77,6 +79,34 @@ function Header() {
   const login = () => {
     navigate("/login");
   };
+
+  // Tim kiem
+  const [searchParams, setSearchTerm] = useState(new SearchModel());
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    onSearch(searchParams);
+  };
+
+  const handleChange = (event) => {
+    const newSearchParams = SearchModel.fromObject({      
+      ...searchParams,      
+      term: event.target.value,
+    });
+    setSearchTerm(newSearchParams);
+//    onSearch(newSearchParams); // neu muon search live thi dung ham nay nhung truoc do phai kiem tra do dai cua term
+  };
+  
+  const handleSearchTypeChange  = (type) => {
+    const newSearchParams = SearchModel.fromObject({      
+      ...searchParams,      
+      type: type
+    });
+    
+    setSearchTerm(newSearchParams);
+    setSelectBtn(type);
+  };
+
   return (
     <header className="site-header mo-left header style-1">
       <div className="header-info-bar">
@@ -283,7 +313,7 @@ function Header() {
 
           {/* <!-- header search nav --> */}
           <div className="header-search-nav">
-            <form className="header-item-search">
+            <form className="header-item-search"  onSubmit={handleSubmit}>
               <div className="input-group search-input">
                 <Dropdown className="dropdown bootstrap-select default-select drop-head">
                   <Dropdown.Toggle as="div" className="i-false">
@@ -291,13 +321,13 @@ function Header() {
                     <i className="ms-4 font-10 fa-solid fa-chevron-down"></i>
                   </Dropdown.Toggle>
                   <Dropdown.Menu>
-                    <Dropdown.Item onClick={() => setSelectBtn("Tên sách")}>
+                    <Dropdown.Item onClick={() => handleSearchTypeChange("name")}>
                       Tên sách
                     </Dropdown.Item>
-                    <Dropdown.Item onClick={() => setSelectBtn("Nhà xuất bản")}>
+                    <Dropdown.Item onClick={() => handleSearchTypeChange("publisher")}>
                       Nhà xuất bản
                     </Dropdown.Item>
-                    <Dropdown.Item onClick={() => setSelectBtn("Tác giả")}>
+                    <Dropdown.Item onClick={() => handleSearchTypeChange("author")}>
                       Tác giả
                     </Dropdown.Item>
                   </Dropdown.Menu>
@@ -307,9 +337,11 @@ function Header() {
                   className="form-control"
                   aria-label="Text input with dropdown button"
                   placeholder="Tìm kiếm của bạn"
+                  value={searchParams.term}
+                    onChange={handleChange}
                 />
-                <button className="btn" type="button">
-                  <i className="flaticon-loupe"></i>
+                <button className="btn" type="submit">
+                  <i className="flaticon-loupe" onClick={handleSubmit}></i>
                 </button>
               </div>
             </form>
