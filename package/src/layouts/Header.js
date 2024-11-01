@@ -1,8 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Dropdown } from "react-bootstrap";
 import Cookies from "js-cookie";
 import SearchModel from "../models/SearchModel";
+import axios from "axios";
+import "../assets/css/Header.css";
+
 //images
 
 import logo from "./../assets/images/_logo.png";
@@ -14,10 +17,11 @@ import pic3 from "./../assets/images/books/small/pic3.jpg";
 import Collapse from "react-bootstrap/Collapse";
 import { MenuListArray2 } from "./MenuListArray2";
 
-function Header({onSearch}) {
-  const [selectBtn, setSelectBtn] = useState("name");//Tên sách
+function Header({ onSearch }) {
+  const [selectBtn, setSelectBtn] = useState("name"); //Tên sách
   const [userEmail, setUserEmail] = useState(null);
- 
+  const searchRef = useRef(null);
+  const [showResults, setShowResults] = useState(false);
   /* for sticky header */
   const [headerFix, setheaderFix] = React.useState(false);
   const navigate = useNavigate();
@@ -82,42 +86,86 @@ function Header({onSearch}) {
 
   // Tim kiem
   const [searchParams, setSearchTerm] = useState(new SearchModel());
+  const [searchResults, setSearchResults] = useState([]);
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    onSearch(searchParams);
+  // Hàm gọi API tìm kiếm
+  const fetchSearchResults = async (term) => {
+    try {
+      const response = await fetch(
+        `${process.env.REACT_APP_API_DOMAIN}/book/search/?${
+          searchParams.type
+        }=${encodeURIComponent(term)}`
+      );
+      if (response.ok) {
+        const data = await response.json();
+        setSearchResults(data.products);
+      } else {
+        console.error("Error fetching search results");
+        setSearchResults([]);
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      setSearchResults([]);
+    }
   };
+
+  // Sử dụng useEffect để debounce việc gọi API
+  useEffect(() => {
+    if (searchParams.term.length >= 3) {
+      const delayDebounceFn = setTimeout(() => {
+        fetchSearchResults(searchParams.term);
+      }, 300); // Thời gian chờ 500ms
+
+      return () => clearTimeout(delayDebounceFn);
+    } else {
+      setSearchResults([]);
+    }
+  }, [searchParams.term, searchParams.type]); // Theo dõi sự thay đổi của term và type
 
   const handleChange = (event) => {
-    const newSearchParams = SearchModel.fromObject({      
-      ...searchParams,      
-      term: event.target.value,
+    const term = event.target.value;
+    const newSearchParams = SearchModel.fromObject({
+      ...searchParams,
+      term: term,
     });
     setSearchTerm(newSearchParams);
-//    onSearch(newSearchParams); // neu muon search live thi dung ham nay nhung truoc do phai kiem tra do dai cua term
+    setShowResults(true); // Hiển thị ô kết quả tìm kiếm
   };
-  
-  const handleSearchTypeChange  = (type) => {
-    const newSearchParams = SearchModel.fromObject({      
-      ...searchParams,      
-      type: type
+
+  const handleSearchTypeChange = (type) => {
+    const newSearchParams = SearchModel.fromObject({
+      ...searchParams,
+      type: type,
     });
-    
+
     setSearchTerm(newSearchParams);
     setSelectBtn(type);
   };
 
-  const SearchTypeStr = () =>{
-      switch (selectBtn) {
-        default:
-        case "name":
-          return "Tên sách";
-        case "author":
-          return "Tác giả";
-        case "publisher":
-          return "Nhà xuất bản";
+  const SearchTypeStr = () => {
+    switch (selectBtn) {
+      default:
+      case "name":
+        return "Tên sách";
+      case "author":
+        return "Tác giả";
+      case "publisher":
+        return "Nhà xuất bản";
     }
-  }
+  };
+
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (searchRef.current && !searchRef.current.contains(event.target)) {
+        setShowResults(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   return (
     <header className="site-header mo-left header style-1">
       <div className="header-info-bar">
@@ -323,8 +371,9 @@ function Header({onSearch}) {
           </div>
 
           {/* <!-- header search nav --> */}
-          <div className="header-search-nav">
-            <form className="header-item-search"  onSubmit={handleSubmit}>
+          <div className="header-search-nav" ref={searchRef}>
+            {/* <form className="header-item-search" onSubmit={handleSubmit}> */}
+            <form className="header-item-search">
               <div className="input-group search-input">
                 <Dropdown className="dropdown bootstrap-select default-select drop-head">
                   <Dropdown.Toggle as="div" className="i-false">
@@ -332,13 +381,19 @@ function Header({onSearch}) {
                     <i className="ms-4 font-10 fa-solid fa-chevron-down"></i>
                   </Dropdown.Toggle>
                   <Dropdown.Menu>
-                    <Dropdown.Item onClick={() => handleSearchTypeChange("name")}>
+                    <Dropdown.Item
+                      onClick={() => handleSearchTypeChange("name")}
+                    >
                       Tên sách
                     </Dropdown.Item>
-                    <Dropdown.Item onClick={() => handleSearchTypeChange("publisher")}>
+                    <Dropdown.Item
+                      onClick={() => handleSearchTypeChange("publisher")}
+                    >
                       Nhà xuất bản
                     </Dropdown.Item>
-                    <Dropdown.Item onClick={() => handleSearchTypeChange("author")}>
+                    <Dropdown.Item
+                      onClick={() => handleSearchTypeChange("author")}
+                    >
                       Tác giả
                     </Dropdown.Item>
                   </Dropdown.Menu>
@@ -349,12 +404,39 @@ function Header({onSearch}) {
                   aria-label="Text input with dropdown button"
                   placeholder="Tìm kiếm của bạn"
                   value={searchParams.term}
-                    onChange={handleChange}
+                  onChange={handleChange}
                 />
-                <button className="btn" type="submit">
-                  <i className="flaticon-loupe" onClick={handleSubmit}></i>
-                </button>
+                <Link
+                  className="btn"
+                  to={`/search/?type=${searchParams.type}&value=${searchParams.term}`}
+                >
+                  <i className="flaticon-loupe"></i>
+                  {/* <i className="flaticon-loupe"></i> */}
+                </Link>
               </div>
+              {showResults && searchResults && searchResults.length > 0 && (
+                <div className="search-results-dropdown">
+                  <ul>
+                    {searchResults.map((product) => (
+                      <li key={product.id} className="search-result-item">
+                        <Link
+                          to={`/book-detail/${product.id}`}
+                          className="search-result-link"
+                        >
+                          <img
+                            src={product.image}
+                            alt={product.name}
+                            className="search-result-image"
+                          />
+                          <span className="search-result-name">
+                            {product.name}
+                          </span>
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
             </form>
           </div>
         </div>
