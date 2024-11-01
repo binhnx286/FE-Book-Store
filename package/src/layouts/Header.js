@@ -107,6 +107,17 @@ function Header({onSearch}) {
     setSelectBtn(type);
   };
 
+  const SearchTypeStr = () =>{
+      switch (selectBtn) {
+        default:
+        case "name":
+          return "Tên sách";
+        case "author":
+          return "Tác giả";
+        case "publisher":
+          return "Nhà xuất bản";
+    }
+  }
   return (
     <header className="site-header mo-left header style-1">
       <div className="header-info-bar">
@@ -317,7 +328,7 @@ function Header({onSearch}) {
               <div className="input-group search-input">
                 <Dropdown className="dropdown bootstrap-select default-select drop-head">
                   <Dropdown.Toggle as="div" className="i-false">
-                    {selectBtn}
+                    {SearchTypeStr()}
                     <i className="ms-4 font-10 fa-solid fa-chevron-down"></i>
                   </Dropdown.Toggle>
                   <Dropdown.Menu>
