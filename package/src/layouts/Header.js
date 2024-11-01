@@ -234,17 +234,17 @@ function Header() {
                   <Dropdown.Menu className="dropdown-menu py-0 dropdown-menu-end">
                     {userEmail && (
                       <>
-                        <div className="dropdown-header">
+                        {/* <div className="dropdown-header">
                           <h6 className="m-0">Xin chào!</h6>
                           <span>{userEmail}</span>
-                        </div>
+                        </div> */}
                         <div className="dropdown-body">
                           <Link
                             to={"/my-profile"}
                             className="dropdown-item d-flex justify-content-between align-items-center ai-icon"
                           >
                             <div>
-                              <span className="ms-2">Profile</span>
+                              <span className="ms-2">Hồ sơ cá nhân</span>
                             </div>
                           </Link>
                           <Link
@@ -252,17 +252,17 @@ function Header() {
                             className="dropdown-item d-flex justify-content-between align-items-center ai-icon"
                           >
                             <div>
-                              <span className="ms-2">My Order</span>
+                              <span className="ms-2">Đơn hàng</span>
                             </div>
                           </Link>
-                          <Link
+                          {/* <Link
                             to={"/wishlist"}
                             className="dropdown-item d-flex justify-content-between align-items-center ai-icon"
                           >
                             <div>
-                              <span className="ms-2">Wishlist</span>
+                              <span className="ms-2">Danh sách</span>
                             </div>
-                          </Link>
+                          </Link> */}
                         </div>
                         <div className="dropdown-footer">
                           <Link
@@ -270,7 +270,7 @@ function Header() {
                             onClick={logout}
                             className="btn btn-primary w-100 btnhover btn-sm"
                           >
-                            Log Out
+                            Đăng Xuất
                           </Link>
                         </div>
                       </>

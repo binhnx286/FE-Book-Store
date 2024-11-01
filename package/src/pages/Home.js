@@ -48,19 +48,17 @@ function Index1() {
         <div className="main-slider style-1">
           <HomeMainSlider />
         </div>
-        <div className="bg-white py-5">
+        {/* <div className="bg-white py-5">
           <div className="container">
             <ClientsSlider />
           </div>
-        </div>
+        </div> */}
         <section className="content-inner-1 bg-grey reccomend">
           <div className="container">
             <div className="section-head text-center">
-              <h2 className="title">Bán chạy nhất</h2>
+              <h2 className="title">Lượt xem nhiều nhất</h2>
               <p>
-                Những cuốn sách nổi bật này không chỉ thu hút sự chú ý mà còn
-                được đánh giá cao bởi khách hàng vì chất lượng và nội dung tuyệt
-                vời.
+              Những cuốn sách này không chỉ gây ấn tượng mạnh mẽ mà còn nhận được đánh giá cao từ khách hàng nhờ nội dung hấp dẫn và chất lượng vượt trội.
               </p>
             </div>
             <RecomendedSlider />
@@ -91,7 +89,7 @@ function Index1() {
 						<BookSaleSlider />
 					</div>
 				</section> */}
-        <section className="content-inner-1 bg-grey reccomend">
+        {/* <section className="content-inner-1 bg-grey reccomend">
           <div className="container">
             <div className="section-head text-center">
               <div className="circle style-1"></div>
@@ -106,7 +104,7 @@ function Index1() {
           <div className="container">
             <FeaturedSlider />
           </div>
-        </section>
+        </section> */}
         <section className="content-inner-2">
           <div className="container">
             <OfferSlider />

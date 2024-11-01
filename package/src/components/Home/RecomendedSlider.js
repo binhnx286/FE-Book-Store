@@ -107,7 +107,7 @@ export default function RecomendedSlider() {
                   to={"/shop-cart"}
                   className="btn btn-secondary btnhover btnhover2"
                 >
-                  <i className="flaticon-shopping-cart-1 m-r10"></i> Add to cart
+                  <i className="flaticon-shopping-cart-1 m-r10"></i> Thêm vào giỏ hàng
                 </Link>
               </div>
             </div>
