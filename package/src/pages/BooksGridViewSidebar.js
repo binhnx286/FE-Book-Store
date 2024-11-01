@@ -97,6 +97,7 @@ function BooksGridViewSidebar(){
             else
             {
                 // khong tim thay
+                setBooks([]);
             }
             
         };
