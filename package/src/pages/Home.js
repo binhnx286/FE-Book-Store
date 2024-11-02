@@ -4,13 +4,11 @@ import React from "react";
 import HomeMainSlider from "../components/Home/HomeMainSlider";
 import Slide from "../components/Home/Slide";
 
-import ClientsSlider from "./../components/Home/ClientsSlider";
+// import ClientsSlider from "./../components/Home/ClientsSlider";
 import RecomendedSlider from "./../components/Home/RecomendedSlider";
-import BookSaleSlider from "./../components/Home/BookSaleSlider";
-import FeaturedSlider from "./../components/Home/FeaturedSlider";
+// import BookSaleSlider from "./../components/Home/BookSaleSlider";
+// import FeaturedSlider from "./../components/Home/FeaturedSlider";
 import OfferSlider from "./../components/Home/OfferSlider";
-import TestimonialSlider from "./../components/Home/TestimonialSlider";
-import LatestNewsSlider from "./../components/Home/LatestNewsSlider";
 import NewsLetter from "./../components/NewsLetter";
 
 //element

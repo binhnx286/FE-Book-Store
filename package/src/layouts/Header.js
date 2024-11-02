@@ -3,7 +3,6 @@ import { Link, useNavigate } from "react-router-dom";
 import { Dropdown } from "react-bootstrap";
 import Cookies from "js-cookie";
 import SearchModel from "../models/SearchModel";
-import axios from "axios";
 import "../assets/css/Header.css";
 
 //images
