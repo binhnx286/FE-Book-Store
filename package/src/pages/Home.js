@@ -2,6 +2,8 @@ import React from "react";
 
 //Components
 import HomeMainSlider from "../components/Home/HomeMainSlider";
+import Slide from "../components/Home/Slide";
+
 import ClientsSlider from "./../components/Home/ClientsSlider";
 import RecomendedSlider from "./../components/Home/RecomendedSlider";
 import BookSaleSlider from "./../components/Home/BookSaleSlider";
@@ -46,7 +48,8 @@ function Index1() {
     <>
       <div className="page-content bg-white">
         <div className="main-slider style-1">
-          <HomeMainSlider />
+          {/* <HomeMainSlider /> */}
+          <Slide />
         </div>
         {/* <div className="bg-white py-5">
           <div className="container">
@@ -58,7 +61,9 @@ function Index1() {
             <div className="section-head text-center">
               <h2 className="title">Lượt xem nhiều nhất</h2>
               <p>
-              Những cuốn sách này không chỉ gây ấn tượng mạnh mẽ mà còn nhận được đánh giá cao từ khách hàng nhờ nội dung hấp dẫn và chất lượng vượt trội.
+                Những cuốn sách này không chỉ gây ấn tượng mạnh mẽ mà còn nhận
+                được đánh giá cao từ khách hàng nhờ nội dung hấp dẫn và chất
+                lượng vượt trội.
               </p>
             </div>
             <RecomendedSlider />

@@ -68,76 +68,76 @@ export const MenuListArray2 = [
   // },
 
   // shop
-  {
-    title: "Shop",
-    classsChange: "sub-menu-down",
-    content: [
-      {
-        title: "Shop Grid",
-        to: "/books-grid-view",
-      },
-      {
-        title: "Shop Grid Sidebar",
-        to: "/books-grid-view-sidebar",
-      },
-      {
-        title: "Shop List",
-        to: "/books-list",
-      },
-      {
-        title: "Shop List Sidebar",
-        to: "/books-list-view-sidebar",
-      },
-      {
-        title: "Shop Detail",
-        to: "/books-detail",
-      },
-      {
-        title: "Cart",
-        to: "/shop-cart",
-      },
-      {
-        title: "Checkout",
-        to: "/shop-checkout",
-      },
-      {
-        title: "Wishlist",
-        to: "/wishlist",
-      },
-      {
-        title: "Login",
-        to: "/shop-login",
-      },
-      {
-        title: "Registration",
-        to: "/shop-registration",
-      },
-    ],
-  },
+  // {
+  //   title: "Shop",
+  //   classsChange: "sub-menu-down",
+  //   content: [
+  //     {
+  //       title: "Shop Grid",
+  //       to: "/books-grid-view",
+  //     },
+  //     {
+  //       title: "Shop Grid Sidebar",
+  //       to: "/books-grid-view-sidebar",
+  //     },
+  //     {
+  //       title: "Shop List",
+  //       to: "/books-list",
+  //     },
+  //     {
+  //       title: "Shop List Sidebar",
+  //       to: "/books-list-view-sidebar",
+  //     },
+  //     {
+  //       title: "Shop Detail",
+  //       to: "/books-detail",
+  //     },
+  //     {
+  //       title: "Cart",
+  //       to: "/shop-cart",
+  //     },
+  //     {
+  //       title: "Checkout",
+  //       to: "/shop-checkout",
+  //     },
+  //     {
+  //       title: "Wishlist",
+  //       to: "/wishlist",
+  //     },
+  //     {
+  //       title: "Login",
+  //       to: "/shop-login",
+  //     },
+  //     {
+  //       title: "Registration",
+  //       to: "/shop-registration",
+  //     },
+  //   ],
+  // },
 
   //   blog
-  {
-    title: "Blog",
-    classsChange: "sub-menu-down",
-    content: [
-      {
-        title: "Blog Grid",
-        to: "/blog-grid",
-      },
-      {
-        title: "Blog Large Sidebar",
-        to: "/blog-large-sidebar",
-      },
-      {
-        title: "Blog List Sidebar",
-        to: "/blog-list-sidebar",
-      },
-      {
-        title: "Blog Details",
-        to: "/blog-detail",
-      },
-    ],
-  },
+  // {
+  //   title: "Blog",
+  //   classsChange: "sub-menu-down",
+  //   content: [
+  //     {
+  //       title: "Blog Grid",
+  //       to: "/blog-grid",
+  //     },
+  //     {
+  //       title: "Blog Large Sidebar",
+  //       to: "/blog-large-sidebar",
+  //     },
+  //     {
+  //       title: "Blog List Sidebar",
+  //       to: "/blog-list-sidebar",
+  //     },
+  //     {
+  //       title: "Blog Details",
+  //       to: "/blog-detail",
+  //     },
+  //   ],
+  // },
   {
     title: "Liên Hệ",
     to: "/contact-us",

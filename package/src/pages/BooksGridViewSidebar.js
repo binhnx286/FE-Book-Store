@@ -76,10 +76,21 @@ const cardDetials = [
 function BooksGridViewSidebar() {
   const [accordBtn, setAccordBtn] = useState();
   const [selectBtn, setSelectBtn] = useState("Newest");
+  const [subCategories, setSubCategories] = useState([]);
+  const [publishers, setPublishers] = useState([]);
+  const [authors, setAuthors] = useState([]);
+  const [publicationYears, setPublicationYears] = useState([]);
+  const [selectedCategories, setSelectedCategories] = useState([]);
+  const [selectedPublishers, setSelectedPublishers] = useState([]);
+  const [selectedAuthors, setSelectedAuthors] = useState([]);
+  const [selectedYears, setSelectedYears] = useState([]);
+  const [sortOrder, setSortOrder] = useState(null); // 'asc' cho tăng dần, 'desc' cho giảm dần
+  const [currentPage, setCurrentPage] = useState(1); // Trang hiện tại
+  const itemsPerPage = 12; // Số sản phẩm trên mỗi trang
+
   const location = useLocation();
   const queryParams = queryString.parse(location.search);
   const { type, value } = queryParams;
-  console.log("type: " + type + " value: " + value);
 
   // Tim kiem
   const { searchParams } = useOutletContext();
@@ -99,6 +110,10 @@ function BooksGridViewSidebar() {
       const data = await response.json();
       if (data && data.products) {
         setBooks(data.products);
+        setSubCategories(data.sub_categories);
+        setPublishers(data.publishers);
+        setAuthors(data.authors);
+        setPublicationYears(data.publication_years);
       } else {
         // khong tim thay
         setBooks([]);
@@ -117,14 +132,184 @@ function BooksGridViewSidebar() {
     return text;
   }
 
+  const handleCategoryClick = (category) => {
+    if (selectedCategories.includes(category)) {
+      setSelectedCategories(
+        selectedCategories.filter((item) => item !== category)
+      );
+    } else {
+      setSelectedCategories([...selectedCategories, category]);
+    }
+  };
+
+  const handlePublisherClick = (publisher) => {
+    if (selectedPublishers.includes(publisher)) {
+      setSelectedPublishers(
+        selectedPublishers.filter((item) => item !== publisher)
+      );
+    } else {
+      setSelectedPublishers([...selectedPublishers, publisher]);
+    }
+  };
+
+  const handleAuthorClick = (author) => {
+    if (selectedAuthors.includes(author)) {
+      setSelectedAuthors(selectedAuthors.filter((item) => item !== author));
+    } else {
+      setSelectedAuthors([...selectedAuthors, author]);
+    }
+  };
+
+  const handleYearClick = (year) => {
+    if (selectedYears.includes(year)) {
+      setSelectedYears(selectedYears.filter((item) => item !== year));
+    } else {
+      setSelectedYears([...selectedYears, year]);
+    }
+  };
+
+  // Hàm lọc sản phẩm
+  const filteredProducts = cardBookDetails.filter((product) => {
+    return (
+      (selectedCategories.length === 0 ||
+        selectedCategories.includes(product.sub_category)) &&
+      (selectedPublishers.length === 0 ||
+        selectedPublishers.includes(product.publisher)) &&
+      (selectedAuthors.length === 0 ||
+        selectedAuthors.includes(product.author)) &&
+      (selectedYears.length === 0 ||
+        selectedYears.includes(product.publication_year))
+    );
+  });
+
+  // Hàm sắp xếp sản phẩm
+  const sortedProducts = [...filteredProducts];
+
+  if (sortOrder === "asc") {
+    sortedProducts.sort((a, b) => (a.new_price || 0) - (b.new_price || 0));
+  } else if (sortOrder === "desc") {
+    sortedProducts.sort((a, b) => (b.new_price || 0) - (a.new_price || 0));
+  }
+
+  // Tính toán phân trang
+  const totalPages = Math.ceil(sortedProducts.length / itemsPerPage);
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentProducts = sortedProducts.slice(
+    indexOfFirstItem,
+    indexOfLastItem
+  );
+
+  const paginate = (pageNumber) => {
+    setCurrentPage(pageNumber);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
   return (
     <>
       <div className="page-content bg-grey">
         <div className="content-inner-1 border-bottom">
           <div className="container">
             <div className="row ">
-              <div className="col-xl-3">
-                <ShopSidebar />
+              <div className="col-xl-3 bg-white border rounded-1">
+                {/* <ShopSidebar /> */}
+                <div className="sidebar">
+                  <h3>Thể loại</h3>
+                  <ul>
+                    {subCategories.map((category, index) => (
+                      <li
+                        key={index}
+                        onClick={() => handleCategoryClick(category)}
+                        style={{
+                          cursor: "pointer",
+                          fontWeight: selectedCategories.includes(category)
+                            ? "bold"
+                            : "normal",
+                          color: selectedCategories.includes(category)
+                            ? "blue"
+                            : "black",
+                        }}
+                      >
+                        {selectedCategories.includes(category) && (
+                          <i className="fas fa-check-circle"></i>
+                        )}{" "}
+                        {category}
+                      </li>
+                    ))}
+                  </ul>
+
+                  <h3>Nhà xuất bản</h3>
+                  <ul>
+                    {publishers.map((publisher, index) => (
+                      <li
+                        key={index}
+                        onClick={() => handlePublisherClick(publisher)}
+                        style={{
+                          cursor: "pointer",
+                          fontWeight: selectedPublishers.includes(publisher)
+                            ? "bold"
+                            : "normal",
+                          color: selectedPublishers.includes(publisher)
+                            ? "blue"
+                            : "black",
+                        }}
+                      >
+                        {selectedPublishers.includes(publisher) && (
+                          <i className="fas fa-check-circle"></i>
+                        )}{" "}
+                        {publisher}
+                      </li>
+                    ))}
+                  </ul>
+
+                  <h3>Tác giả</h3>
+                  <ul>
+                    {authors.map((author, index) => (
+                      <li
+                        key={index}
+                        onClick={() => handleAuthorClick(author)}
+                        style={{
+                          cursor: "pointer",
+                          fontWeight: selectedAuthors.includes(author)
+                            ? "bold"
+                            : "normal",
+                          color: selectedAuthors.includes(author)
+                            ? "blue"
+                            : "black",
+                        }}
+                      >
+                        {selectedAuthors.includes(author) && (
+                          <i className="fas fa-check-circle"></i>
+                        )}{" "}
+                        {author}
+                      </li>
+                    ))}
+                  </ul>
+
+                  <h3>Năm xuất bản</h3>
+                  <ul>
+                    {publicationYears.map((year, index) => (
+                      <li
+                        key={index}
+                        onClick={() => handleYearClick(year)}
+                        style={{
+                          cursor: "pointer",
+                          fontWeight: selectedYears.includes(year)
+                            ? "bold"
+                            : "normal",
+                          color: selectedYears.includes(year)
+                            ? "blue"
+                            : "black",
+                        }}
+                      >
+                        {selectedYears.includes(year) && (
+                          <i className="fas fa-check-circle"></i>
+                        )}{" "}
+                        {year}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
               </div>
 
               <div className="col-xl-9">
@@ -136,7 +321,7 @@ function BooksGridViewSidebar() {
                 </div>
                 <div className="filter-area m-b30">
                   <div className="grid-area">
-                    <div className="shop-tab">
+                    {/* <div className="shop-tab">
                       <ul
                         className="nav text-center product-filter justify-content-end"
                         role="tablist"
@@ -213,10 +398,10 @@ function BooksGridViewSidebar() {
                           </Link>
                         </li>
                       </ul>
-                    </div>
+                    </div> */}
                   </div>
                   <div className="category">
-                    <div className="filter-category">
+                    {/* <div className="filter-category">
                       <Link
                         to={"#"}
                         data-bs-toggle="collapse"
@@ -225,8 +410,8 @@ function BooksGridViewSidebar() {
                         <i className="fas fa-list me-2"></i>
                         Categories
                       </Link>
-                    </div>
-                    <div className="form-group">
+                    </div> */}
+                    {/* <div className="form-group">
                       <i className="fas fa-sort-amount-down me-2 text-secondary"></i>
                       <Dropdown>
                         <Dropdown.Toggle className="i-false">
@@ -253,7 +438,29 @@ function BooksGridViewSidebar() {
                           </Dropdown.Item>
                         </Dropdown.Menu>
                       </Dropdown>
-                    </div>
+                    </div> */}
+                    <Dropdown className="sort-dropdown">
+                      {" "}
+                      Sắp xếp theo giá:{" "}
+                      <Dropdown.Toggle id="dropdown-sort">
+                        {sortOrder === "asc"
+                          ? "Tăng dần"
+                          : sortOrder === "desc"
+                          ? "Giảm dần"
+                          : "Mặc định"}
+                      </Dropdown.Toggle>
+                      <Dropdown.Menu>
+                        <Dropdown.Item onClick={() => setSortOrder(null)}>
+                          Mặc định
+                        </Dropdown.Item>
+                        <Dropdown.Item onClick={() => setSortOrder("asc")}>
+                          Giá tăng dần
+                        </Dropdown.Item>
+                        <Dropdown.Item onClick={() => setSortOrder("desc")}>
+                          Giá giảm dần
+                        </Dropdown.Item>
+                      </Dropdown.Menu>
+                    </Dropdown>
                   </div>
                 </div>
                 <Collapse in={accordBtn} className="acod-content">
@@ -279,7 +486,7 @@ function BooksGridViewSidebar() {
                   </div>
                 </Collapse>
                 <div className="row book-grid-row">
-                  {cardBookDetails.map((data, i) => (
+                  {currentProducts.map((data, i) => (
                     <div className="col-book style-2" key={i}>
                       <div
                         className="dz-shop-card style-1"
@@ -310,20 +517,13 @@ function BooksGridViewSidebar() {
                               height: "56px",
                             }}
                           >
-                            <Link to={"books-grid-view"}>
-                              {truncateText(data.name, 30)}
-                            </Link>
+                            {truncateText(data.name, 30)}
                           </h5>
                           <ul>
-                            <li>
-                              <Link to={"/books-grid-view"}>
-                                {data.sub_category}
-                              </Link>
-                            </li>
-                            <li>
-                              <Link to={"/books-grid-view"}>
-                                Nhà xuất bản {data.publisher}
-                              </Link>
+                            <li>{data.sub_category}</li>
+                            <li>Tác giả: {data.author}</li>
+                            <li style={{ height: "52px" }}>
+                              Nhà xuất bản {data.publisher}
                             </li>
                           </ul>
                           <ul className="dz-rating">
@@ -357,11 +557,11 @@ function BooksGridViewSidebar() {
                               <del>${data.new_price}</del>
                             </div> */}
                             <Link
-                              to={"/shop-cart"}
+                              to={`/books-detail/?product=${data.id}`}
                               className="btn btn-secondary box-btn btnhover btnhover2"
                             >
                               <i className="flaticon-shopping-cart-1 m-r10"></i>{" "}
-                              Add to cart
+                              Xem chi tiết
                             </Link>
                           </div>
                         </div>
@@ -371,10 +571,10 @@ function BooksGridViewSidebar() {
                 </div>
                 <div className="row page mt-0">
                   <div className="col-md-6">
-                    <p className="page-text">Showing 12 from 50 data</p>
+                    {/* <p className="page-text">Showing 12 from 50 data</p> */}
                   </div>
                   <div className="col-md-6">
-                    <nav aria-label="Blog Pagination">
+                    {/* <nav aria-label="Blog Pagination">
                       <ul className="pagination style-1 p-t20">
                         <li className="page-item">
                           <Link to={"#"} className="page-link prev">
@@ -402,7 +602,52 @@ function BooksGridViewSidebar() {
                           </Link>
                         </li>
                       </ul>
-                    </nav>
+                    </nav> */}
+                    <div className="pagination-container">
+                      <nav aria-label="Page navigation">
+                        <ul className="pagination justify-content-center">
+                          <li
+                            className={`page-item ${
+                              currentPage === 1 ? "disabled" : ""
+                            }`}
+                          >
+                            <button
+                              className="page-link"
+                              onClick={() => paginate(currentPage - 1)}
+                            >
+                              Previous
+                            </button>
+                          </li>
+                          {[...Array(totalPages)].map((_, index) => (
+                            <li
+                              key={index}
+                              className={`page-item ${
+                                currentPage === index + 1 ? "active" : ""
+                              }`}
+                            >
+                              <button
+                                className="page-link"
+                                onClick={() => paginate(index + 1)}
+                              >
+                                {index + 1}
+                              </button>
+                            </li>
+                          ))}
+                          <li
+                            className={`page-item ${
+                              currentPage === totalPages ? "disabled" : ""
+                            }`}
+                          >
+                            <button
+                              className="page-link"
+                              onClick={() => paginate(currentPage + 1)}
+                            >
+                              Next
+                            </button>
+                          </li>
+                        </ul>
+                      </nav>
+                    </div>
                   </div>
                 </div>
               </div>

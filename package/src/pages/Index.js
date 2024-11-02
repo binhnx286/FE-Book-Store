@@ -76,7 +76,7 @@ function Index() {
             exact
             element={<BooksListViewSidebar />}
           />
-          <Route path="/shop-cart" exact element={<ShopCart />} />
+          <Route path="/cart" exact element={<ShopCart />} />
           <Route path="/wishlist" exact element={<Wishlist />} />
           <Route path="/login" exact element={<Login />} />
           <Route path="/signup" exact element={<Registration />} />

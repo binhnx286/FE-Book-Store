@@ -104,10 +104,10 @@ export default function RecomendedSlider() {
                   {formatCurrency(product.new_price)}
                 </span>
                 <Link
-                  to={"/shop-cart"}
+                  to={`/books-detail/?product=${product.id}`}
                   className="btn btn-secondary btnhover btnhover2"
                 >
-                  <i className="flaticon-shopping-cart-1 m-r10"></i> Thêm vào giỏ hàng
+                  Xem chi tiết
                 </Link>
               </div>
             </div>

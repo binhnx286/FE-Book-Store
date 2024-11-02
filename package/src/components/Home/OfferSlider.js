@@ -20,6 +20,13 @@ function OfferSlider() {
       .catch((error) => console.error("Error fetching data:", error));
   }, []);
 
+  function truncateText(text, maxLength) {
+    if (text.length > maxLength) {
+      return text.substring(0, maxLength) + "...";
+    }
+    return text;
+  }
+
   return (
     <>
       <div className="section-head book-align">
@@ -79,7 +86,7 @@ function OfferSlider() {
           <SwiperSlide key={product.id}>
             <div className="dz-card style-2">
               <div className="dz-media">
-                <Link to={`/books-detail/${product.id}`}>
+                <Link to={`/books-detail/?product=${product.id}`}>
                   <img
                     src={product.image || "https://via.placeholder.com/150"}
                     alt={product.name}
@@ -87,8 +94,10 @@ function OfferSlider() {
                 </Link>
               </div>
               <div className="dz-info">
-                <h4 className="dz-title">
-                  <Link to={`/books-detail/${product.id}`}>{product.name}</Link>
+                <h4 className="dz-title" style={{ height: "68px" }}>
+                  <Link to={`/books-detail/?product=${product.id}`}>
+                    {truncateText(product.name, 30)}
+                  </Link>
                 </h4>
                 <div className="dz-meta">
                   <ul className="dz-tags">
