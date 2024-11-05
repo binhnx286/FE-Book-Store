@@ -68,6 +68,8 @@ function ShopDetail() {
       .then((response) => response.json())
       .then((data) => setProductData(data))
       .catch((error) => console.error("Error:", error));
+
+    console.log("productData: " + productData.viewed);
   }, [product]);
 
   if (!productData) {

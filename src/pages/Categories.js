@@ -92,7 +92,6 @@ function Categories() {
           params: { category: categoryId },
         }
       );
-      console.log("API Response for Category:", response.data); // Log để kiểm tra
 
       // Lưu tất cả sản phẩm vào allProducts
       setAllProducts(response.data);
@@ -122,7 +121,6 @@ function Categories() {
           params: { subcategory: subcategoryId },
         }
       );
-      console.log("API Response for Subcategory:", response.data); // Log để kiểm tra
 
       // Lưu tất cả sản phẩm vào allProducts
       setAllProducts(response.data);
