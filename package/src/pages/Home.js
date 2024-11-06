@@ -1,7 +1,7 @@
 import React from "react";
 
 //Components
-import HomeMainSlider from "../components/Home/HomeMainSlider";
+// import HomeMainSlider from "../components/Home/HomeMainSlider";
 import Slide from "../components/Home/Slide";
 
 // import ClientsSlider from "./../components/Home/ClientsSlider";

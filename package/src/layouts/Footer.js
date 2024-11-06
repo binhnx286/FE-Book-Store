@@ -1,37 +1,37 @@
 import React,{useState} from 'react';
 import {Link} from 'react-router-dom';
-import Collapse from 'react-bootstrap/Collapse';
+// import Collapse from 'react-bootstrap/Collapse';
 //images
 
 
-function heartToggle(){
- 	var  heartBlaste = document.querySelector('.heart');
- 	if(heartBlaste){
-		heartBlaste.classList.toggle("heart-blast");			
- 	}	
-}
+// function heartToggle(){
+//  	var  heartBlaste = document.querySelector('.heart');
+//  	if(heartBlaste){
+// 		heartBlaste.classList.toggle("heart-blast");			
+//  	}	
+// }
 
-const accordList = [
-	{name:'Architecture'},{name:'Art'},{name:'Action'},{name:'Biography'},
-	{name:'Body, Mind & Spirit'},{name:'Business & Economics'},
-	{name:'Children Fiction'},{name:'Children Non-Fiction'},
-	{name:'Comics & Graphics'},{name:'Cooking'},
-	{name:'Crafts & Hobbies'},{name:'Design'},
-	{name:'Drama'},{name:'Education'},
-	{name:'Family & Relationships'},{name:'Fiction'},
-	{name:'Foreign Language'},{name:'Games'},
-	{name:'Gardening'},{name:'Health & Fitness'},
-	{name:'History'},{name:'House & Home'},
-	{name:'Humor'},{name:'Literary Collections'},
-	{name:'Mathematics'},{name:'Medical'},
-	{name:'Nature'},{name:'Performing Arts'},
-	{name:'Pets'},{name:'Show others'}
-];
+// const accordList = [
+// 	{name:'Architecture'},{name:'Art'},{name:'Action'},{name:'Biography'},
+// 	{name:'Body, Mind & Spirit'},{name:'Business & Economics'},
+// 	{name:'Children Fiction'},{name:'Children Non-Fiction'},
+// 	{name:'Comics & Graphics'},{name:'Cooking'},
+// 	{name:'Crafts & Hobbies'},{name:'Design'},
+// 	{name:'Drama'},{name:'Education'},
+// 	{name:'Family & Relationships'},{name:'Fiction'},
+// 	{name:'Foreign Language'},{name:'Games'},
+// 	{name:'Gardening'},{name:'Health & Fitness'},
+// 	{name:'History'},{name:'House & Home'},
+// 	{name:'Humor'},{name:'Literary Collections'},
+// 	{name:'Mathematics'},{name:'Medical'},
+// 	{name:'Nature'},{name:'Performing Arts'},
+// 	{name:'Pets'},{name:'Show others'}
+// ];
 
 function Footer({footerChange, logoImage}){
 	//const [open, setOpen] = useState(false);
-	const  d = new Date();
-	const [accordBtn, setAccordBtn] = useState();
+	// const  d = new Date();
+	// const [accordBtn, setAccordBtn] = useState();
 	return(
 		<>
 			<footer className={`site-footer ${footerChange}`}>				

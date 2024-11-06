@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 // Import Swiper React components
 import { Swiper, SwiperSlide } from "swiper/react";
+import Cookies from "js-cookie";
+import { toast } from "react-toastify";
 
 // Import Swiper styles
 //import "swiper/css";
@@ -26,6 +28,51 @@ function OfferSlider() {
     }
     return text;
   }
+
+  const handleAddToCart = (id) => {
+    const accessToken = Cookies.get("access"); // Get the access token from cookies
+
+    if (!accessToken) {
+      // If the user is not logged in, redirect to login or show a message
+      toast.error("Hãy đăng nhập để thêm vào giỏ hàng");
+      // You can redirect to login page if needed
+      // window.location.href = "/login";
+      return;
+    }
+
+    const cartItem = {
+      product_id: id,
+      quantity: 1,
+    };
+
+    fetch("/api/cart/carts/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`, // Include the bearer token
+      },
+      body: JSON.stringify(cartItem),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          // Handle errors
+          return response.json().then((errorData) => {
+            throw new Error(errorData.message || "Failed to add to cart.");
+          });
+        }
+        return response.json();
+      })
+      .then((data) => {
+        // Handle success (e.g., show a success message or update cart count)
+        toast.success("Thêm sản phẩm thành công!");
+        // console.log("Add to cart response:", data);
+      })
+      .catch((error) => {
+        // Handle errors (e.g., show an error message)
+        // console.error("Error adding to cart:", error);
+        toast.error("Thêm sản phẩm thất bại!");
+      });
+  };
 
   return (
     <>
@@ -132,13 +179,15 @@ function OfferSlider() {
                       {product.discount_percent}%
                     </p>
                   </div>
-                  <Link
-                    to={"/shop-cart"}
+                  <div
+                    onClick={() => {
+                      handleAddToCart(product.id);
+                    }}
                     className="btn btn-primary m-t15 btnhover btnhover2"
                   >
                     <i className="flaticon-shopping-cart-1 m-r10"></i> Thêm vào
                     giỏ hàng
-                  </Link>
+                  </div>
                 </div>
               </div>
             </div>

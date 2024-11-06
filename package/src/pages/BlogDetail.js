@@ -1,6 +1,6 @@
 import React from "react";
-import { Link, useLocation } from "react-router-dom";
-import queryString from "query-string";
+import { Link } from "react-router-dom";
+// import queryString from "query-string";
 
 import PageTitle from "../layouts/PageTitle";
 //import BlogSidebar from '../elements/BlogSidebar';

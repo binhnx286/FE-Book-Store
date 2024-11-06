@@ -20,6 +20,10 @@ export const MenuListArray2 = [
     to: "/",
   },
   {
+    title: "Danh Mục Sản Phẩm",
+    to: "/categories",
+  },
+  {
     title: "Về Chúng Tôi",
     to: "/about-us",
   },

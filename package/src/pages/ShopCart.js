@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import Form from "react-bootstrap/Form";
+// import Form from "react-bootstrap/Form";
 import Cookies from "js-cookie";
 // Placeholder image
 // import defaultImage from "./../assets/images/default-product.jpg";

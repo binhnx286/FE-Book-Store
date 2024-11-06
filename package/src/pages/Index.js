@@ -19,7 +19,8 @@ import Pricing from "./Pricing";
 import PrivacyPolicy from "./PrivacyPolicy";
 import BooksGridView from "./BooksGridView";
 import ShopList from "./ShopList";
-import BooksGridViewSidebar from "./BooksGridViewSidebar";
+import Search from "./Search";
+import Categories from "./Categories";
 import BooksListViewSidebar from "./BooksListViewSidebar";
 import ShopCart from "./ShopCart";
 import Wishlist from "./Wishlist";
@@ -70,7 +71,8 @@ function Index() {
           <Route path="/privacy-policy" exact element={<PrivacyPolicy />} />
           <Route path="/books-grid-view" exact element={<BooksGridView />} />
           <Route path="/books-list" exact element={<ShopList />} />
-          <Route path="/search" exact element={<BooksGridViewSidebar />} />
+          <Route path="/search" exact element={<Search />} />
+          <Route path="/categories" exact element={<Categories />} />
           <Route
             path="/books-list-view-sidebar"
             exact

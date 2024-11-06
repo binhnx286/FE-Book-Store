@@ -15,15 +15,12 @@ import profile2 from "./../assets/images/profile2.jpg";
 import profile4 from "./../assets/images/profile4.jpg";
 import profile3 from "./../assets/images/profile3.jpg";
 import profile1 from "./../assets/images/profile1.jpg";
-import book15 from "./../assets/images/books/grid/book15.jpg";
-import book3 from "./../assets/images/books/grid/book3.jpg";
-import book5 from "./../assets/images/books/grid/book5.jpg";
 
-const relatedBook = [
-  { image: book15, title: "Terrible Madness" },
-  { image: book3, title: "Battle Drive" },
-  { image: book5, title: "Terrible Madness" },
-];
+// const relatedBook = [
+//   { image: book15, title: "Terrible Madness" },
+//   { image: book3, title: "Battle Drive" },
+//   { image: book5, title: "Terrible Madness" },
+// ];
 
 function CommentBlog({ title, image }) {
   return (
@@ -63,13 +60,25 @@ function ShopDetail() {
   const { product } = queryParams;
 
   useEffect(() => {
-    const productId = product || 2;
-    fetch(`/api/book/products/${productId}`)
-      .then((response) => response.json())
-      .then((data) => setProductData(data))
-      .catch((error) => console.error("Error:", error));
+    const fetchProductData = async () => {
+      const productId = product || 2;
+      try {
+        const response = await fetch(
+          `${process.env.REACT_APP_API_DOMAIN}/book/products/${productId}`
+        );
 
-    console.log("productData: " + productData.viewed);
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        setProductData(data);
+      } catch (error) {
+        console.error("Error:", error);
+      }
+    };
+
+    fetchProductData();
   }, [product]);
 
   if (!productData) {
@@ -99,7 +108,7 @@ function ShopDetail() {
   const plainDescription = stripHTML(productData.description || "");
 
   // Limit the description to 200 characters
-  const maxLength = 1000; // Adjust the length as needed
+  const maxLength = 800; // Adjust the length as needed
   const shortDescription =
     plainDescription.length > maxLength
       ? plainDescription.substring(0, maxLength) + "..."

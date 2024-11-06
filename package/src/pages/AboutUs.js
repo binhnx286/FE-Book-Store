@@ -5,12 +5,12 @@ import CountUp from 'react-countup';
 
 //Components 
 import PageTitle from './../layouts/PageTitle';
-import TestimonialSlider from './../components/Home/TestimonialSlider';
-import ClientsSlider from './../components/Home/ClientsSlider';
-import NewsLetter from '../components/NewsLetter';
+// import TestimonialSlider from './../components/Home/TestimonialSlider';
+// import ClientsSlider from './../components/Home/ClientsSlider';
+// import NewsLetter from '../components/NewsLetter';
 
 //element
-import CounterSection from './../elements/CounterSection';
+// import CounterSection from './../elements/CounterSection';
 
 //Imgaes
 import about1 from './../assets/images/about/about1.jpg';
