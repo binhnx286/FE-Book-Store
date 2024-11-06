@@ -31,7 +31,8 @@ function ShopCart() {
         );
         if (response.ok) {
           const data = await response.json();
-          setShopData(data);
+          console.log(data);
+          setShopData(data.results);
         } else {
           console.error("Failed to fetch cart data");
         }

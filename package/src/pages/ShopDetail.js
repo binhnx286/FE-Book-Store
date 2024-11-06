@@ -131,7 +131,7 @@ function ShopDetail() {
       quantity: count,
     };
 
-    fetch("/api/cart/carts/", {
+    fetch(`${process.env.REACT_APP_API_DOMAIN}/cart/carts/`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

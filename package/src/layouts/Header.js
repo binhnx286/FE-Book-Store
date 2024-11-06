@@ -51,38 +51,38 @@ function Header({ onSearch }) {
     }
   }, [navigate]);
 
-  useEffect(() => {
-    const fetchCartData = async () => {
-      const accessToken = Cookies.get("access");
-      if (!accessToken) {
-        console.error("Access token not found");
-        return;
-      }
-      const headers = {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${accessToken}`,
-      };
-      try {
-        const response = await fetch(
-          `${process.env.REACT_APP_API_DOMAIN}/cart/carts/`,
-          {
-            method: "GET",
-            headers: headers,
-          }
-        );
-        if (response.ok) {
-          const data = await response.json();
-          setShopDataLength(data[0].cart_items.length);
-          console.log(data[0].cart_items.length);
-        } else {
-          console.error("Failed to fetch cart data");
-        }
-      } catch (error) {
-        console.error("Error fetching cart data:", error);
-      }
-    };
-    fetchCartData();
-  }, []);
+  // useEffect(() => {
+  //   const fetchCartData = async () => {
+  //     const accessToken = Cookies.get("access");
+  //     if (!accessToken) {
+  //       console.error("Access token not found");
+  //       return;
+  //     }
+  //     const headers = {
+  //       "Content-Type": "application/json",
+  //       Authorization: `Bearer ${accessToken}`,
+  //     };
+  //     try {
+  //       const response = await fetch(
+  //         `${process.env.REACT_APP_API_DOMAIN}/cart/carts/`,
+  //         {
+  //           method: "GET",
+  //           headers: headers,
+  //         }
+  //       );
+  //       if (response.ok) {
+  //         const data = await response.json();
+  //         setShopDataLength(data[0].cart_items.length);
+  //         console.log(data[0].cart_items.length);
+  //       } else {
+  //         console.error("Failed to fetch cart data");
+  //       }
+  //     } catch (error) {
+  //       console.error("Error fetching cart data:", error);
+  //     }
+  //   };
+  //   fetchCartData();
+  // }, []);
 
   /* for open menu Toggle btn  */
   const [sidebarOpen, setSidebarOpen] = useState(false);
