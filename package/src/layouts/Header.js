@@ -5,6 +5,11 @@ import { Dropdown } from "react-bootstrap";
 import Cookies from "js-cookie";
 import SearchModel from "../models/SearchModel";
 import "../assets/css/Header.css";
+import Button from "react-bootstrap/Button";
+import Form from "react-bootstrap/Form";
+import Modal from "react-bootstrap/Modal";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 //images
 
@@ -30,6 +35,290 @@ function Header({ onSearch }) {
   const location = useLocation();
   const queryParams = queryString.parse(location.search);
   const { product } = queryParams;
+
+  // modal
+  const [show, setShow] = useState(false);
+
+  // State cho các trường tìm kiếm
+  const [bookName, setBookName] = useState("");
+  const [authors, setAuthors] = useState([
+    { id: 1, value: "", relation: "AND" }, // Tác giả đầu tiên không cần mối quan hệ nhưng để mặc định
+  ]);
+  const [publisher, setPublisher] = useState("");
+  const [yearValue, setYearValue] = useState("");
+  const [beforeYear, setBeforeYear] = useState(false);
+  const [afterYear, setAfterYear] = useState(false);
+
+  // State cho thông báo lỗi
+  const [errors, setErrors] = useState({});
+
+  const handleClose = () => {
+    setShow(false);
+    setErrors({});
+    // Reset các trường khi đóng modal nếu cần
+    // setBookName('');
+    // setAuthors([{ id: 1, value: '', relation: 'AND' }]);
+    // setPublisher('');
+    // setYearValue('');
+    // setBeforeYear(false);
+    // setAfterYear(false);
+  };
+  const handleShow = () => setShow(true);
+
+  // Hàm thêm trường tác giả
+  const addAuthorField = () => {
+    setAuthors([
+      ...authors,
+      { id: authors.length + 1, value: "", relation: "AND" },
+    ]);
+  };
+
+  // Hàm xóa trường tác giả
+  const removeAuthorField = (id) => {
+    if (authors.length === 1) return; // Ít nhất phải có một trường tác giả
+    const updatedAuthors = authors.filter((author) => author.id !== id);
+    setAuthors(updatedAuthors);
+  };
+
+  // Hàm cập nhật giá trị tác giả
+  const handleAuthorChange = (id, value) => {
+    setAuthors(
+      authors.map((author) =>
+        author.id === id ? { ...author, value } : author
+      )
+    );
+  };
+
+  // Hàm cập nhật mối quan hệ giữa các tác giả
+  const handleRelationChange = (id, relation) => {
+    setAuthors(
+      authors.map((author) =>
+        author.id === id ? { ...author, relation } : author
+      )
+    );
+  };
+
+  // Hàm xử lý khi nhấn Tìm kiếm
+  const handleSearch = () => {
+    const validationErrors = {};
+
+    // Kiểm tra tên sách
+    if (bookName.trim() === "") {
+      validationErrors.bookName = "Tên sách không được để trống";
+    }
+
+    // Kiểm tra tác giả
+    const filledAuthors = authors.filter(
+      (author) => author.value.trim() !== ""
+    );
+    if (filledAuthors.length === 0) {
+      validationErrors.authors = "Vui lòng nhập ít nhất một tác giả";
+    }
+
+    // Kiểm tra nhà xuất bản
+    if (publisher.trim() === "") {
+      validationErrors.publisher = "Nhà xuất bản không được để trống";
+    }
+
+    // Kiểm tra năm xuất bản nếu có nhập
+    if (yearValue.trim() !== "" && !/^\d{4}$/.test(yearValue)) {
+      validationErrors.yearValue = "Năm xuất bản phải là số gồm 4 chữ số";
+    }
+
+    // Kiểm tra lựa chọn trước hoặc sau
+    if (beforeYear && afterYear) {
+      validationErrors.yearOption =
+        "Vui lòng chọn chỉ một trong hai tùy chọn trước hoặc sau";
+    }
+
+    // Nếu có lỗi, cập nhật state errors và dừng hàm
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      return;
+    }
+
+    // Xây dựng đối tượng tìm kiếm
+    const searchCriteria = {
+      bookName,
+      authors: filledAuthors.map((author) => ({
+        name: author.value,
+        relation: author.relation,
+      })),
+      publisher,
+      year: yearValue,
+      beforeYear,
+      afterYear,
+    };
+
+    // Xử lý logic tìm kiếm ở đây (ví dụ: gửi lên backend)
+    console.log("Tiêu chí tìm kiếm:", searchCriteria);
+
+    // Hiển thị thông báo thành công
+    toast.success("Tìm kiếm thành công!", {
+      position: "top-right",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
+
+    // Đóng modal sau khi tìm kiếm
+    handleClose();
+
+    // Reset form nếu cần
+    setBookName("");
+    setAuthors([{ id: 1, value: "", relation: "AND" }]);
+    setPublisher("");
+    setYearValue("");
+    setBeforeYear(false);
+    setAfterYear(false);
+  };
+
+  function Example() {
+    return (
+      <>
+        <Modal show={show} onHide={handleClose} size="lg">
+          <Modal.Header closeButton>
+            <Modal.Title>Tìm kiếm nâng cao</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <Form>
+              {/* Tên sách */}
+              <Form.Group className="mb-3" controlId="product_name">
+                <Form.Label>Tên sách</Form.Label>
+                <Form.Control
+                  type="text"
+                  placeholder="Tên sách mà bạn muốn tìm kiếm"
+                  value={bookName}
+                  onChange={(e) => setBookName(e.target.value)}
+                  isInvalid={!!errors.bookName}
+                />
+                <Form.Control.Feedback type="invalid">
+                  {errors.bookName}
+                </Form.Control.Feedback>
+              </Form.Group>
+
+              {/* Tác giả */}
+              <Form.Group className="mb-3" controlId="author">
+                <Form.Label>Tác giả</Form.Label>
+                {authors.map((author, index) => (
+                  <div
+                    key={author.id}
+                    className="d-flex align-items-center mb-2"
+                  >
+                    {/* Select mối quan hệ (không hiển thị cho tác giả đầu tiên) */}
+                    {index !== 0 && (
+                      <Form.Select
+                        className="me-2"
+                        value={author.relation}
+                        onChange={(e) =>
+                          handleRelationChange(author.id, e.target.value)
+                        }
+                        style={{ width: "100px" }}
+                      >
+                        <option value="AND">Và</option>
+                        <option value="OR">Hoặc</option>
+                      </Form.Select>
+                    )}
+                    <Form.Control
+                      type="text"
+                      placeholder={`Tác giả ${index + 1}`}
+                      value={author.value}
+                      onChange={(e) =>
+                        handleAuthorChange(author.id, e.target.value)
+                      }
+                      isInvalid={index === 0 && !!errors.authors}
+                    />
+                    {authors.length > 1 && (
+                      <Button
+                        variant="danger"
+                        className="ms-2"
+                        onClick={() => removeAuthorField(author.id)}
+                      >
+                        Xóa
+                      </Button>
+                    )}
+                  </div>
+                ))}
+                <Button variant="secondary" onClick={addAuthorField}>
+                  Thêm tác giả
+                </Button>
+                {errors.authors && (
+                  <div className="text-danger mt-1">{errors.authors}</div>
+                )}
+              </Form.Group>
+
+              {/* Nhà xuất bản */}
+              <Form.Group className="mb-3" controlId="publisher">
+                <Form.Label>Nhà xuất bản</Form.Label>
+                <Form.Control
+                  type="text"
+                  placeholder="Nhà xuất bản mà bạn muốn tìm kiếm"
+                  value={publisher}
+                  onChange={(e) => setPublisher(e.target.value)}
+                  isInvalid={!!errors.publisher}
+                />
+                <Form.Control.Feedback type="invalid">
+                  {errors.publisher}
+                </Form.Control.Feedback>
+              </Form.Group>
+
+              {/* Năm xuất bản */}
+              <Form.Group className="mb-3" controlId="publicationYear">
+                <Form.Label>Năm xuất bản</Form.Label>
+                <Form.Control
+                  type="text"
+                  placeholder="Mặc định sẽ tìm kiếm theo năm bạn nhập"
+                  value={yearValue}
+                  onChange={(e) => setYearValue(e.target.value)}
+                  isInvalid={!!errors.yearValue || !!errors.yearOption}
+                />
+                <Form.Control.Feedback type="invalid">
+                  {errors.yearValue || errors.yearOption}
+                </Form.Control.Feedback>
+                <div className="mt-2">
+                  <Form.Check
+                    type="checkbox"
+                    label="Trước khoảng thời gian này"
+                    checked={beforeYear}
+                    onChange={(e) => {
+                      setBeforeYear(e.target.checked);
+                      if (e.target.checked && afterYear) {
+                        setAfterYear(false); // Nếu chọn trước thì bỏ chọn sau
+                      }
+                    }}
+                  />
+                  <Form.Check
+                    type="checkbox"
+                    label="Sau khoảng thời gian này"
+                    checked={afterYear}
+                    onChange={(e) => {
+                      setAfterYear(e.target.checked);
+                      if (e.target.checked && beforeYear) {
+                        setBeforeYear(false); // Nếu chọn sau thì bỏ chọn trước
+                      }
+                    }}
+                  />
+                </div>
+              </Form.Group>
+            </Form>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={handleClose}>
+              Đóng
+            </Button>
+            <Button variant="primary" onClick={handleSearch}>
+              Tìm kiếm
+            </Button>
+          </Modal.Footer>
+        </Modal>
+
+        <ToastContainer />
+      </>
+    );
+  }
 
   useEffect(() => {
     window.addEventListener("scroll", () => {
@@ -202,9 +491,145 @@ function Header({ onSearch }) {
 
   return (
     <header className="site-header mo-left header style-1">
+      {/* modal advance search */}
+      <Modal show={show} onHide={handleClose} size="lg">
+        <Modal.Header closeButton>
+          <Modal.Title>Tìm kiếm nâng cao</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form>
+            {/* Tên sách */}
+            <Form.Group className="mb-3" controlId="product_name">
+              <Form.Label>Tên sách</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Tên sách mà bạn muốn tìm kiếm"
+                value={bookName}
+                onChange={(e) => setBookName(e.target.value)}
+                isInvalid={!!errors.bookName}
+              />
+              <Form.Control.Feedback type="invalid">
+                {errors.bookName}
+              </Form.Control.Feedback>
+            </Form.Group>
+
+            {/* Tác giả */}
+            <Form.Group className="mb-3" controlId="author">
+              <Form.Label>Tác giả</Form.Label>
+              {authors.map((author, index) => (
+                <div key={author.id} className="d-flex align-items-center mb-2">
+                  {/* Select mối quan hệ (không hiển thị cho tác giả đầu tiên) */}
+                  {index !== 0 && (
+                    <Form.Select
+                      className="me-2"
+                      value={author.relation}
+                      onChange={(e) =>
+                        handleRelationChange(author.id, e.target.value)
+                      }
+                      style={{ width: "100px" }}
+                    >
+                      <option value="AND">Và</option>
+                      <option value="OR">Hoặc</option>
+                    </Form.Select>
+                  )}
+                  <Form.Control
+                    type="text"
+                    placeholder={`Tác giả ${index + 1}`}
+                    value={author.value}
+                    onChange={(e) =>
+                      handleAuthorChange(author.id, e.target.value)
+                    }
+                    isInvalid={index === 0 && !!errors.authors}
+                  />
+                  {authors.length > 1 && (
+                    <Button
+                      variant="danger"
+                      className="ms-2"
+                      onClick={() => removeAuthorField(author.id)}
+                    >
+                      Xóa
+                    </Button>
+                  )}
+                </div>
+              ))}
+              <Button variant="secondary" onClick={addAuthorField}>
+                Thêm tác giả
+              </Button>
+              {errors.authors && (
+                <div className="text-danger mt-1">{errors.authors}</div>
+              )}
+            </Form.Group>
+
+            {/* Nhà xuất bản */}
+            <Form.Group className="mb-3" controlId="publisher">
+              <Form.Label>Nhà xuất bản</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Nhà xuất bản mà bạn muốn tìm kiếm"
+                value={publisher}
+                onChange={(e) => setPublisher(e.target.value)}
+                isInvalid={!!errors.publisher}
+              />
+              <Form.Control.Feedback type="invalid">
+                {errors.publisher}
+              </Form.Control.Feedback>
+            </Form.Group>
+
+            {/* Năm xuất bản */}
+            <Form.Group className="mb-3" controlId="publicationYear">
+              <Form.Label>Năm xuất bản</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Mặc định sẽ tìm kiếm theo năm bạn nhập"
+                value={yearValue}
+                onChange={(e) => setYearValue(e.target.value)}
+                isInvalid={!!errors.yearValue || !!errors.yearOption}
+              />
+              <Form.Control.Feedback type="invalid">
+                {errors.yearValue || errors.yearOption}
+              </Form.Control.Feedback>
+              <div className="mt-2">
+                <Form.Check
+                  type="checkbox"
+                  label="Trước khoảng thời gian này"
+                  checked={beforeYear}
+                  onChange={(e) => {
+                    setBeforeYear(e.target.checked);
+                    if (e.target.checked && afterYear) {
+                      setAfterYear(false); // Nếu chọn trước thì bỏ chọn sau
+                    }
+                  }}
+                />
+                <Form.Check
+                  type="checkbox"
+                  label="Sau khoảng thời gian này"
+                  checked={afterYear}
+                  onChange={(e) => {
+                    setAfterYear(e.target.checked);
+                    if (e.target.checked && beforeYear) {
+                      setBeforeYear(false); // Nếu chọn sau thì bỏ chọn trước
+                    }
+                  }}
+                />
+              </div>
+            </Form.Group>
+          </Form>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleClose}>
+            Đóng
+          </Button>
+          <Button variant="primary" onClick={handleSearch}>
+            Tìm kiếm
+          </Button>
+        </Modal.Footer>
+      </Modal>
+      <ToastContainer />
+      
       <div className="header-info-bar">
         <div className="container clearfix">
           {/* <!-- Website Logo --> */}
+
           <div className="logo-header logo-dark">
             <Link to={"/"}>
               <img src={logo} alt="logo" />
@@ -216,8 +641,8 @@ function Header({ onSearch }) {
             <div className="extra-cell">
               <ul className="navbar-nav header-right">
                 <li className="nav-item">
-                  <Link to={"/wishlist"} className="nav-link">
-                    <svg
+                  {/* <Link to={"/wishlist"} className="nav-link"> */}
+                  {/* <svg
                       xmlns="http://www.w3.org/2000/svg"
                       height="24px"
                       viewBox="0 0 24 24"
@@ -226,9 +651,10 @@ function Header({ onSearch }) {
                     >
                       <path d="M0 0h24v24H0V0z" fill="none" />
                       <path d="M16.5 3c-1.74 0-3.41.81-4.5 2.09C10.91 3.81 9.24 3 7.5 3 4.42 3 2 5.42 2 8.5c0 3.78 3.4 6.86 8.55 11.54L12 21.35l1.45-1.32C18.6 15.36 22 12.28 22 8.5 22 5.42 19.58 3 16.5 3zm-4.4 15.55l-.1.1-.1-.1C7.14 14.24 4 11.39 4 8.5 4 6.5 5.5 5 7.5 5c1.54 0 3.04.99 3.57 2.36h1.87C13.46 5.99 14.96 5 16.5 5c2 0 3.5 1.5 3.5 3.5 0 2.89-3.14 5.74-7.9 10.05z" />
-                    </svg>
-                    {/* <span className="badge">{shopDataLength || 0}</span> */}
-                  </Link>
+                    </svg> */}
+                  {/* <span className="badge">{shopDataLength || 0}</span> */}
+                  {/* </Link> */}
+                  <Button onClick={handleShow}>Tìm kiếm nâng cao</Button>
                 </li>
                 <Dropdown as="li" className="nav-item">
                   <Link to={"/cart"}>
@@ -249,88 +675,6 @@ function Header({ onSearch }) {
                       </svg>
                       {/* <span className="badge">{shopDataLength || 0}</span> */}
                     </Dropdown.Toggle>
-                    {/* <Dropdown.Menu as="ul" className="dropdown-menu cart-list">
-                    <li className="cart-item">
-                      <div className="media">
-                        <div className="media-left">
-                          <Link to={"/books-detail"}>
-                            <img alt="" className="media-object" src={pic1} />
-                          </Link>
-                        </div>
-                        <div className="media-body">
-                          <h6 className="dz-title">
-                            <Link
-                              to={"/books-detail"}
-                              className="media-heading"
-                            >
-                              Real Life
-                            </Link>
-                          </h6>
-                          <span className="dz-price">$28.00</span>
-                          <span className="item-close">&times;</span>
-                        </div>
-                      </div>
-                    </li>
-                    <li className="cart-item">
-                      <div className="media">
-                        <div className="media-left">
-                          <Link to={"/books-detail"}>
-                            <img alt="" className="media-object" src={pic2} />
-                          </Link>
-                        </div>
-                        <div className="media-body">
-                          <h6 className="dz-title">
-                            <Link
-                              to={"/books-detail"}
-                              className="media-heading"
-                            >
-                              Home
-                            </Link>
-                          </h6>
-                          <span className="dz-price">$28.00</span>
-                          <span className="item-close">&times;</span>
-                        </div>
-                      </div>
-                    </li>
-                    <li className="cart-item">
-                      <div className="media">
-                        <div className="media-left">
-                          <Link to={"/books-detail"}>
-                            <img alt="" className="media-object" src={pic3} />
-                          </Link>
-                        </div>
-                        <div className="media-body">
-                          <h6 className="dz-title">
-                            <Link
-                              to={"/books-detail"}
-                              className="media-heading"
-                            >
-                              Such a fun age
-                            </Link>
-                          </h6>
-                          <span className="dz-price">$28.00</span>
-                          <span className="item-close">&times;</span>
-                        </div>
-                      </div>
-                    </li>
-                    <li className="cart-item text-center">
-                      <h6 className="text-secondary">Totle = $500</h6>
-                    </li>
-                    <li className="text-center d-flex">
-                      <Link
-                        to={"/shop-cart"}
-                        className="btn btn-sm btn-primary me-2 btnhover w-100"
-                      >
-                        View Cart
-                      </Link>
-                      <Link
-                        to={"/shop-checkout"}
-                        className="btn btn-sm btn-outline-primary btnhover w-100"
-                      >
-                        Checkout
-                      </Link>
-                    </li>
-                  </Dropdown.Menu> */}
                   </Link>
                 </Dropdown>
                 <Dropdown
@@ -409,7 +753,10 @@ function Header({ onSearch }) {
           {/* <!-- header search nav --> */}
           <div className="header-search-nav" ref={searchRef}>
             {/* <form className="header-item-search" onSubmit={handleSubmit}> */}
-            <form className="header-item-search">
+            <form
+              className="header-item-search"
+              style={{ "margin-left": "36px" }}
+            >
               <div className="input-group search-input">
                 <Dropdown className="dropdown bootstrap-select default-select drop-head">
                   <Dropdown.Toggle as="div" className="i-false">
