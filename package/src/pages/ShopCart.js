@@ -248,7 +248,7 @@ function ShopCart() {
                               </td>
                               <td className="product-item-close">
                                 <button
-                                  className="ti-close btn btn-link"
+                                  className="ti-close"
                                   onClick={() => handleDeleteClick(item.id)}
                                 ></button>
                               </td>
