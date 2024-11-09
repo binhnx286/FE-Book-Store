@@ -42,13 +42,13 @@ function Categories() {
           axios.get(`${process.env.REACT_APP_API_DOMAIN}/book/subcategories/`),
         ]);
 
-        // Lọc các categories không bị xóa
-        const activeCategories = categoriesResponse.data.results.filter(
+        // Lọc các categories không bị xóas
+        const activeCategories = categoriesResponse.data.filter(
           (category) => !category.is_delete
         );
 
         // Lọc các subcategories không bị xóa
-        const activeSubcategories = subcategoriesResponse.data.results.filter(
+        const activeSubcategories = subcategoriesResponse.data.filter(
           (subcategory) => !subcategory.is_delete
         );
 

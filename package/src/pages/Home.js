@@ -4,9 +4,9 @@ import React from "react";
 // import HomeMainSlider from "../components/Home/HomeMainSlider";
 import Slide from "../components/Home/Slide";
 
-// import ClientsSlider from "./../components/Home/ClientsSlider";
+import ClientsSlider from "./../components/Home/ClientsSlider";
 import RecomendedSlider from "./../components/Home/RecomendedSlider";
-// import BookSaleSlider from "./../components/Home/BookSaleSlider";
+import BookSaleSlider from "./../components/Home/BookSaleSlider";
 // import FeaturedSlider from "./../components/Home/FeaturedSlider";
 import OfferSlider from "./../components/Home/OfferSlider";
 import NewsLetter from "./../components/NewsLetter";
@@ -49,11 +49,11 @@ function Index1() {
           {/* <HomeMainSlider /> */}
           <Slide />
         </div>
-        {/* <div className="bg-white py-5">
+        <div className="bg-white py-5">
           <div className="container">
             <ClientsSlider />
           </div>
-        </div> */}
+        </div>
         <section className="content-inner-1 bg-grey reccomend">
           <div className="container">
             <div className="section-head text-center">
@@ -88,10 +88,10 @@ function Index1() {
           </div>
         </section>
         {/* <section className="content-inner-1">
-					<div className="container">
-						<BookSaleSlider />
-					</div>
-				</section> */}
+          <div className="container">
+            <BookSaleSlider />
+          </div>
+        </section> */}
         {/* <section className="content-inner-1 bg-grey reccomend">
           <div className="container">
             <div className="section-head text-center">

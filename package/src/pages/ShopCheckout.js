@@ -192,7 +192,7 @@ function ShopCheckout() {
       const { payUrl } = response.data;
 
       if (payUrl) {
-        window.open(payUrl, "_blank");
+        window.location.assign(payUrl);
       } else {
         throw new Error("Không nhận được URL thanh toán.");
       }
@@ -209,12 +209,12 @@ function ShopCheckout() {
   return (
     <>
       <div className="page-content">
-        <PageTitle parentPage="Shop" childPage="Checkout" />
+        <PageTitle parentPage="Trang chủ" childPage="Thanh toán" />
         <section className="content-inner-1">
           {/* <!-- Product --> */}
           <div className="container">
             <form className="shop-form">
-              <div className="row">
+              {/* <div className="row">
                 <div className="col-lg-6 col-md-6">
                   <div className="widget">
                     <h4 className="widget-title">Billing & Shipping Address</h4>
@@ -430,7 +430,7 @@ function ShopCheckout() {
                     ></textarea>
                   </div>
                 </div>
-              </div>
+              </div> */}
             </form>
             <div className="dz-divider bg-gray-dark text-gray-dark icon-center my-5">
               <i className="fa fa-circle bg-white text-gray-dark"></i>
@@ -438,13 +438,13 @@ function ShopCheckout() {
             <div className="row">
               <div className="col-lg-6">
                 <div className="widget">
-                  <h4 className="widget-title">Your Order</h4>
+                  <h4 className="widget-title">Đơn hàng của bạn</h4>
                   <table className="table-bordered check-tbl">
                     <thead className="text-center">
                       <tr>
                         {/* <th>IMAGE</th> */}
-                        <th>PRODUCT NAME</th>
-                        <th>TOTAL</th>
+                        <th>Tên sản phẩm</th>
+                        <th>Tổng cộng</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -473,11 +473,11 @@ function ShopCheckout() {
               </div>
               <div className="col-lg-6">
                 <form className="shop-form widget">
-                  <h4 className="widget-title">Order Total</h4>
+                  <h4 className="widget-title">Tổng thanh toán</h4>
                   <table className="table-bordered check-tbl mb-4">
                     <tbody>
                       <tr>
-                        <td>Order Subtotal</td>
+                        <td>Giá trị đơn hàng</td>
                         <td className="product-price">
                           {new Intl.NumberFormat("vi-VN", {
                             style: "currency",
@@ -486,7 +486,7 @@ function ShopCheckout() {
                         </td>
                       </tr>
                       <tr>
-                        <td>Discount</td>
+                        <td>Giảm giá</td>
                         <td className="product-price">
                           {discount > 0
                             ? `- ${new Intl.NumberFormat("vi-VN", {
@@ -497,7 +497,7 @@ function ShopCheckout() {
                         </td>
                       </tr>
                       <tr>
-                        <td>Total</td>
+                        <td>Thành tiền</td>
                         <td className="product-price-total">
                           {new Intl.NumberFormat("vi-VN", {
                             style: "currency",
@@ -507,13 +507,13 @@ function ShopCheckout() {
                       </tr>
                     </tbody>
                   </table>
-                  <h4 className="widget-title">Payment Method</h4>
-                  <SingleInput
+                  <h4 className="widget-title">Phương thức thanh toán</h4>
+                  {/* <SingleInput
                     title="Name on Card"
                     name="nameOnCard"
                     value={formData.nameOnCard}
                     onChange={handleChange}
-                  />
+                  /> */}
                   <div className="form-group">
                     <Form.Select
                       aria-label="Credit Card Type"
@@ -521,19 +521,15 @@ function ShopCheckout() {
                       value={formData.cardType}
                       onChange={handleChange}
                     >
-                      <option value="">Credit Card Type</option>
-                      <option value="Cashback credit cards">
-                        Cashback credit cards
-                      </option>
-                      <option value="Travel credit cards">
-                        Travel credit cards.
-                      </option>
-                      <option value="Business credit cards">
+                      <option value="">Phương thức thanh toán</option>
+                      <option value="Momo">Thanh toán qua momo</option>
+                      <option value="COD">Thanh toán khi nhận hàng</option>
+                      {/* <option value="Business credit cards">
                         Business credit cards
-                      </option>
+                      </option> */}
                     </Form.Select>
                   </div>
-                  <SingleInput
+                  {/* <SingleInput
                     title="Credit Card Number"
                     name="cardNumber"
                     value={formData.cardNumber}
@@ -545,14 +541,14 @@ function ShopCheckout() {
                     value={formData.cardCVV}
                     onChange={handleChange}
                     type="password"
-                  />
+                  /> */}
                   <div className="form-group">
                     <button
                       className="btn btn-primary btnhover"
                       type="button"
                       onClick={handlePlaceOrder}
                     >
-                      Place Order Now
+                      Đặt hàng
                     </button>
                   </div>
                 </form>
