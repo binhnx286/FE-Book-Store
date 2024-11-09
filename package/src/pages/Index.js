@@ -33,7 +33,7 @@ import BlogLargeSidebar from "./BlogLargeSidebar";
 import BlogListSidebar from "./BlogListSidebar";
 import BlogDetail from "./BlogDetail";
 import ContactUs from "./ContactUs";
-
+import PromotionsPage from "./Promotion";
 import ErrorPage from "./ErrorPage";
 import UnderConstruction from "./UnderConstruction";
 import ComingSoon from "./ComingSoon";
@@ -73,6 +73,7 @@ function Index() {
           <Route path="/books-list" exact element={<ShopList />} />
           <Route path="/search" exact element={<Search />} />
           <Route path="/categories" exact element={<Categories />} />
+          <Route path="/promotion" exact element={<PromotionsPage />} />
           <Route
             path="/books-list-view-sidebar"
             exact
