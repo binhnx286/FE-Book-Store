@@ -37,6 +37,7 @@ import PromotionsPage from "./Promotion";
 import ErrorPage from "./ErrorPage";
 import UnderConstruction from "./UnderConstruction";
 import ComingSoon from "./ComingSoon";
+import PromotionDetail from "./PromotionDetail";
 
 //images
 import logo from "./../assets/images/logo.png";
@@ -58,22 +59,23 @@ function Index() {
       <Routes>
         <Route path="/error-404" element={<ErrorPage />} />
         <Route path="/under-construction" element={<UnderConstruction />} />
-        <Route path="/coming-soon" element={<ComingSoon />} />
-        <Route path="/index-2" element={<Home2 />} />
+        {/* <Route path="/coming-soon" element={<ComingSoon />} /> */}
+        {/* <Route path="/index-2" element={<Home2 />} /> */}
         <Route element={<MainLayout />}>
           <Route path="/" exact element={<Home />} />
           <Route path="/about-us" exact element={<AboutUs />} />
           <Route path="/my-profile" exact element={<MyProfile />} />
           <Route path="/services" exact element={<Services />} />
-          <Route path="/faq" exact element={<Faq />} />
-          <Route path="/help-desk" exact element={<HelpDesk />} />
-          <Route path="/pricing" exact element={<Pricing />} />
-          <Route path="/privacy-policy" exact element={<PrivacyPolicy />} />
-          <Route path="/books-grid-view" exact element={<BooksGridView />} />
-          <Route path="/books-list" exact element={<ShopList />} />
+          {/* <Route path="/faq" exact element={<Faq />} /> */}
+          {/* <Route path="/help-desk" exact element={<HelpDesk />} /> */}
+          {/* <Route path="/pricing" exact element={<Pricing />} /> */}
+          {/* <Route path="/privacy-policy" exact element={<PrivacyPolicy />} /> */}
+          {/* <Route path="/books-grid-view" exact element={<BooksGridView />} /> */}
+          {/* <Route path="/books-list" exact element={<ShopList />} /> */}
           <Route path="/search" exact element={<Search />} />
           <Route path="/categories" exact element={<Categories />} />
           <Route path="/promotion" exact element={<PromotionsPage />} />
+          <Route path="/promotion-details/:id" element={<PromotionDetail />} />
           <Route
             path="/books-list-view-sidebar"
             exact

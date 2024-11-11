@@ -41,7 +41,7 @@ const BlogGrid = () => {
               ) : (
                 promotions.map((promo, index) => {
                   // Lấy URL hình ảnh từ description
-                  const imageUrl = extractImageUrl(promo.description);
+                  const imageUrl = promo.image;
 
                   return (
                     <Col key={index} xl={6} lg={6} className="mb-4">
@@ -52,7 +52,8 @@ const BlogGrid = () => {
                             <img
                               src={imageUrl}
                               alt={promo.name}
-                              className="w-50"
+                              className="w-100"
+                              style={{ height: "180px" }}
                             />
                           </div>
                         )}
@@ -89,7 +90,7 @@ const BlogGrid = () => {
             </Row>
 
             {/* Pagination (giả lập phân trang nếu cần) */}
-            <nav aria-label="Promotion Pagination">
+            {/* <nav aria-label="Promotion Pagination">
               <ul className="pagination text-center style-1 p-t20">
                 <li className="page-item">
                   <Link to="#" className="page-link prev">
@@ -117,7 +118,7 @@ const BlogGrid = () => {
                   </Link>
                 </li>
               </ul>
-            </nav>
+            </nav> */}
           </Container>
         </section>
       </div>
