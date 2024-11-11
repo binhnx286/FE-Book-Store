@@ -96,11 +96,13 @@ const PromotionDetail = () => {
                 variant="top"
                 src={product.image}
                 alt={product.name}
+                onClick={() => handleViewDetail(product.id)}
                 style={{
                   borderTopLeftRadius: "8px",
                   borderTopRightRadius: "8px",
                   maxHeight: "180px",
                   objectFit: "cover",
+                  cursor: "pointer",
                 }}
               />
               <Card.Body>
