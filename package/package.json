@@ -21,6 +21,7 @@
     "react-countup": "^6.4.1",
     "react-dom": "^18.2.0",
     "react-modal-video": "^2.0.0",
+    "react-rating": "^2.0.5",
     "react-router-dom": "^6.4.5",
     "react-scripts": "5.0.1",
     "react-scroll-to-top": "^3.0.0",

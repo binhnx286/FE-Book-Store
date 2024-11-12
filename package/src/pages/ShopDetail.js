@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import queryString from "query-string";
-import { Button, Nav, Tab } from "react-bootstrap";
+import { Button, Nav, Tab, Pagination } from "react-bootstrap";
 import Cookies from "js-cookie";
 import { toast } from "react-toastify";
+import Rating from "react-rating";
 
 // Component
 import ClientsSlider from "../components/Home/ClientsSlider";
@@ -16,37 +17,41 @@ import profile4 from "./../assets/images/profile4.jpg";
 import profile3 from "./../assets/images/profile3.jpg";
 import profile1 from "./../assets/images/profile1.jpg";
 
-// const relatedBook = [
-//   { image: book15, title: "Terrible Madness" },
-//   { image: book3, title: "Battle Drive" },
-//   { image: book5, title: "Terrible Madness" },
-// ];
+const relatedBook = [
+  { image: profile2, title: "Terrible Madness" },
+  { image: profile4, title: "Battle Drive" },
+  { image: profile3, title: "Terrible Madness" },
+];
 
-function CommentBlog({ title, image }) {
+function CommentBlog({ title, image, rating, feedback, date }) {
   return (
     <>
-      {/* <div className="comment-body" id="div-comment-3">
+      <div className="comment-body">
         <div className="comment-author vcard">
           <img src={image} alt="" className="avatar" />
           <cite className="fn">{title}</cite>{" "}
           <span className="says">says:</span>
           <div className="comment-meta">
-            <Link to={"#"}>December 28, 2022 at 6:14 am</Link>
+            <Link to={"#"}>{date}</Link>
+          </div>
+          <div className="dz-rating">
+            <Rating
+              emptySymbol="far fa-star"
+              fullSymbol="fas fa-star"
+              initialRating={rating}
+              readonly
+              style={{
+                color: "#FDCC0D",
+                fontSize: "16px",
+                marginRight: "16px",
+              }}
+            />
           </div>
         </div>
         <div className="comment-content dlab-page-text">
-          <p>
-            Donec suscipit porta lorem eget condimentum. Morbi vitae mauris in
-            leo venenatis varius. Aliquam nunc enim, egestas ac dui in, aliquam
-            vulputate erat.
-          </p>
+          <p>{feedback}</p>
         </div>
-        <div className="reply">
-          <Link to={"#"} className="comment-reply-link">
-            <i className="fa fa-reply"></i> Reply
-          </Link>
-        </div>
-      </div> */}
+      </div>
     </>
   );
 }
@@ -54,6 +59,11 @@ function CommentBlog({ title, image }) {
 function ShopDetail() {
   const [count, setCount] = useState(1);
   const [productData, setProductData] = useState(null);
+  const [ratingsData, setRatingsData] = useState(null);
+  const [newRating, setNewRating] = useState(4);
+  const [newFeedback, setNewFeedback] = useState("");
+  const [currentPage, setCurrentPage] = useState(1); // Added state for current page
+  const commentsPerPage = 5; // Number of comments per page
 
   const location = useLocation();
   const queryParams = queryString.parse(location.search);
@@ -63,6 +73,7 @@ function ShopDetail() {
     const fetchProductData = async () => {
       const productId = product || 2;
       try {
+        // Fetch product data
         const response = await fetch(
           `${process.env.REACT_APP_API_DOMAIN}/book/products/${productId}`
         );
@@ -73,6 +84,9 @@ function ShopDetail() {
 
         const data = await response.json();
         setProductData(data);
+
+        // Fetch ratings data
+        fetchRatingsData(productId);
       } catch (error) {
         console.error("Error:", error);
       }
@@ -80,6 +94,53 @@ function ShopDetail() {
 
     fetchProductData();
   }, [product]);
+
+  // Function to fetch ratings data
+  const fetchRatingsData = async (productId) => {
+    try {
+      const accessToken = Cookies.get("access");
+      if (accessToken) {
+        const ratingsResponse = await fetch(
+          `${process.env.REACT_APP_API_DOMAIN}/rating/ratings/${productId}/average_rating`,
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
+        );
+        if (!ratingsResponse.ok) {
+          throw new Error(`HTTP error! status: ${ratingsResponse.status}`);
+        }
+        const ratingsData = await ratingsResponse.json();
+        setRatingsData(ratingsData);
+      } else {
+        // User is not authenticated
+        setRatingsData(null);
+      }
+    } catch (error) {
+      console.error("Error fetching ratings:", error);
+    }
+  };
+
+  // Calculate pagination values
+  const [totalPages, setTotalPages] = useState(0);
+
+  useEffect(() => {
+    if (ratingsData && ratingsData.ratings) {
+      const total = Math.ceil(ratingsData.ratings.length / commentsPerPage);
+      setTotalPages(total);
+      if (currentPage > total) {
+        setCurrentPage(total);
+      }
+    }
+  }, [ratingsData, currentPage]);
+
+  const indexOfLastComment = currentPage * commentsPerPage;
+  const indexOfFirstComment = indexOfLastComment - commentsPerPage;
+  const currentComments =
+    ratingsData && ratingsData.ratings
+      ? ratingsData.ratings.slice(indexOfFirstComment, indexOfLastComment)
+      : [];
 
   if (!productData) {
     return <div>Loading...</div>;
@@ -107,7 +168,7 @@ function ShopDetail() {
   // Get the plain text description
   const plainDescription = stripHTML(productData.description || "");
 
-  // Limit the description to 200 characters
+  // Limit the description to 800 characters
   const maxLength = 800; // Adjust the length as needed
   const shortDescription =
     plainDescription.length > maxLength
@@ -121,8 +182,6 @@ function ShopDetail() {
     if (!accessToken) {
       // If the user is not logged in, redirect to login or show a message
       toast.error("Hãy đăng nhập để thêm vào giỏ hàng");
-      // You can redirect to login page if needed
-      // window.location.href = "/login";
       return;
     }
 
@@ -151,14 +210,61 @@ function ShopDetail() {
       .then((data) => {
         // Handle success (e.g., show a success message or update cart count)
         toast.success("Thêm sản phẩm thành công!");
-        // console.log("Add to cart response:", data);
       })
       .catch((error) => {
         // Handle errors (e.g., show an error message)
-        // console.error("Error adding to cart:", error);
         toast.error("Thêm sản phẩm thất bại!");
       });
   };
+
+  // Function to handle submitting a new review
+  const handleSubmitReview = (e) => {
+    e.preventDefault();
+    const accessToken = Cookies.get("access");
+    const user_id = Cookies.get("user_id");
+
+    if (!accessToken) {
+      // User is not logged in
+      toast.error("Hãy đăng nhập để đánh giá sản phẩm");
+      return;
+    }
+
+    const reviewData = {
+      user: user_id,
+      product: productData.id,
+      rate: newRating,
+      feed_back: newFeedback,
+    };
+
+    fetch(`${process.env.REACT_APP_API_DOMAIN}/rating/ratings/`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+      },
+      body: JSON.stringify(reviewData),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          return response.json().then((errorData) => {
+            throw new Error(errorData.message || "Failed to submit review.");
+          });
+        }
+        return response.json();
+      })
+      .then((data) => {
+        toast.success("Đánh giá của bạn đã được gửi!");
+        // Reset the form
+        setNewRating(0);
+        setNewFeedback("");
+        // Refresh the ratings data
+        fetchRatingsData(productData.id);
+      })
+      .catch((error) => {
+        toast.error("Gửi đánh giá thất bại!");
+      });
+  };
+
   return (
     <>
       <div className="page-content bg-grey">
@@ -176,23 +282,25 @@ function ShopDetail() {
                       <div className="shop-item-rating">
                         <div className="d-lg-flex d-sm-inline-flex d-flex align-items-center">
                           <ul className="dz-rating">
-                            <li>
-                              <i className="flaticon-star text-yellow"></i>
-                            </li>
-                            <li>
-                              <i className="flaticon-star text-yellow"></i>
-                            </li>
-                            <li>
-                              <i className="flaticon-star text-yellow"></i>
-                            </li>
-                            <li>
-                              <i className="flaticon-star text-yellow"></i>
-                            </li>
-                            <li>
-                              <i className="flaticon-star text-muted"></i>
-                            </li>
+                            <Rating
+                              emptySymbol="far fa-star"
+                              fullSymbol="fas fa-star"
+                              initialRating={
+                                ratingsData ? ratingsData.average_rating : 0
+                              }
+                              readonly
+                              style={{
+                                color: "#FDCC0D",
+                                fontSize: "24px",
+                                marginRight: "16px",
+                              }}
+                            />
                           </ul>
-                          <h6 className="m-b0">4.0</h6>
+                          <h4 className="m-b0">
+                            {ratingsData
+                              ? ratingsData.average_rating.toFixed(1)
+                              : "0.0"}
+                          </h4>
                         </div>
                         <div className="social-area">
                           <ul className="dz-social-icon style-3">
@@ -294,7 +402,7 @@ function ShopDetail() {
                             className="btn btn-primary btnhover btnhover2 flex justify-content-center"
                           >
                             {/* <i className="flaticon-shopping-cart-1"></i>{" "} */}
-                            <span style={{ "margin-left": "0" }}>
+                            <span style={{ marginLeft: "0" }}>
                               Thêm vào giỏ hàng
                             </span>
                           </Button>
@@ -318,7 +426,6 @@ function ShopDetail() {
                 </div>
               </div>
 
-              {/* Move the closing tags for container and section after the product details */}
               {/* Product Details and Reviews */}
               <div className="row mt-4">
                 <div className="col-xl-8">
@@ -341,31 +448,31 @@ function ShopDetail() {
                           <table className="table border book-overview">
                             <tbody>
                               <tr>
-                                <th>Book Title</th>
+                                <th>Tên sách</th>
                                 <td>{productData.name}</td>
                               </tr>
                               <tr>
-                                <th>Author</th>
+                                <th>Tác giả</th>
                                 <td>{productData.author}</td>
                               </tr>
                               <tr>
-                                <th>Publication Year</th>
+                                <th>Năm xuất bản</th>
                                 <td>{productData.publication_year}</td>
                               </tr>
                               <tr>
-                                <th>Publisher</th>
+                                <th>Nhà xuất bản</th>
                                 <td>{productData.publisher}</td>
                               </tr>
                               <tr>
-                                <th>Reprint Edition</th>
+                                <th>Tái bản</th>
                                 <td>{productData.reprint_edition}</td>
                               </tr>
                               <tr>
-                                <th>Dimensions</th>
+                                <th>Kích thước</th>
                                 <td>{productData.dimensions}</td>
                               </tr>
                               <tr>
-                                <th>Cover Type</th>
+                                <th>Loại bìa</th>
                                 <td>{productData.cover_type}</td>
                               </tr>
                             </tbody>
@@ -375,49 +482,70 @@ function ShopDetail() {
                           {/* Customer Reviews Section */}
                           <div className="clear" id="comment-list">
                             <div className="post-comments comments-area style-1 clearfix">
-                              <h4 className="comments-title">4 COMMENTS</h4>
+                              <h4 className="comments-title">Bình luận</h4>
                               <div id="comment">
-                                <ol className="comment-list">
-                                  <li
-                                    className="comment even thread-even depth-1 comment"
-                                    id="comment-2"
-                                  >
-                                    <CommentBlog
-                                      title="Michel Poe"
-                                      image={profile4}
-                                    />
-                                    <ol className="children">
+                                {currentComments &&
+                                currentComments.length > 0 ? (
+                                  <ol className="comment-list">
+                                    {currentComments.map((rating) => (
                                       <li
-                                        className="comment byuser comment-author-w3itexpertsuser bypostauthor odd alt depth-2 comment"
-                                        id="comment-3"
+                                        key={rating.id}
+                                        className="comment even thread-even depth-1 comment"
+                                        id={`comment-${rating.id}`}
                                       >
                                         <CommentBlog
-                                          title="Celesto Anderson"
-                                          image={profile3}
+                                          title={rating.user.name}
+                                          // image={profile4}
+                                          rating={rating.rate}
+                                          feedback={rating.feed_back}
+                                          // date={
+                                          //   rating.created_at || "Ngày đăng"
+                                          // }
                                         />
                                       </li>
-                                    </ol>
-                                  </li>
-                                  <li
-                                    className="comment even thread-odd thread-alt depth-1 comment"
-                                    id="comment-4"
-                                  >
-                                    <CommentBlog
-                                      title="Ryan"
-                                      image={profile2}
-                                    />
-                                  </li>
-                                  <li
-                                    className="comment odd alt thread-even depth-1 comment"
-                                    id="comment-5"
-                                  >
-                                    <CommentBlog
-                                      title="Stuart"
-                                      image={profile1}
-                                    />
-                                  </li>
-                                </ol>
+                                    ))}
+                                  </ol>
+                                ) : (
+                                  <p>Chưa có đánh giá nào.</p>
+                                )}
                               </div>
+                              {/* Pagination Controls */}
+                              {totalPages > 1 && (
+                                <Pagination className="mt-3">
+                                  <Pagination.First
+                                    onClick={() => setCurrentPage(1)}
+                                    disabled={currentPage === 1}
+                                  />
+                                  <Pagination.Prev
+                                    onClick={() =>
+                                      setCurrentPage((prev) => prev - 1)
+                                    }
+                                    disabled={currentPage === 1}
+                                  />
+                                  {Array.from(
+                                    { length: totalPages },
+                                    (_, index) => index + 1
+                                  ).map((number) => (
+                                    <Pagination.Item
+                                      key={number}
+                                      active={number === currentPage}
+                                      onClick={() => setCurrentPage(number)}
+                                    >
+                                      {number}
+                                    </Pagination.Item>
+                                  ))}
+                                  <Pagination.Next
+                                    onClick={() =>
+                                      setCurrentPage((prev) => prev + 1)
+                                    }
+                                    disabled={currentPage === totalPages}
+                                  />
+                                  <Pagination.Last
+                                    onClick={() => setCurrentPage(totalPages)}
+                                    disabled={currentPage === totalPages}
+                                  />
+                                </Pagination>
+                              )}
                               <div
                                 className="default-form comment-respond style-1"
                                 id="respond"
@@ -426,53 +554,40 @@ function ShopDetail() {
                                   className="comment-reply-title"
                                   id="reply-title"
                                 >
-                                  LEAVE A REPLY
-                                  <small>
-                                    <Link
-                                      to={"#"}
-                                      rel="nofollow"
-                                      id="cancel-comment-reply-link"
-                                      style={{ display: "none" }}
-                                    >
-                                      Cancel reply
-                                    </Link>
-                                  </small>
+                                  Đánh giá của bạn
                                 </h4>
                                 <div className="clearfix">
                                   <form
-                                    method="post"
+                                    onSubmit={handleSubmitReview}
                                     id="comments_form"
                                     className="comment-form"
                                     noValidate
                                   >
-                                    <p className="comment-form-author">
-                                      <input
-                                        id="name"
-                                        placeholder="Author"
-                                        name="author"
-                                        type="text"
-                                        value=""
-                                      />
-                                    </p>
-                                    <p className="comment-form-email">
-                                      <input
-                                        id="email"
-                                        required="required"
-                                        placeholder="Email"
-                                        name="email"
-                                        type="email"
-                                        value=""
-                                      />
-                                    </p>
+                                    <Rating
+                                      emptySymbol="far fa-star"
+                                      fullSymbol="fas fa-star"
+                                      initialRating={newRating}
+                                      onChange={(value) => setNewRating(value)}
+                                      style={{
+                                        color: "#FDCC0D",
+                                        marginLeft: "20px",
+                                        marginBottom: "20px",
+                                        fontSize: "24px",
+                                      }}
+                                    />
                                     <p className="comment-form-comment">
                                       <textarea
                                         id="comments"
-                                        placeholder="Type Comment Here"
+                                        placeholder="Viết bình luận của bạn"
                                         className="form-control4"
                                         name="comment"
                                         cols="45"
                                         rows="3"
                                         required="required"
+                                        value={newFeedback}
+                                        onChange={(e) =>
+                                          setNewFeedback(e.target.value)
+                                        }
                                       ></textarea>
                                     </p>
                                     <p className="col-md-12 col-sm-12 col-xs-12 form-submit">
@@ -481,7 +596,7 @@ function ShopDetail() {
                                         type="submit"
                                         className="submit btn btn-primary filled"
                                       >
-                                        Submit Now{" "}
+                                        Gửi đánh giá{" "}
                                         <i className="fa fa-angle-right m-l10"></i>
                                       </button>
                                     </p>
@@ -496,9 +611,9 @@ function ShopDetail() {
                   </Tab.Container>
                 </div>
                 {/* Related Books Section */}
-                {/* <div className="col-xl-4 mt-5 mt-xl-0">
+                <div className="col-xl-4 mt-5 mt-xl-0">
                   <div className="widget">
-                    <h4 className="widget-title">Related Books</h4>
+                    <h4 className="widget-title">Đề xuất cho bạn</h4>
                     <div className="row">
                       {relatedBook.map((data, index) => (
                         <div className="col-xl-12 col-lg-6" key={index}>
@@ -530,7 +645,7 @@ function ShopDetail() {
                       ))}
                     </div>
                   </div>
-                </div> */}
+                </div>
               </div>
               {/* Close the container and section divs here */}
             </div>

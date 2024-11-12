@@ -529,7 +529,7 @@ function Categories() {
                           </div>
                           <div className="dz-content">
                             <h5 className="title" style={{ height: "56px" }}>
-                              <Link to={`/books-grid-view/${product.id}`}>
+                              <Link to={`/books-detail/?product=${product.id}`}>
                                 {truncateText(product.name, 30)}
                               </Link>
                             </h5>

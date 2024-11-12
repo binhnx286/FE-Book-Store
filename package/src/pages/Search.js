@@ -87,6 +87,7 @@ function Search() {
   const [sortOrder, setSortOrder] = useState(null); // 'asc' cho tăng dần, 'desc' cho giảm dần
   const [currentPage, setCurrentPage] = useState(1); // Trang hiện tại
   const itemsPerPage = 12; // Số sản phẩm trên mỗi trang
+  const [viewed, setViewed] = useState(1);
 
   const location = useLocation();
   const queryParams = queryString.parse(location.search);
@@ -114,6 +115,7 @@ function Search() {
         setPublishers(data.publishers);
         setAuthors(data.authors);
         setPublicationYears(data.publication_years);
+        setViewed(data.viewed);
       } else {
         // khong tim thay
         setBooks([]);
@@ -438,7 +440,9 @@ function Search() {
                               height: "56px",
                             }}
                           >
-                            {truncateText(data.name, 30)}
+                            <Link to={`/books-detail/?product=${data.id}`}>
+                              {truncateText(data.name, 30)}
+                            </Link>
                           </h5>
                           <ul>
                             <li>{data.sub_category}</li>
