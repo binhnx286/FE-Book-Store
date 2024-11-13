@@ -16,6 +16,7 @@ import profile2 from "./../assets/images/profile2.jpg";
 import profile4 from "./../assets/images/profile4.jpg";
 import profile3 from "./../assets/images/profile3.jpg";
 import profile1 from "./../assets/images/profile1.jpg";
+import avatar from "./../assets/images/avatar.jpg";
 
 const relatedBook = [
   { image: profile2, title: "Terrible Madness" },
@@ -64,6 +65,7 @@ function ShopDetail() {
   const [newFeedback, setNewFeedback] = useState("");
   const [currentPage, setCurrentPage] = useState(1); // Added state for current page
   const commentsPerPage = 5; // Number of comments per page
+  const [viewed, setViewed] = useState(1);
 
   const location = useLocation();
   const queryParams = queryString.parse(location.search);
@@ -71,7 +73,7 @@ function ShopDetail() {
 
   useEffect(() => {
     const fetchProductData = async () => {
-      const productId = product || 2;
+      const productId = product || 1;
       try {
         // Fetch product data
         const response = await fetch(
@@ -84,6 +86,24 @@ function ShopDetail() {
 
         const data = await response.json();
         setProductData(data);
+        // setViewed(data.viewed);
+
+        // console.log("Current viewed count from server: " + data.viewed);
+
+        const newViewed = data.viewed + 1;
+        setViewed(newViewed);
+        // console.log("Incremented viewed count: " + newViewed);
+
+        await fetch(
+          `${process.env.REACT_APP_API_DOMAIN}/book/products/${productId}/`,
+          {
+            method: "PATCH",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ viewed: newViewed }),
+          }
+        );
 
         // Fetch ratings data
         fetchRatingsData(productId);
@@ -91,7 +111,6 @@ function ShopDetail() {
         console.error("Error:", error);
       }
     };
-
     fetchProductData();
   }, [product]);
 
@@ -357,11 +376,11 @@ function ShopDetail() {
                             </div>
                           </li>
                           <li>
-                            <span>Publisher </span>
+                            <span>Nhà xuất bản </span>
                             {productData.publisher}
                           </li>
                           <li>
-                            <span>Year </span>
+                            <span>Năm xuất bản</span>
                             {productData.publication_year}
                           </li>
                         </ul>
@@ -369,9 +388,9 @@ function ShopDetail() {
                       <p className="text-1">{shortDescription}</p>
                       <div className="book-footer">
                         <div className="price">
-                          <h5>{productData.new_price.toLocaleString()} VND</h5>
+                          <h5>{productData.new_price.toLocaleString()}₫</h5>
                           <p className="p-lr10">
-                            {productData.price_origin.toLocaleString()} VND
+                            {productData.price_origin.toLocaleString()}₫
                           </p>
                         </div>
                         <div className="product-num">
@@ -495,7 +514,7 @@ function ShopDetail() {
                                       >
                                         <CommentBlog
                                           title={rating.user.name}
-                                          // image={profile4}
+                                          image={avatar}
                                           rating={rating.rate}
                                           feedback={rating.feed_back}
                                           // date={
