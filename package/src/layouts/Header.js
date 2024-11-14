@@ -625,7 +625,7 @@ function Header({ onSearch }) {
         </Modal.Footer>
       </Modal>
       <ToastContainer />
-      
+
       <div className="header-info-bar">
         <div className="container clearfix">
           {/* <!-- Website Logo --> */}
@@ -717,7 +717,7 @@ function Header({ onSearch }) {
                             </div>
                           </Link>
                           <Link
-                            to={"/shop-cart"}
+                            to={"/cart"}
                             className="dropdown-item d-flex justify-content-between align-items-center ai-icon"
                           >
                             <div>

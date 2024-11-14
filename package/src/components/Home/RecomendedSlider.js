@@ -84,7 +84,9 @@ export default function RecomendedSlider() {
               data-wow-delay="0.1s"
             >
               <div className="dz-media">
-                <img src={product.image} alt={product.name} />
+                <Link to={`/books-detail/?product=${product.id}`}>
+                  <img src={product.image} alt={product.name} />
+                </Link>
               </div>
               <div className="dz-content">
                 <h5

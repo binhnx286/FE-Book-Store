@@ -122,6 +122,24 @@ function ShopCart() {
     }
   };
 
+  const handleInputChange = (e, itemId) => {
+    let newQuantity = parseInt(e.target.value, 10);
+    if (isNaN(newQuantity) || newQuantity <= 0) {
+      newQuantity = 1; // Đặt số lượng tối thiểu là 1 nếu giá trị không hợp lệ
+    }
+    updateCartItemQuantity(itemId, newQuantity);
+    const updatedCartItems = cartItems.map((item) =>
+      item.id === itemId
+        ? {
+            ...item,
+            quantity: newQuantity,
+            total: (item.total / item.quantity) * newQuantity,
+          }
+        : item
+    );
+    setShopData({ ...shopData, cart_items: updatedCartItems });
+  }
+
   const updateCartItemQuantity = async (itemId, newQuantity) => {
     const accessToken = Cookies.get("access");
     if (!accessToken) {
@@ -167,7 +185,7 @@ function ShopCart() {
   return (
     <>
       <div className="page-content">
-        <PageTitle parentPage="Shop" childPage="Cart" />
+        <PageTitle parentPage="Trang chủ" childPage="Giỏ hàng" />
         <section className="content-inner shop-account">
           <div className="container">
             {error && (
@@ -229,7 +247,6 @@ function ShopCart() {
                                     type="text"
                                     className="quantity-input"
                                     value={item.quantity}
-                                    readOnly
                                   />
                                   <button
                                     className="btn btn-minus"

@@ -168,12 +168,28 @@ function ShopDetail() {
   const handleIncrement = () => {
     if (count < productData.quantity) {
       setCount(count + 1);
+    } else {
+      toast.error("Vượt quá số lượng sản phẩm cho phép");
     }
   };
 
   const handleDecrement = () => {
     if (count > 1) {
       setCount(count - 1);
+    }
+  };
+
+  const handleInputChange = (event) => {
+    const value = event.target.value;
+    const parsedValue = parseInt(value, 10);
+
+    if (isNaN(parsedValue) || parsedValue < 1) {
+      setCount(1);
+    } else if (parsedValue > productData.quantity) {
+      setCount(productData.quantity);
+      toast.error("Vượt quá số lượng sản phẩm cho phép");
+    } else {
+      setCount(parsedValue);
     }
   };
 
@@ -406,7 +422,7 @@ function ShopDetail() {
                               className="quantity-input"
                               type="text"
                               value={count}
-                              readOnly
+                              onChange={handleInputChange}
                             />
                             <button
                               className="btn btn-minus"
