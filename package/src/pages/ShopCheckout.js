@@ -8,26 +8,11 @@ import PageTitle from "./../layouts/PageTitle";
 
 // Images
 import book1 from "./../assets/images/books/grid/book1.jpg";
-import book2 from "./../assets/images/books/grid/book2.jpg";
-import book3 from "./../assets/images/books/grid/book3.jpg";
-import book4 from "./../assets/images/books/grid/book4.jpg";
-import book5 from "./../assets/images/books/grid/book5.jpg";
 
 // Mapping product ID to images
 const productImages = {
-  90: book1, // Giả sử product ID 90 tương ứng với book1.jpg
-  // Thêm các mapping khác nếu cần
-  // Ví dụ:
-  // 91: book2,
-  // 92: book3,
-  // ...
+  90: book1,
 };
-
-const inputData = [
-  { name1: "Apartment, suite, unit etc.", name2: "Town / City" },
-  { name1: "State / County", name2: "Postcode / Zip" },
-  { name1: "Email", name2: "Phone" },
-];
 
 const SingleInput = ({
   title,
@@ -35,6 +20,7 @@ const SingleInput = ({
   value,
   onChange,
   type = "text",
+  name,
 }) => {
   return (
     <div className={`form-group ${changeClass}`}>
@@ -44,20 +30,21 @@ const SingleInput = ({
         placeholder={title}
         value={value}
         onChange={onChange}
+        name={name}
       />
     </div>
   );
 };
 
 function ShopCheckout() {
-  const [accordBtn, setAccordBtn] = useState(false);
   const [cartData, setCartData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
   // State quản lý form
   const [formData, setFormData] = useState({
-    country: "",
+    province: "",
+    district: "",
+    ward: "",
     firstName: "",
     lastName: "",
     companyName: "",
@@ -76,6 +63,91 @@ function ShopCheckout() {
     cardCVV: "",
   });
 
+  // State lưu trữ danh sách tỉnh/thành phố, quận/huyện, phường/xã
+  const [provinces, setProvinces] = useState([]);
+  const [districts, setDistricts] = useState([]);
+  const [wards, setWards] = useState([]);
+
+  // State lưu trữ phí vận chuyển
+  const [shippingFee, setShippingFee] = useState(0);
+
+  const FROM_DISTRICT_ID = 1542; // Mã quận/huyện gửi hàng của bạn
+  const SHOP_ID = 195350; // Mã shop của bạn
+
+  // fetch province
+  useEffect(() => {
+    const fetchProvinces = async () => {
+      try {
+        const token = process.env.REACT_APP_SHIPPING_TOKEN;
+        const config = {
+          headers: {
+            Token: token,
+            "Content-Type": "application/json",
+          },
+        };
+
+        const response = await axios.get(
+          "https://dev-online-gateway.ghn.vn/shiip/public-api/master-data/province",
+          config
+        );
+        const provincesData = response.data.data;
+        setProvinces(provincesData);
+      } catch (error) {
+        console.error("Error fetching provinces:", error);
+      }
+    };
+
+    fetchProvinces();
+  }, []);
+
+  // Hàm fetch districts khi chọn province
+  const fetchDistricts = async (provinceId) => {
+    try {
+      const token = process.env.REACT_APP_SHIPPING_TOKEN;
+
+      const config = {
+        headers: {
+          Token: token,
+          "Content-Type": "application/json",
+        },
+      };
+
+      const response = await axios.post(
+        "https://dev-online-gateway.ghn.vn/shiip/public-api/master-data/district",
+        { province_id: Number(provinceId) },
+        config
+      );
+      const districtsData = response.data.data;
+      setDistricts(districtsData);
+    } catch (error) {
+      console.error("Error fetching districts:", error);
+    }
+  };
+
+  // Hàm fetch wards khi chọn district
+  const fetchWards = async (districtId) => {
+    try {
+      const token = process.env.REACT_APP_SHIPPING_TOKEN;
+
+      const config = {
+        headers: {
+          Token: token,
+          "Content-Type": "application/json",
+        },
+      };
+
+      const response = await axios.post(
+        "https://dev-online-gateway.ghn.vn/shiip/public-api/master-data/ward",
+        { district_id: Number(districtId) },
+        config
+      );
+      const wardsData = response.data.data;
+      setWards(wardsData);
+    } catch (error) {
+      console.error("Error fetching wards:", error);
+    }
+  };
+
   useEffect(() => {
     const fetchCartData = async () => {
       try {
@@ -93,7 +165,6 @@ function ShopCheckout() {
           headers: {
             Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
-            // Thêm các headers khác nếu cần
           },
         };
 
@@ -118,6 +189,122 @@ function ShopCheckout() {
     fetchCartData();
   }, []);
 
+  // Hàm xử lý thay đổi input
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+
+    setFormData((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
+
+    if (name === "province") {
+      fetchDistricts(value);
+      setFormData((prevState) => ({
+        ...prevState,
+        district: "",
+        ward: "",
+      }));
+      setDistricts([]);
+      setWards([]);
+    } else if (name === "district") {
+      fetchWards(value);
+      setFormData((prevState) => ({
+        ...prevState,
+        ward: "",
+      }));
+      setWards([]);
+    }
+  };
+
+  // Gọi calculateShippingFee khi người dùng chọn xong phường/xã
+  useEffect(() => {
+    if (formData.province && formData.district && formData.ward) {
+      calculateShippingFee();
+    }
+  }, [formData.province, formData.district, formData.ward]);
+
+  // Hàm lấy service_id
+  const getServiceId = async () => {
+    try {
+      const token = process.env.REACT_APP_SHIPPING_TOKEN;
+      const config = {
+        headers: {
+          Token: token,
+          "Content-Type": "application/json",
+        },
+      };
+
+      const payload = {
+        shop_id: SHOP_ID,
+        from_district: FROM_DISTRICT_ID,
+        to_district: Number(formData.district),
+      };
+
+      const response = await axios.post(
+        "https://dev-online-gateway.ghn.vn/shiip/public-api/v2/shipping-order/available-services",
+        payload,
+        config
+      );
+
+      const services = response.data.data;
+
+      if (services && services.length > 0) {
+        const serviceId = services[0].service_id;
+        return serviceId;
+      } else {
+        throw new Error("Không tìm thấy dịch vụ vận chuyển phù hợp.");
+      }
+    } catch (error) {
+      console.error("Error getting service ID:", error);
+    }
+  };
+
+  // Hàm tính phí vận chuyển
+  const calculateShippingFee = async () => {
+    try {
+      const serviceId = await getServiceId();
+
+      if (!serviceId) {
+        throw new Error("Không thể lấy service_id.");
+      }
+
+      const token = process.env.REACT_APP_SHIPPING_TOKEN;
+      const config = {
+        headers: {
+          Token: token,
+          "Content-Type": "application/json",
+        },
+      };
+
+      const payload = {
+        // service_id: serviceId,
+        service_id: 53321,
+        // insurance_value: cartData.total,
+        insurance_value: 500000,
+        coupon: null,
+        from_district_id: FROM_DISTRICT_ID,
+        to_district_id: Number(formData.district),
+        to_ward_code: formData.ward,
+        height: 15,
+        length: 15,
+        weight: 1000,
+        width: 15,
+      };
+
+      const response = await axios.post(
+        "https://dev-online-gateway.ghn.vn/shiip/public-api/v2/shipping-order/fee",
+        payload,
+        config
+      );
+
+      const shippingFee = response.data.data.total;
+      setShippingFee(shippingFee);
+    } catch (error) {
+      console.error("Error calculating shipping fee:", error);
+    }
+  };
+
   if (loading) {
     return <div className="page-content">Đang tải dữ liệu...</div>;
   }
@@ -127,15 +314,6 @@ function ShopCheckout() {
   }
 
   const { discount, sub_total, total, cart_items } = cartData;
-
-  // Hàm xử lý thay đổi input
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }));
-  };
 
   // Hàm xử lý đặt hàng
   const handlePlaceOrder = async () => {
@@ -157,35 +335,28 @@ function ShopCheckout() {
         },
       };
 
-      // Tạo payload từ formData và cartData
-      //   const payload = {
-      //     billing_address: {
-      //       country: formData.country,
-      //       first_name: formData.firstName,
-      //       last_name: formData.lastName,
-      //       company: formData.companyName,
-      //       address: formData.address,
-      //       apartment: formData.apartment,
-      //       town: formData.town,
-      //       state: formData.state,
-      //       postcode: formData.postcode,
-      //       email: formData.email,
-      //       phone: formData.phone,
-      //     },
-      //     notes: formData.notes,
-      //     payment_method: "credit_card",
-      //     payment_details: {
-      //       name_on_card: formData.nameOnCard,
-      //       card_type: formData.cardType,
-      //       card_number: formData.cardNumber,
-      //       cvv: formData.cardCVV,
-      //     },
-      //   };
+      // Tạo payload từ formData và các thông tin cần thiết
+      const payload = {
+        // shipping_address: {
+        //   province_id: Number(formData.province),
+        //   district_id: Number(formData.district),
+        //   ward_code: formData.ward,
+        //   address: formData.address,
+        //   apartment: formData.apartment,
+        // },
+        // full_name: formData.firstName,
+        // email: formData.email,
+        // phone: formData.phone,
+        // payment_method: formData.cardType,
+        // shipping_fee: shippingFee,
+        // Thêm các thông tin khác nếu API yêu cầu
+        shipping: shippingFee,
+      };
 
       // Gọi API đặt hàng
       const response = await axios.post(
         `${process.env.REACT_APP_API_DOMAIN}/cart/checkout/`,
-        {},
+        payload,
         config
       );
 
@@ -214,223 +385,103 @@ function ShopCheckout() {
           {/* <!-- Product --> */}
           <div className="container">
             <form className="shop-form">
-              {/* <div className="row">
+              <div className="row">
                 <div className="col-lg-6 col-md-6">
                   <div className="widget">
-                    <h4 className="widget-title">Billing & Shipping Address</h4>
+                    <h4 className="widget-title">
+                      Địa chỉ thanh toán và giao hàng
+                    </h4>
                     <div className="form-group">
                       <Form.Select
-                        aria-label="Country Select"
-                        name="country"
-                        value={formData.country}
+                        aria-label="Province Select"
+                        name="province"
+                        value={formData.province}
                         onChange={handleChange}
+                        className="mb-3"
                       >
-                        <option value="">Chọn Quốc Gia</option>
-                        <option value="1">Afghanistan</option>
-                        <option value="2">Albania</option>
-                        <option value="3">Algeria</option>
-                        <option value="4">Andorra</option>
-                        <option value="5">Angola</option>
-                        <option value="6">Anguilla</option>
-                        <option value="7">Antarctica</option>
-                        <option value="8">Antigua and Barbuda</option>
-                        <option value="9">Argentina</option>
-                        <option value="10">Armenia</option>
-                        <option value="11">Aruba</option>
-                        <option value="12">Australia</option>
+                        <option value="">Chọn tỉnh/thành phố</option>
+                        {provinces.map((province) => (
+                          <option
+                            key={province.ProvinceID}
+                            value={province.ProvinceID}
+                          >
+                            {province.ProvinceName}
+                          </option>
+                        ))}
+                      </Form.Select>
+
+                      <Form.Select
+                        aria-label="District Select"
+                        name="district"
+                        value={formData.district}
+                        onChange={handleChange}
+                        className="mb-3"
+                        disabled={!formData.province}
+                      >
+                        <option value="">Chọn quận/huyện</option>
+                        {districts.map((district) => (
+                          <option
+                            key={district.DistrictID}
+                            value={district.DistrictID}
+                          >
+                            {district.DistrictName}
+                          </option>
+                        ))}
+                      </Form.Select>
+
+                      <Form.Select
+                        aria-label="Ward Select"
+                        name="ward"
+                        value={formData.ward}
+                        onChange={handleChange}
+                        className="mb-3"
+                        disabled={!formData.district}
+                      >
+                        <option value="">Chọn phường/xã</option>
+                        {wards.map((ward) => (
+                          <option key={ward.WardCode} value={ward.WardCode}>
+                            {ward.WardName}
+                          </option>
+                        ))}
                       </Form.Select>
                     </div>
                     <div className="row">
                       <SingleInput
-                        changeClass="col-md-6"
-                        title="First Name"
+                        title="Địa chỉ"
+                        name="address"
+                        value={formData.address}
+                        onChange={handleChange}
+                      />
+                      <SingleInput
+                        // changeClass="col-md-6"
+                        title="Họ và tên"
                         name="firstName"
                         value={formData.firstName}
                         onChange={handleChange}
                       />
-                      <SingleInput
-                        changeClass="col-md-6"
-                        title="Last Name"
-                        name="lastName"
-                        value={formData.lastName}
-                        onChange={handleChange}
-                      />
                     </div>
                     <SingleInput
-                      title="Company Name"
-                      name="companyName"
-                      value={formData.companyName}
+                      title="Căn hộ, tòa nhà,..."
+                      name="apartment"
+                      value={formData.apartment}
                       onChange={handleChange}
                     />
                     <SingleInput
-                      title="Address"
-                      name="address"
-                      value={formData.address}
+                      title="Email"
+                      name="email"
+                      value={formData.email}
                       onChange={handleChange}
                     />
-                    {inputData.map((data, index) => (
-                      <div className="row" key={index}>
-                        <div className="form-group col-md-6">
-                          <input
-                            type="text"
-                            className="form-control"
-                            placeholder={data.name1}
-                            name="apartment"
-                            value={formData.apartment}
-                            onChange={handleChange}
-                          />
-                        </div>
-                        <div className="form-group col-md-6">
-                          <input
-                            type="text"
-                            className="form-control"
-                            placeholder={data.name2}
-                            name={data.name2.toLowerCase().replace(/\s+/g, "")}
-                            value={
-                              formData[
-                                data.name2.toLowerCase().replace(/\s+/g, "")
-                              ]
-                            }
-                            onChange={handleChange}
-                          />
-                        </div>
-                      </div>
-                    ))}
-                    <button
-                      className="btn btn-primary btnhover mb-3"
-                      type="button"
-                      data-bs-toggle="collapse"
-                      data-bs-target="#create-an-account"
-                    >
-                      Create an account{" "}
-                      <i className="fa fa-arrow-circle-o-down"></i>
-                    </button>
-                    <div id="create-an-account" className="collapse">
-                      <p>
-                        Create an account by entering the information below. If
-                        you are a returning customer please login at the top of
-                        the page.
-                      </p>
-                      <div className="form-group">
-                        <SingleInput
-                          title="Password"
-                          name="password"
-                          type="password"
-                          value={formData.password}
-                          onChange={handleChange}
-                        />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div className="col-lg-6 col-md-6">
-                  <button
-                    className="btn btn-primary btnhover mb-3"
-                    type="button"
-                    onClick={() => setAccordBtn(!accordBtn)}
-                  >
-                    Ship to a different address{" "}
-                    <i className="fa fa-arrow-circle-o-down"></i>
-                  </button>
-                  <Collapse in={accordBtn}>
-                    <div>
-                      <p>
-                        If you have shopped with us before, please enter your
-                        details in the boxes below. If you are a new customer
-                        please proceed to the Billing & Shipping section.
-                      </p>
-                      <div className="form-group">
-                        <Form.Select
-                          aria-label="Country Select"
-                          name="countryDifferent"
-                          value={formData.countryDifferent}
-                          onChange={handleChange}
-                        >
-                          <option value="">Chọn Quốc Gia</option>
-                          <option value="1">Afghanistan</option>
-                          <option value="2">Albania</option>
-                          <option value="3">Algeria</option>
-                          <option value="4">Andorra</option>
-                          <option value="5">Angola</option>
-                          <option value="6">Anguilla</option>
-                          <option value="7">Antarctica</option>
-                          <option value="8">Antigua and Barbuda</option>
-                          <option value="9">Argentina</option>
-                          <option value="10">Armenia</option>
-                          <option value="11">Aruba</option>
-                          <option value="12">Australia</option>
-                        </Form.Select>
-                      </div>
-                      <div className="row">
-                        <SingleInput
-                          changeClass="col-md-6"
-                          title="First Name"
-                          name="firstNameDifferent"
-                          value={formData.firstNameDifferent}
-                          onChange={handleChange}
-                        />
-                        <SingleInput
-                          changeClass="col-md-6"
-                          title="Last Name"
-                          name="lastNameDifferent"
-                          value={formData.lastNameDifferent}
-                          onChange={handleChange}
-                        />
-                      </div>
-                      <SingleInput
-                        title="Company Name"
-                        name="companyNameDifferent"
-                        value={formData.companyNameDifferent}
-                        onChange={handleChange}
-                      />
-                      <SingleInput
-                        title="Address"
-                        name="addressDifferent"
-                        value={formData.addressDifferent}
-                        onChange={handleChange}
-                      />
-                      {inputData.map((data, index) => (
-                        <div className="row" key={index}>
-                          <div className="form-group col-md-6">
-                            <input
-                              type="text"
-                              className="form-control"
-                              placeholder={data.name1}
-                              name={`apartmentDifferent${index}`}
-                              value={formData[`apartmentDifferent${index}`]}
-                              onChange={handleChange}
-                            />
-                          </div>
-                          <div className="form-group col-md-6">
-                            <input
-                              type="text"
-                              className="form-control"
-                              placeholder={data.name2}
-                              name={`fieldDifferent${index}`}
-                              value={formData[`fieldDifferent${index}`]}
-                              onChange={handleChange}
-                            />
-                          </div>
-                        </div>
-                      ))}
-                      <p>
-                        Create an account by entering the information below. If
-                        you are a returning customer please login at the top of
-                        the page.
-                      </p>
-                    </div>
-                  </Collapse>
-                  <div className="form-group">
-                    <textarea
-                      className="form-control"
-                      placeholder="Notes about your order, e.g. special notes for delivery"
-                      name="notes"
-                      value={formData.notes}
+                    <SingleInput
+                      title="Số điện thoại"
+                      name="phone"
+                      value={formData.phone}
                       onChange={handleChange}
-                    ></textarea>
+                    />
                   </div>
                 </div>
-              </div> */}
+                {/* Phần còn lại của form nếu cần */}
+              </div>
             </form>
             <div className="dz-divider bg-gray-dark text-gray-dark icon-center my-5">
               <i className="fa fa-circle bg-white text-gray-dark"></i>
@@ -493,7 +544,18 @@ function ShopCheckout() {
                                 style: "currency",
                                 currency: "VND",
                               }).format(discount)}`
-                            : "No Discount"}
+                            : "Không có"}
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>Phí vận chuyển</td>
+                        <td className="product-price">
+                          {shippingFee > 0
+                            ? `${new Intl.NumberFormat("vi-VN", {
+                                style: "currency",
+                                currency: "VND",
+                              }).format(shippingFee)}`
+                            : "Đang tính..."}
                         </td>
                       </tr>
                       <tr>
@@ -502,46 +564,25 @@ function ShopCheckout() {
                           {new Intl.NumberFormat("vi-VN", {
                             style: "currency",
                             currency: "VND",
-                          }).format(total)}
+                          }).format(total + shippingFee)}
                         </td>
                       </tr>
                     </tbody>
                   </table>
+
                   <h4 className="widget-title">Phương thức thanh toán</h4>
-                  {/* <SingleInput
-                    title="Name on Card"
-                    name="nameOnCard"
-                    value={formData.nameOnCard}
-                    onChange={handleChange}
-                  /> */}
                   <div className="form-group">
                     <Form.Select
-                      aria-label="Credit Card Type"
+                      aria-label="Payment Method"
                       name="cardType"
                       value={formData.cardType}
                       onChange={handleChange}
                     >
-                      <option value="">Phương thức thanh toán</option>
-                      <option value="Momo">Thanh toán qua momo</option>
+                      <option value="">Chọn phương thức thanh toán</option>
+                      <option value="Momo">Thanh toán qua Momo</option>
                       <option value="COD">Thanh toán khi nhận hàng</option>
-                      {/* <option value="Business credit cards">
-                        Business credit cards
-                      </option> */}
                     </Form.Select>
                   </div>
-                  {/* <SingleInput
-                    title="Credit Card Number"
-                    name="cardNumber"
-                    value={formData.cardNumber}
-                    onChange={handleChange}
-                  />
-                  <SingleInput
-                    title="Card Verification Number"
-                    name="cardCVV"
-                    value={formData.cardCVV}
-                    onChange={handleChange}
-                    type="password"
-                  /> */}
                   <div className="form-group">
                     <button
                       className="btn btn-primary btnhover"
