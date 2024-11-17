@@ -19,7 +19,8 @@ function Slide() {
         <img
           className="d-block w-100"
           src="https://theme.hstatic.net/200000845405/1001223012/14/home_slider_image_2.jpg"
-          alt="First slide"
+          alt="Khuyễn mãi"
+          title="Khuyễn mãi"
           style={{ height: "100%", objectFit: "cover" }}
         />
       </Carousel.Item>
@@ -31,7 +32,8 @@ function Slide() {
         <img
           className="d-block w-100"
           src="https://sachkhainguyen.com/wp-content/uploads/2023/03/slide-3.jpg"
-          alt="Second slide"
+          alt="Khuyễn mãi"
+          title="Khuyễn mãi"
           style={{ height: "100%", objectFit: "cover" }}
         />
       </Carousel.Item>
@@ -43,7 +45,8 @@ function Slide() {
         <img
           className="d-block w-100"
           src="https://bookbuy.vn/Res/Images/Album/00456729-e290-44a5-bbe9-da9a261ff77b.png?w=920&h=420&mode=crop"
-          alt="Third slide"
+          alt="Khuyễn mãi"
+          title="Khuyễn mãi"
           style={{ height: "100%", objectFit: "cover" }}
         />
       </Carousel.Item>

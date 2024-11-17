@@ -57,7 +57,7 @@ function Index() {
 				<Footer  footerChange="footer-dark" logoImage={logoWhite} />		
 			</Route> */}
       <Routes>
-        <Route path="/error-404" element={<ErrorPage />} />
+        <Route path="*" element={<ErrorPage />} />
         <Route path="/under-construction" element={<UnderConstruction />} />
         {/* <Route path="/coming-soon" element={<ComingSoon />} /> */}
         {/* <Route path="/index-2" element={<Home2 />} /> */}

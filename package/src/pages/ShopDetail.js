@@ -29,7 +29,7 @@ function CommentBlog({ title, image, rating, feedback, date }) {
     <>
       <div className="comment-body">
         <div className="comment-author vcard">
-          <img src={image} alt="" className="avatar" />
+          {/* <img src={image} alt="" className="avatar" /> */}
           <cite className="fn">{title}</cite>{" "}
           <span className="says">says:</span>
           <div className="comment-meta">
@@ -66,6 +66,7 @@ function ShopDetail() {
   const [currentPage, setCurrentPage] = useState(1); // Added state for current page
   const commentsPerPage = 5; // Number of comments per page
   const [viewed, setViewed] = useState(1);
+  const [recommendedProducts, setRecommendedProducts] = useState([]);
 
   const location = useLocation();
   const queryParams = queryString.parse(location.search);
@@ -129,6 +130,35 @@ function ShopDetail() {
       console.error("Error fetching ratings:", error);
     }
   };
+
+  useEffect(() => {
+    const fetchRecommendedProducts = async () => {
+      const user_id = Cookies.get("user_id");
+      if (!user_id) {
+        setRecommendedProducts([]); // Ẩn phần đề xuất nếu người dùng chưa đăng nhập
+        return;
+      }
+      try {
+        const response = await fetch(
+          `${process.env.REACT_APP_API_DOMAIN}/rating/recommendations/${user_id}`
+        );
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        if (data.message) {
+          // Không có sản phẩm đề xuất
+          setRecommendedProducts([]);
+        } else {
+          setRecommendedProducts(data);
+        }
+      } catch (error) {
+        console.error("Error fetching recommendations:", error);
+        setRecommendedProducts([]); // Ẩn phần đề xuất khi có lỗi
+      }
+    };
+    fetchRecommendedProducts();
+  }, []);
 
   // Calculate pagination values
   const [totalPages, setTotalPages] = useState(0);
@@ -310,9 +340,7 @@ function ShopDetail() {
                               emptySymbol="far fa-star"
                               fullSymbol="fas fa-star"
                               initialRating={
-                                ratingsData > 0.0
-                                  ? ratingsData.average_rating
-                                  : "Chưa có đánh giá"
+                                ratingsData ? ratingsData.average_rating : ""
                               }
                               readonly
                               style={{
@@ -432,7 +460,7 @@ function ShopDetail() {
                               Thêm vào giỏ hàng
                             </span>
                           </Button>
-                          <div className="bookmark-btn style-1 d-none d-sm-block">
+                          {/* <div className="bookmark-btn style-1 d-none d-sm-block">
                             <input
                               className="form-check-input"
                               type="checkbox"
@@ -444,7 +472,7 @@ function ShopDetail() {
                             >
                               <i className="flaticon-heart"></i>
                             </label>
-                          </div>
+                          </div> */}
                         </div>
                       </div>
                     </div>
@@ -537,7 +565,7 @@ function ShopDetail() {
                               </div>
                               {/* Pagination Controls */}
                               {totalPages > 1 && (
-                                <Pagination className="mt-3">
+                                <Pagination className="mt-1 mb-3">
                                   <Pagination.First
                                     onClick={() => setCurrentPage(1)}
                                     disabled={currentPage === 1}
@@ -637,41 +665,47 @@ function ShopDetail() {
                   </Tab.Container>
                 </div>
                 {/* Related Books Section */}
-                <div className="col-xl-4 mt-5 mt-xl-0">
-                  <div className="widget">
-                    <h4 className="widget-title">Đề xuất cho bạn</h4>
-                    <div className="row">
-                      {relatedBook.map((data, index) => (
-                        <div className="col-xl-12 col-lg-6" key={index}>
-                          <div className="dz-shop-card style-5">
-                            <div className="dz-media">
-                              <img src={data.image} alt="" />
-                            </div>
-                            <div className="dz-content">
-                              <h5 className="subtitle">{data.title}</h5>
-                              <ul className="dz-tags">
-                                <li>THRILLE,</li>
-                                <li>DRAMA,</li>
-                                <li>HORROR</li>
-                              </ul>
-                              <div className="price">
-                                <span className="price-num">$45.4</span>
-                                <del>$98.4</del>
+                {recommendedProducts && recommendedProducts.length > 0 && (
+                  <div className="col-xl-4 mt-5 mt-xl-0">
+                    <div className="widget">
+                      <h4 className="widget-title">Đề xuất cho bạn</h4>
+                      <div className="row">
+                        {recommendedProducts.map((data, index) => (
+                          <div className="col-xl-12 col-lg-6" key={index}>
+                            <div className="dz-shop-card style-5">
+                              <div className="dz-media">
+                                <img src={data.image} alt={data.name} />
                               </div>
-                              <Link
-                                to={"/shop-cart"}
-                                className="btn btn-outline-primary btn-sm btnhover btnhover2"
-                              >
-                                <i className="flaticon-shopping-cart-1 me-2"></i>{" "}
-                                Add to cart
-                              </Link>
+                              <div className="dz-content">
+                                <h5 className="subtitle">{data.name}</h5>
+                                <ul className="dz-tags">
+                                  <li>{data.sub_category}</li>
+                                </ul>
+                                <div className="price">
+                                  <span className="price-num">
+                                    {data.new_price.toLocaleString()}₫
+                                  </span>
+                                  {data.discount_percent > 0 && (
+                                    <del>
+                                      {data.price_origin.toLocaleString()}₫
+                                    </del>
+                                  )}
+                                </div>
+                                <Link
+                                  to={`/shop-detail?product=${data.id}`}
+                                  className="btn btn-outline-primary btn-sm btnhover btnhover2"
+                                >
+                                  <i className="flaticon-shopping-cart-1 me-2"></i>
+                                  Xem chi tiết
+                                </Link>
+                              </div>
                             </div>
                           </div>
-                        </div>
-                      ))}
+                        ))}
+                      </div>
                     </div>
                   </div>
-                </div>
+                )}
               </div>
               {/* Close the container and section divs here */}
             </div>

@@ -514,7 +514,7 @@ function Categories() {
                               style={{ width: "100%", height: "auto" }}
                             />
                           </div>
-                          <div className="bookmark-btn style-2">
+                          {/* <div className="bookmark-btn style-2">
                             <input
                               className="form-check-input"
                               type="checkbox"
@@ -526,7 +526,7 @@ function Categories() {
                             >
                               <i className="flaticon-heart"></i>
                             </label>
-                          </div>
+                          </div> */}
                           <div className="dz-content">
                             <h5 className="title" style={{ height: "56px" }}>
                               <Link to={`/books-detail/?product=${product.id}`}>

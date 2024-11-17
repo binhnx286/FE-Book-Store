@@ -58,17 +58,17 @@ function Registration() {
         <>
           Đăng nhập thành công!
           <br />
-          Bạn sẽ được chuyển sang trang đăng nhập sau 5 giây...
+          Bạn sẽ được chuyển sang trang đăng nhập sau 3 giây...
         </>,
         {
           position: "top-right",
-          autoClose: 5000,
+          autoClose: 3000,
         }
       );
 
       setTimeout(() => {
         navigate("/login"); // Chuyển đến trang chủ
-      }, 5500);
+      }, 3500);
 
       console.log("Tạo tài khoản thành công:", data);
     } catch (err) {

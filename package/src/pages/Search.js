@@ -382,7 +382,7 @@ function Search() {
                         <div className="dz-media">
                           <img src={data.image} alt="book" />
                         </div>
-                        <div className="bookmark-btn style-2">
+                        {/* <div className="bookmark-btn style-2">
                           <input
                             className="form-check-input"
                             type="checkbox"
@@ -394,7 +394,7 @@ function Search() {
                           >
                             <i className="flaticon-heart"></i>
                           </label>
-                        </div>
+                        </div> */}
                         <div className="dz-content">
                           <h5
                             className="name"
