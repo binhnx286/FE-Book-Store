@@ -113,19 +113,19 @@ function OfferSlider() {
             slidesPerView: 1,
           },
           600: {
-            slidesPerView: 1,
+            slidesPerView: 2,
           },
           767: {
-            slidesPerView: 2,
+            slidesPerView: 3,
           },
           991: {
-            slidesPerView: 2,
+            slidesPerView: 3,
           },
           1200: {
-            slidesPerView: 3,
+            slidesPerView: 4,
           },
           1680: {
-            slidesPerView: 3,
+            slidesPerView: 4,
           },
         }}
       >
@@ -143,7 +143,7 @@ function OfferSlider() {
               <div className="dz-info">
                 <h4 className="dz-title" style={{ height: "68px" }}>
                   <Link to={`/books-detail/?product=${product.id}`}>
-                    {truncateText(product.name, 30)}
+                    {truncateText(product.name, 23)}
                   </Link>
                 </h4>
                 <div className="dz-meta">
@@ -169,25 +169,29 @@ function OfferSlider() {
                       alignItems: "end",
                     }}
                   >
-                    <h4 className="mb-0 m-r10">
-                      {product.new_price.toLocaleString("vi-VN")}₫{" "}
-                    </h4>
-                    <del className="mb-1 m-r10">
-                      {product.price_origin.toLocaleString("vi-VN")}₫
-                    </del>
+                    <div>
+                      <h4 className="mb-0 m-r10">
+                        {product.new_price.toLocaleString("vi-VN")}₫{" "}
+                      </h4>
+                      <del className="mb-1 m-r10">
+                        {product.price_origin.toLocaleString("vi-VN")}₫
+                      </del>
+                    </div>
                     <p className="fs-6 bg-primary py-1 px-2 rounded rounded-3 text-light">
                       {product.discount_percent}%
                     </p>
                   </div>
-                  <div
-                    onClick={() => {
-                      handleAddToCart(product.id);
-                    }}
-                    className="btn btn-primary m-t15 btnhover btnhover2"
-                  >
-                    <i className="flaticon-shopping-cart-1 m-r10"></i> Thêm vào
-                    giỏ hàng
-                  </div>
+                  <Link to={`/books-detail/?product=${product.id}`}>
+                    <div
+                      // onClick={() => {
+                      //   handleAddToCart(product.id);
+                      // }}
+                      className="btn btn-primary m-t15 btnhover btnhover2"
+                    >
+                      {/* <i className="flaticon-shopping-cart-1 m-r10"></i>  */}
+                      Xem chi tiết
+                    </div>
+                  </Link>
                 </div>
               </div>
             </div>

@@ -10,9 +10,12 @@ import PageTitle from "./../layouts/PageTitle";
 function Login() {
   const [forgotPass, setForgotPass] = useState(false);
   const [email, setEmail] = useState("");
+  const [forgotPasswordEmail, setForgotPasswordEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
+  const [forgotPasswordError, setForgotPasswordError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [forgotPasswordLoading, setForgotPasswordLoading] = useState(false);
   const navigate = useNavigate();
 
   // Hàm xử lý đăng nhập
@@ -42,7 +45,7 @@ function Login() {
 
       const data = await response.json();
       // Xử lý đăng nhập thành công (lưu token, điều hướng, vv.)
-      Cookies.set("refresh", data.refresh, { expires: 10 }); // Lưu 7 ngày
+      Cookies.set("refresh", data.refresh, { expires: 10 });
       Cookies.set("access", data.access, { expires: 1 });
       Cookies.set("email", data.email, { expires: 1 });
       Cookies.set("user_id", data.user_id, { expires: 1 });
@@ -52,21 +55,65 @@ function Login() {
         <>
           Đăng nhập thành công!
           <br />
-          Bạn sẽ được chuyển sang trang chủ sau 5 giây...
+          Bạn sẽ được chuyển sang trang chủ sau 3 giây...
+        </>,
+        {
+          position: "top-right",
+          autoClose: 3000,
+        }
+      );
+      // Sau khi đăng nhập thành công, chuyển hướng đến trang chủ sau 3 giây
+      setTimeout(() => {
+        navigate("/"); // Chuyển đến trang chủ
+      }, 3500);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Hàm xử lý quên mật khẩu
+  const handleForgotPassword = async (e) => {
+    e.preventDefault();
+    setForgotPasswordLoading(true);
+    setForgotPasswordError(null);
+
+    try {
+      const response = await fetch(
+        `${process.env.REACT_APP_API_DOMAIN}/user/password-reset/`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+          body: JSON.stringify({ email: forgotPasswordEmail }),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Không thể đặt lại mật khẩu. Vui lòng thử lại.");
+      }
+
+      const data = await response.json();
+
+      toast.success(
+        <>
+          Yêu cầu đặt lại mật khẩu đã được gửi!
+          <br />
+          Vui lòng kiểm tra email của bạn.
         </>,
         {
           position: "top-right",
           autoClose: 5000,
         }
       );
-      // Sau khi đăng nhập thành công, chuyển hướng đến trang chủ sau 3 giây
-      setTimeout(() => {
-        navigate("/"); // Chuyển đến trang chủ
-      }, 5500);
+      setForgotPasswordEmail("");
     } catch (err) {
-      setError(err.message);
+      setForgotPasswordError(err.message);
     } finally {
-      setIsLoading(false);
+      setForgotPasswordLoading(false);
     }
   };
 
@@ -151,36 +198,46 @@ function Login() {
                       </div>
                     </form>
                     <form
-                      onSubmit={(e) => e.preventDefault()}
+                      onSubmit={handleForgotPassword}
                       className={` col-12 ${forgotPass ? "" : "d-none"}`}
                     >
-                      <h4 className="text-secondary">FORGET PASSWORD ?</h4>
+                      <h4 className="text-secondary">Quên mật khẩu?</h4>
                       <p className="font-weight-600">
-                        We will send you an email to reset your password.
+                        Nhập email để nhận mật khẩu mới
                       </p>
                       <div className="mb-3">
                         <label className="label-title">E-MAIL *</label>
                         <input
-                          name="dzName"
+                          name="forgotPasswordEmail"
                           required
                           className="form-control"
-                          placeholder="Your Email Id"
+                          placeholder="Email của bạn"
                           type="email"
+                          value={forgotPasswordEmail}
+                          onChange={(e) =>
+                            setForgotPasswordEmail(e.target.value)
+                          }
                         />
                       </div>
+                      {forgotPasswordError && (
+                        <div className="text-danger mb-3">
+                          {forgotPasswordError}
+                        </div>
+                      )}
                       <div className="text-left">
                         <Link
                           to={"#"}
                           className="btn btn-outline-secondary btnhover m-r10 active"
                           onClick={() => setForgotPass(!forgotPass)}
                         >
-                          Back
+                          Đăng nhập
                         </Link>
                         <button
                           type="submit"
                           className="btn btn-primary btnhover"
+                          disabled={forgotPasswordLoading}
                         >
-                          Submit
+                          {forgotPasswordLoading ? "Đang xử lý..." : "Gửi"}
                         </button>
                       </div>
                     </form>

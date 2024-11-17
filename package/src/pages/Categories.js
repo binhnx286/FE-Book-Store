@@ -13,7 +13,7 @@ import CounterSection from "../elements/CounterSection";
 function Categories() {
   // State quản lý danh mục và subcategories
   const [accordBtn, setAccordBtn] = useState(false);
-  const [selectBtn, setSelectBtn] = useState("Newest");
+  const [selectBtn, setSelectBtn] = useState("Sắp xếp theo");
   const [combinedCategories, setCombinedCategories] = useState([]); // State cho categories và subcategories
   const [loading, setLoading] = useState(true); // State để quản lý trạng thái tải categories
   const [error, setError] = useState(null); // State để quản lý lỗi categories
@@ -225,7 +225,7 @@ function Categories() {
     <>
       <div className="page-content bg-grey">
         <div className="content-inner-1 border-bottom">
-          <div className="container">
+          <div className="container mb-5">
             <div className="row">
               {/* Bên Trái - Sidebar */}
               <div className="col-xl-3">
@@ -357,14 +357,14 @@ function Categories() {
                         Categories
                       </Link> */}
                     </div>
-                    <div className="form-group">
+                    <div className="form-group m-r50">
                       <i className="fas fa-sort-amount-down me-2 text-secondary"></i>
                       <Dropdown>
                         <Dropdown.Toggle className="i-false">
                           {selectBtn}{" "}
-                          <i className="ms-4 font-14 fa-solid fa-caret-down" />
+                          {/* <i className="ms-4 font-14 fa-solid fa-caret-down" /> */}
                         </Dropdown.Toggle>
-                        <Dropdown.Menu>
+                        <Dropdown.Menu className="m-r20">
                           <Dropdown.Item
                             onClick={() => setSelectBtn("Mới nhất")}
                           >

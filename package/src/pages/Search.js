@@ -324,44 +324,6 @@ function Search() {
                 <div className="filter-area m-b30">
                   <div className="grid-area"></div>
                   <div className="category">
-                    {/* <div className="filter-category">
-                      <Link
-                        to={"#"}
-                        data-bs-toggle="collapse"
-                        onClick={() => setAccordBtn(!accordBtn)}
-                      >
-                        <i className="fas fa-list me-2"></i>
-                        Categories
-                      </Link>
-                    </div> */}
-                    {/* <div className="form-group">
-                      <i className="fas fa-sort-amount-down me-2 text-secondary"></i>
-                      <Dropdown>
-                        <Dropdown.Toggle className="i-false">
-                          {selectBtn}{" "}
-                          <i className="ms-4 font-14 fa-solid fa-caret-down" />
-                        </Dropdown.Toggle>
-                        <Dropdown.Menu>
-                          <Dropdown.Item onClick={() => setSelectBtn("Newest")}>
-                            Newest
-                          </Dropdown.Item>
-                          <Dropdown.Item onClick={() => setSelectBtn("1 Days")}>
-                            1 Days
-                          </Dropdown.Item>
-                          <Dropdown.Item onClick={() => setSelectBtn("2 Week")}>
-                            2 Week
-                          </Dropdown.Item>
-                          <Dropdown.Item onClick={() => setSelectBtn("3 Week")}>
-                            3 Weeks
-                          </Dropdown.Item>
-                          <Dropdown.Item
-                            onClick={() => setSelectBtn("1 Month")}
-                          >
-                            1 Month
-                          </Dropdown.Item>
-                        </Dropdown.Menu>
-                      </Dropdown>
-                    </div> */}
                     <Dropdown className="sort-dropdown">
                       {" "}
                       Sắp xếp theo giá:{" "}

@@ -138,7 +138,7 @@ function ShopCart() {
         : item
     );
     setShopData({ ...shopData, cart_items: updatedCartItems });
-  }
+  };
 
   const updateCartItemQuantity = async (itemId, newQuantity) => {
     const accessToken = Cookies.get("access");
@@ -295,10 +295,10 @@ function ShopCart() {
                               })}
                             </td>
                           </tr>
-                          <tr>
+                          {/* <tr>
                             <td>Vận chuyển</td>
                             <td>Miễn phí</td>
-                          </tr>
+                          </tr> */}
                           <tr>
                             <td>Phiếu giảm giá</td>
                             <td>

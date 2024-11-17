@@ -117,25 +117,14 @@ function ShopDetail() {
   // Function to fetch ratings data
   const fetchRatingsData = async (productId) => {
     try {
-      const accessToken = Cookies.get("access");
-      if (accessToken) {
-        const ratingsResponse = await fetch(
-          `${process.env.REACT_APP_API_DOMAIN}/rating/ratings/${productId}/average_rating`,
-          {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          }
-        );
-        if (!ratingsResponse.ok) {
-          throw new Error(`HTTP error! status: ${ratingsResponse.status}`);
-        }
-        const ratingsData = await ratingsResponse.json();
-        setRatingsData(ratingsData);
-      } else {
-        // User is not authenticated
-        setRatingsData(null);
+      const ratingsResponse = await fetch(
+        `${process.env.REACT_APP_API_DOMAIN}/rating/ratings/${productId}/average_rating`
+      );
+      if (!ratingsResponse.ok) {
+        throw new Error(`HTTP error! status: ${ratingsResponse.status}`);
       }
+      const ratingsData = await ratingsResponse.json();
+      setRatingsData(ratingsData);
     } catch (error) {
       console.error("Error fetching ratings:", error);
     }
@@ -321,7 +310,9 @@ function ShopDetail() {
                               emptySymbol="far fa-star"
                               fullSymbol="fas fa-star"
                               initialRating={
-                                ratingsData ? ratingsData.average_rating : 0
+                                ratingsData > 0.0
+                                  ? ratingsData.average_rating
+                                  : "Chưa có đánh giá"
                               }
                               readonly
                               style={{
