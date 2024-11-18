@@ -342,7 +342,7 @@ function Categories() {
                     Filter
                   </Link>
                 </div>
-                <div className="filter-area m-b30">
+                <div className="filter-area m-b10">
                   <div className="grid-area"></div>
                   <div className="category">
                     <div className="filter-category">
@@ -385,6 +385,86 @@ function Categories() {
                     </div>
                   </div>
                 </div>
+
+                {/* Phân Trang */}
+                <div className="row page mt-0 m-b30">
+                  <div className="col-md-6">
+                    <p className="page-text">
+                      {`Hiển thị ${sortedProducts.length} sản phẩm trong tổng số ${totalPages} trang`}
+                    </p>
+                  </div>
+                  <div className="col-md-6">
+                    <nav aria-label="Product Pagination">
+                      <ul className="pagination style-1 p-t20 justify-content-end">
+                        {/* Nút Prev */}
+                        <li
+                          className={`page-item ${
+                            currentPage === 1 ? "disabled" : ""
+                          }`}
+                        >
+                          <button
+                            className="page-link prev"
+                            onClick={() => handlePageChange(currentPage - 1)}
+                            disabled={currentPage === 1}
+                          >
+                            Prev
+                          </button>
+                        </li>
+
+                        {/* Hiển thị các số trang */}
+                        {getPagination().map((page, index) =>
+                          page === "..." ? (
+                            <li
+                              key={`ellipsis-${index}`}
+                              className="page-item disabled"
+                            >
+                              <span className="page-link">...</span>
+                            </li>
+                          ) : (
+                            <li
+                              key={page}
+                              className={`page-item ${
+                                currentPage === page ? "active" : ""
+                              }`}
+                            >
+                              <button
+                                className="page-link"
+                                onClick={() => handlePageChange(page)}
+                                style={
+                                  currentPage === page
+                                    ? {
+                                        backgroundColor: "#007bff",
+                                        color: "#fff",
+                                        borderColor: "#007bff",
+                                      }
+                                    : {}
+                                }
+                              >
+                                {page}
+                              </button>
+                            </li>
+                          )
+                        )}
+
+                        {/* Nút Next */}
+                        <li
+                          className={`page-item ${
+                            currentPage === totalPages ? "disabled" : ""
+                          }`}
+                        >
+                          <button
+                            className="page-link next"
+                            onClick={() => handlePageChange(currentPage + 1)}
+                            disabled={currentPage === totalPages}
+                          >
+                            Next
+                          </button>
+                        </li>
+                      </ul>
+                    </nav>
+                  </div>
+                </div>
+
                 {/* Collapse cho categories nếu cần */}
                 <Collapse in={accordBtn} className="acod-content">
                   <div>
@@ -633,6 +713,15 @@ function Categories() {
                               <button
                                 className="page-link"
                                 onClick={() => handlePageChange(page)}
+                                style={
+                                  currentPage === page
+                                    ? {
+                                        backgroundColor: "#007bff",
+                                        color: "#fff",
+                                        borderColor: "#007bff",
+                                      }
+                                    : {}
+                                }
                               >
                                 {page}
                               </button>

@@ -215,7 +215,7 @@ function Search() {
             <div className="row ">
               <div className="col-xl-3 bg-white border rounded-1">
                 {/* <ShopSidebar /> */}
-                <div className="sidebar">
+                <div className="sidebar my-3">
                   <h3>Thể loại</h3>
                   <ul>
                     {subCategories.map((category, index) => (
@@ -348,6 +348,56 @@ function Search() {
                     </Dropdown>
                   </div>
                 </div>
+
+                {/* Pagination */}
+                <div className="col-md-6 offset-6 m-b30">
+                  <div className="pagination-container">
+                    <nav aria-label="Page navigation">
+                      <ul className="pagination justify-content-center">
+                        <li
+                          className={`page-item ${
+                            currentPage === 1 ? "disabled" : ""
+                          }`}
+                        >
+                          <button
+                            className="page-link"
+                            onClick={() => paginate(currentPage - 1)}
+                          >
+                            Previous
+                          </button>
+                        </li>
+                        {[...Array(totalPages)].map((_, index) => (
+                          <li
+                            key={index}
+                            className={`page-item ${
+                              currentPage === index + 1 ? "active" : ""
+                            }`}
+                          >
+                            <button
+                              className="page-link"
+                              onClick={() => paginate(index + 1)}
+                            >
+                              {index + 1}
+                            </button>
+                          </li>
+                        ))}
+                        <li
+                          className={`page-item ${
+                            currentPage === totalPages ? "disabled" : ""
+                          }`}
+                        >
+                          <button
+                            className="page-link"
+                            onClick={() => paginate(currentPage + 1)}
+                          >
+                            Next
+                          </button>
+                        </li>
+                      </ul>
+                    </nav>
+                  </div>
+                </div>
+
                 <Collapse in={accordBtn} className="acod-content">
                   <div>
                     <div className="widget widget_services style-2">
@@ -461,35 +511,6 @@ function Search() {
                     {/* <p className="page-text">Showing 12 from 50 data</p> */}
                   </div>
                   <div className="col-md-6">
-                    {/* <nav aria-label="Blog Pagination">
-                      <ul className="pagination style-1 p-t20">
-                        <li className="page-item">
-                          <Link to={"#"} className="page-link prev">
-                            Prev
-                          </Link>
-                        </li>
-                        <li className="page-item">
-                          <Link to={"#"} className="page-link active">
-                            1
-                          </Link>
-                        </li>
-                        <li className="page-item">
-                          <Link to={"#"} className="page-link">
-                            2
-                          </Link>
-                        </li>
-                        <li className="page-item">
-                          <Link to={"#"} className="page-link">
-                            3
-                          </Link>
-                        </li>
-                        <li className="page-item">
-                          <Link to={"#"} className="page-link next">
-                            Next
-                          </Link>
-                        </li>
-                      </ul>
-                    </nav> */}
                     <div className="pagination-container">
                       <nav aria-label="Page navigation">
                         <ul className="pagination justify-content-center">
