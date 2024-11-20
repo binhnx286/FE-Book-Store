@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Environment } from "../Environment";
 import { useOutletContext, useLocation } from "react-router-dom";
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
 
 import queryString from "query-string";
 
@@ -11,67 +13,12 @@ import { Collapse, Dropdown } from "react-bootstrap";
 import ClientsSlider from "../components/Home/ClientsSlider";
 import NewsLetter from "../components/NewsLetter";
 
-//element
 import CounterSection from "../elements/CounterSection";
-// import ShopSidebar from "../elements/ShopSidebar";
 
-//Images
-// import book16 from "./../assets/images/books/grid/book16.jpg";
-// import book8 from "./../assets/images/books/grid/book8.jpg";
-// import book14 from "./../assets/images/books/grid/book14.jpg";
-// import book15 from "./../assets/images/books/grid/book15.jpg";
-// import book4 from "./../assets/images/books/grid/book4.jpg";
-// import book9 from "./../assets/images/books/grid/book9.jpg";
-// import book2 from "./../assets/images/books/grid/book2.jpg";
-// import book7 from "./../assets/images/books/grid/book7.jpg";
-// import book13 from "./../assets/images/books/grid/book13.jpg";
-// import book10 from "./../assets/images/books/grid/book10.jpg";
-// import book11 from "./../assets/images/books/grid/book11.jpg";
-// import SearchModel from "../models/SearchModel";
-
-const lableBlogData = [
-  { name: "Architecture" },
-  { name: "Art" },
-  { name: "Action" },
-  { name: "Biography & Autobiography" },
-  { name: "Body, Mind & Spirit" },
-  { name: "Business & Economics" },
-  { name: "Children Fiction" },
-  { name: "Children Non-Fiction" },
-  { name: "Comics & Graphic Novels" },
-  { name: "Cooking" },
-  { name: "Crafts & Hobbies" },
-  { name: "Design" },
-  { name: "Drama" },
-  { name: "Education" },
-  { name: "Family & Relationships" },
-  { name: "Fiction" },
-  { name: "Foreign Language Study" },
-  { name: "Games" },
-  { name: "Gardening" },
-  { name: "Health & Fitness" },
-  { name: "History" },
-  { name: "House & Home" },
-  { name: "Humor" },
-  { name: "Literary Collections" },
-  { name: "Mathematics" },
-];
+const lableBlogData = [];
 
 // mock data
-const cardDetials = [
-  // {image:book16, name:'Thunder Stunt', sub_category:'ADVANTURE',publisher:'SCIENCE', price_origin:'54.78', new_price:'70.00' },
-  // {image:book14, name:'A Heavy Lift', sub_category:'RACING',publisher:'DRAMA', price_origin:'25.18', new_price:'68.00' },
-  // {image:book15, name:'Terrible Madness', sub_category:'SPORTS',publisher:'GAME', price_origin:'25.30', new_price:'38.00' },
-  // {image:book4, name:'Such Fun Age', sub_category:'ADVANTURE', price_origin:'20.15', new_price:'33.00' },
-  // {image:book9, name:'Pushing Clouds', sub_category:'ADVANTURE', price_origin:'30.12', new_price:'40.00' },
-  // {image:book2, name:'Homie', sub_category:'HORROR',publisher:'DRAMA', price_origin:'15.25', new_price:'45.00' },
-  // {image:book7, name:'SECONDS', sub_category:'SPORTS',publisher:'GAME', price_origin:'21.78', new_price:'36.00' },
-  // {image:book13, name:'REWORK', sub_category:'THRILLER', price_origin:'23.20', new_price:'49.00' },
-  // {image:book11, name:'ALL GOOD NEWS', sub_category:'DRAMA',publisher:'COMEDY', price_origin:'40.78', new_price:'68.00' },
-  // {image:book10, name:'Emily The Back', sub_category:'DRAMA',publisher:'SIRIAL', price_origin:'54.78', new_price:'63.00' },
-  // {image:book8, name:'The Adventure', sub_category:'BIOGRAPHY', price_origin:'37.00', new_price:'47.00' },
-  // {image:book14, name:'A Heavy Lift', sub_category:'STORY',publisher:'BIOGRAPHY', price_origin:'22.00', new_price:'51.00' },
-];
+const cardDetials = [];
 
 function Search() {
   const [accordBtn, setAccordBtn] = useState();
@@ -88,6 +35,7 @@ function Search() {
   const [currentPage, setCurrentPage] = useState(1); // Trang hiện tại
   const itemsPerPage = 12; // Số sản phẩm trên mỗi trang
   const [viewed, setViewed] = useState(1);
+  const [isLoading, setIsLoading] = useState(true);
 
   const location = useLocation();
   const queryParams = queryString.parse(location.search);
@@ -99,9 +47,9 @@ function Search() {
 
   useEffect(() => {
     const fetchBooks = async () => {
-      //   let url = `${Environment.getSearchEndpoint()}/${searchParams.toQueryString()}`;
-      let url = `${Environment.getSearchEndpoint()}/?${type}=${value}`;
+      setIsLoading(true); // Bắt đầu tải dữ liệu
 
+      let url = `${Environment.getSearchEndpoint()}/?${type}=${value}`;
       const response = await fetch(url, {
         headers: {
           "Content-Type": "application/json",
@@ -117,15 +65,16 @@ function Search() {
         setPublicationYears(data.publication_years);
         setViewed(data.viewed);
       } else {
-        // khong tim thay
         setBooks([]);
       }
+
+      setIsLoading(false); // Kết thúc tải dữ liệu
     };
 
     if (queryParams) {
       fetchBooks();
     }
-  }, [queryParams]);
+  }, [location.search]);
 
   function truncateText(text, maxLength) {
     if (text.length > maxLength) {
@@ -207,6 +156,60 @@ function Search() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
+  const BookCardSkeleton = () => (
+    <div className="col-book style-2">
+      <div className="dz-shop-card style-1" style={{ minHeight: "573px" }}>
+        <div className="dz-media">
+          <Skeleton height={200} />
+        </div>
+        <div className="dz-content">
+          <h5 className="name" style={{ height: "56px" }}>
+            <Skeleton width={`80%`} />
+          </h5>
+          <ul>
+            <li>
+              <Skeleton width={`60%`} />
+            </li>
+            <li style={{ height: "52px" }}>
+              <Skeleton width={`40%`} />
+            </li>
+          </ul>
+          <ul className="dz-rating">
+            <Skeleton width={80} />
+          </ul>
+          <div className="price mb-3">
+            <span className="price-num fs-5 text-primary fw-bold m-r10">
+              <Skeleton width={50} />
+            </span>
+            <del>
+              <Skeleton width={50} />
+            </del>
+          </div>
+          <div className="book-footer">
+            <Skeleton height={36} width={150} />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  const SidebarSkeleton = () => (
+    <div className="sidebar my-3">
+      {Array.from({ length: 4 }).map((_, index) => (
+        <div key={index}>
+          <Skeleton height={30} width={100} style={{ marginBottom: 10 }} />
+          <ul>
+            {Array.from({ length: 5 }).map((_, i) => (
+              <li key={i} style={{ marginBottom: 5 }}>
+                <Skeleton width={`80%`} />
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </div>
+  );
+
   return (
     <>
       <div className="page-content bg-grey">
@@ -215,103 +218,107 @@ function Search() {
             <div className="row ">
               <div className="col-xl-3 bg-white border rounded-1">
                 {/* <ShopSidebar /> */}
-                <div className="sidebar my-3">
-                  <h3>Thể loại</h3>
-                  <ul>
-                    {subCategories.map((category, index) => (
-                      <li
-                        key={index}
-                        onClick={() => handleCategoryClick(category)}
-                        style={{
-                          cursor: "pointer",
-                          fontWeight: selectedCategories.includes(category)
-                            ? "bold"
-                            : "normal",
-                          color: selectedCategories.includes(category)
-                            ? "blue"
-                            : "black",
-                        }}
-                      >
-                        {selectedCategories.includes(category) && (
-                          <i className="fas fa-check-circle"></i>
-                        )}{" "}
-                        {category}
-                      </li>
-                    ))}
-                  </ul>
+                {isLoading ? (
+                  <SidebarSkeleton />
+                ) : (
+                  <div className="sidebar my-3">
+                    <h3>Thể loại</h3>
+                    <ul>
+                      {subCategories.map((category, index) => (
+                        <li
+                          key={index}
+                          onClick={() => handleCategoryClick(category)}
+                          style={{
+                            cursor: "pointer",
+                            fontWeight: selectedCategories.includes(category)
+                              ? "bold"
+                              : "normal",
+                            color: selectedCategories.includes(category)
+                              ? "blue"
+                              : "black",
+                          }}
+                        >
+                          {selectedCategories.includes(category) && (
+                            <i className="fas fa-check-circle"></i>
+                          )}{" "}
+                          {category}
+                        </li>
+                      ))}
+                    </ul>
 
-                  <h3>Nhà xuất bản</h3>
-                  <ul>
-                    {publishers.map((publisher, index) => (
-                      <li
-                        key={index}
-                        onClick={() => handlePublisherClick(publisher)}
-                        style={{
-                          cursor: "pointer",
-                          fontWeight: selectedPublishers.includes(publisher)
-                            ? "bold"
-                            : "normal",
-                          color: selectedPublishers.includes(publisher)
-                            ? "blue"
-                            : "black",
-                        }}
-                      >
-                        {selectedPublishers.includes(publisher) && (
-                          <i className="fas fa-check-circle"></i>
-                        )}{" "}
-                        {publisher}
-                      </li>
-                    ))}
-                  </ul>
+                    <h3>Nhà xuất bản</h3>
+                    <ul>
+                      {publishers.map((publisher, index) => (
+                        <li
+                          key={index}
+                          onClick={() => handlePublisherClick(publisher)}
+                          style={{
+                            cursor: "pointer",
+                            fontWeight: selectedPublishers.includes(publisher)
+                              ? "bold"
+                              : "normal",
+                            color: selectedPublishers.includes(publisher)
+                              ? "blue"
+                              : "black",
+                          }}
+                        >
+                          {selectedPublishers.includes(publisher) && (
+                            <i className="fas fa-check-circle"></i>
+                          )}{" "}
+                          {publisher}
+                        </li>
+                      ))}
+                    </ul>
 
-                  <h3>Tác giả</h3>
-                  <ul>
-                    {authors.map((author, index) => (
-                      <li
-                        key={index}
-                        onClick={() => handleAuthorClick(author)}
-                        style={{
-                          cursor: "pointer",
-                          fontWeight: selectedAuthors.includes(author)
-                            ? "bold"
-                            : "normal",
-                          color: selectedAuthors.includes(author)
-                            ? "blue"
-                            : "black",
-                        }}
-                      >
-                        {selectedAuthors.includes(author) && (
-                          <i className="fas fa-check-circle"></i>
-                        )}{" "}
-                        {author}
-                      </li>
-                    ))}
-                  </ul>
+                    <h3>Tác giả</h3>
+                    <ul>
+                      {authors.map((author, index) => (
+                        <li
+                          key={index}
+                          onClick={() => handleAuthorClick(author)}
+                          style={{
+                            cursor: "pointer",
+                            fontWeight: selectedAuthors.includes(author)
+                              ? "bold"
+                              : "normal",
+                            color: selectedAuthors.includes(author)
+                              ? "blue"
+                              : "black",
+                          }}
+                        >
+                          {selectedAuthors.includes(author) && (
+                            <i className="fas fa-check-circle"></i>
+                          )}{" "}
+                          {author}
+                        </li>
+                      ))}
+                    </ul>
 
-                  <h3>Năm xuất bản</h3>
-                  <ul>
-                    {publicationYears.map((year, index) => (
-                      <li
-                        key={index}
-                        onClick={() => handleYearClick(year)}
-                        style={{
-                          cursor: "pointer",
-                          fontWeight: selectedYears.includes(year)
-                            ? "bold"
-                            : "normal",
-                          color: selectedYears.includes(year)
-                            ? "blue"
-                            : "black",
-                        }}
-                      >
-                        {selectedYears.includes(year) && (
-                          <i className="fas fa-check-circle"></i>
-                        )}{" "}
-                        {year}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
+                    <h3>Năm xuất bản</h3>
+                    <ul>
+                      {publicationYears.map((year, index) => (
+                        <li
+                          key={index}
+                          onClick={() => handleYearClick(year)}
+                          style={{
+                            cursor: "pointer",
+                            fontWeight: selectedYears.includes(year)
+                              ? "bold"
+                              : "normal",
+                            color: selectedYears.includes(year)
+                              ? "blue"
+                              : "black",
+                          }}
+                        >
+                          {selectedYears.includes(year) && (
+                            <i className="fas fa-check-circle"></i>
+                          )}{" "}
+                          {year}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
               </div>
 
               <div className="col-xl-9">
@@ -421,18 +428,22 @@ function Search() {
                   </div>
                 </Collapse>
                 <div className="row book-grid-row">
-                  {currentProducts.map((data, i) => (
-                    <div className="col-book style-2" key={i}>
-                      <div
-                        className="dz-shop-card style-1"
-                        style={{
-                          "min-height": "573px",
-                        }}
-                      >
-                        <div className="dz-media">
-                          <img src={data.image} alt="book" />
-                        </div>
-                        {/* <div className="bookmark-btn style-2">
+                  {isLoading
+                    ? Array.from({ length: itemsPerPage }).map((_, i) => (
+                        <BookCardSkeleton key={i} />
+                      ))
+                    : currentProducts.map((data, i) => (
+                        <div className="col-book style-2" key={i}>
+                          <div
+                            className="dz-shop-card style-1"
+                            style={{
+                              "min-height": "573px",
+                            }}
+                          >
+                            <div className="dz-media">
+                              <img src={data.image} alt="book" />
+                            </div>
+                            {/* <div className="bookmark-btn style-2">
                           <input
                             className="form-check-input"
                             type="checkbox"
@@ -445,66 +456,68 @@ function Search() {
                             <i className="flaticon-heart"></i>
                           </label>
                         </div> */}
-                        <div className="dz-content">
-                          <h5
-                            className="name"
-                            style={{
-                              height: "56px",
-                            }}
-                          >
-                            <Link to={`/books-detail/?product=${data.id}`}>
-                              {truncateText(data.name, 30)}
-                            </Link>
-                          </h5>
-                          <ul>
-                            <li>{data.sub_category}</li>
-                            <li style={{ height: "52px" }}>
-                              Tác giả: {data.author}
-                            </li>
-                            {/* <li style={{ height: "52px" }}>{data.publisher}</li> */}
-                          </ul>
-                          <ul className="dz-rating">
-                            <li>
-                              <i className="flaticon-star text-yellow"></i>
-                            </li>
-                            <li>
-                              <i className="flaticon-star text-yellow"></i>
-                            </li>
-                            <li>
-                              <i className="flaticon-star text-yellow"></i>
-                            </li>
-                            <li>
-                              <i className="flaticon-star text-yellow"></i>
-                            </li>
-                            <li>
-                              <i className="flaticon-star text-yellow"></i>
-                            </li>
-                          </ul>
-                          <div className="price mb-3">
-                            <span className="price-num fs-5 text-primary fw-bold m-r10">
-                              {data.price_origin.toLocaleString("vi-VN")}₫
-                            </span>
-                            <del>{data.new_price.toLocaleString("vi-VN")}₫</del>
-                          </div>
-                          <div className="book-footer">
-                            {/* <div className="price">
+                            <div className="dz-content">
+                              <h5
+                                className="name"
+                                style={{
+                                  height: "56px",
+                                }}
+                              >
+                                <Link to={`/books-detail/?product=${data.id}`}>
+                                  {truncateText(data.name, 30)}
+                                </Link>
+                              </h5>
+                              <ul>
+                                <li>{data.sub_category}</li>
+                                <li style={{ height: "52px" }}>
+                                  Tác giả: {data.author}
+                                </li>
+                                {/* <li style={{ height: "52px" }}>{data.publisher}</li> */}
+                              </ul>
+                              <ul className="dz-rating">
+                                <li>
+                                  <i className="flaticon-star text-yellow"></i>
+                                </li>
+                                <li>
+                                  <i className="flaticon-star text-yellow"></i>
+                                </li>
+                                <li>
+                                  <i className="flaticon-star text-yellow"></i>
+                                </li>
+                                <li>
+                                  <i className="flaticon-star text-yellow"></i>
+                                </li>
+                                <li>
+                                  <i className="flaticon-star text-yellow"></i>
+                                </li>
+                              </ul>
+                              <div className="price mb-3">
+                                <span className="price-num fs-5 text-primary fw-bold m-r10">
+                                  {data.price_origin.toLocaleString("vi-VN")}₫
+                                </span>
+                                <del>
+                                  {data.new_price.toLocaleString("vi-VN")}₫
+                                </del>
+                              </div>
+                              <div className="book-footer">
+                                {/* <div className="price">
                               <span className="price-num">
                                 ${data.price_origin}
                               </span>
                               <del>${data.new_price}</del>
                             </div> */}
-                            <Link
-                              to={`/books-detail/?product=${data.id}`}
-                              className="btn btn-secondary box-btn btnhover btnhover2"
-                            >
-                              <i className="flaticon-shopping-cart-1 m-r10"></i>{" "}
-                              Xem chi tiết
-                            </Link>
+                                <Link
+                                  to={`/books-detail/?product=${data.id}`}
+                                  className="btn btn-secondary box-btn btnhover btnhover2"
+                                >
+                                  <i className="flaticon-shopping-cart-1 m-r10"></i>{" "}
+                                  Xem chi tiết
+                                </Link>
+                              </div>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    </div>
-                  ))}
+                      ))}
                 </div>
                 <div className="row page mt-0">
                   <div className="col-md-6">

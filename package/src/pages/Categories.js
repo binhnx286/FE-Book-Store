@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Collapse, Dropdown } from "react-bootstrap";
-import axios from "axios"; // Đảm bảo bạn đã cài đặt axios: npm install axios
+import axios from "axios";
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
 
 // Components
 import ClientsSlider from "../components/Home/ClientsSlider";
@@ -14,9 +16,9 @@ function Categories() {
   // State quản lý danh mục và subcategories
   const [accordBtn, setAccordBtn] = useState(false);
   const [selectBtn, setSelectBtn] = useState("Sắp xếp theo");
-  const [combinedCategories, setCombinedCategories] = useState([]); // State cho categories và subcategories
-  const [loading, setLoading] = useState(true); // State để quản lý trạng thái tải categories
-  const [error, setError] = useState(null); // State để quản lý lỗi categories
+  const [combinedCategories, setCombinedCategories] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   // State quản lý sản phẩm
   const [currentProducts, setCurrentProducts] = useState([]); // Sản phẩm của trang hiện tại
@@ -30,13 +32,12 @@ function Categories() {
   // State quản lý phân trang
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const pageSize = 12; // Số sản phẩm trên mỗi trang (nếu cần)
+  const pageSize = 12; // Số sản phẩm trên mỗi trang
 
   useEffect(() => {
     // Hàm để gọi API và lấy categories và subcategories
     const fetchData = async () => {
       try {
-        // Sử dụng Promise.all để gọi đồng thời cả hai API
         const [categoriesResponse, subcategoriesResponse] = await Promise.all([
           axios.get(`${process.env.REACT_APP_API_DOMAIN}/book/categories/`),
           axios.get(`${process.env.REACT_APP_API_DOMAIN}/book/subcategories/`),
@@ -77,7 +78,7 @@ function Categories() {
     };
 
     fetchData();
-  }, []); // Chạy một lần khi component được mount
+  }, []);
 
   // Hàm để fetch sản phẩm theo categoryId
   const fetchProductsByCategory = async (categoryId, page = 1) => {
@@ -91,11 +92,9 @@ function Categories() {
         }
       );
 
-      // Giả sử API trả về sản phẩm trong response.data.results và total_pages trong response.data.total_pages
       const products = response.data.results || [];
       const apiTotalPages = response.data.total_pages || 1;
 
-      // Cập nhật state
       setCurrentProducts(products);
       setTotalPages(apiTotalPages);
       setCurrentPage(page);
@@ -119,11 +118,9 @@ function Categories() {
         }
       );
 
-      // Giả sử API trả về sản phẩm trong response.data.results và total_pages trong response.data.total_pages
       const products = response.data.results || [];
       const apiTotalPages = response.data.total_pages || 1;
 
-      // Cập nhật state
       setCurrentProducts(products);
       setTotalPages(apiTotalPages);
       setCurrentPage(page);
@@ -138,26 +135,24 @@ function Categories() {
   // Hàm xử lý khi chọn category
   const handleCategoryClick = (categoryId) => {
     setSelectedCategoryId(categoryId);
-    setSelectedSubcategoryId(null); // Reset subcategory khi chọn category mới
-    setCurrentPage(1); // Reset về trang đầu khi thay đổi category
+    setSelectedSubcategoryId(null);
+    setCurrentPage(1);
     fetchProductsByCategory(categoryId, 1);
   };
 
   // Hàm xử lý khi chọn subcategory
   const handleSubcategoryClick = (subcategoryId) => {
     setSelectedSubcategoryId(subcategoryId);
-    setSelectedCategoryId(null); // Reset category khi chọn subcategory mới
-    setCurrentPage(1); // Reset về trang đầu khi thay đổi subcategory
+    setSelectedCategoryId(null);
+    setCurrentPage(1);
     fetchProductsBySubcategory(subcategoryId, 1);
   };
 
-  // Hàm xử lý khi thay đổi trang (bao gồm scroll to top)
   const handlePageChange = (pageNumber) => {
     if (pageNumber < 1 || pageNumber > totalPages) return;
 
     setCurrentPage(pageNumber);
 
-    // Cuộn lên đầu trang với hiệu ứng mượt mà
     window.scrollTo({ top: 0, behavior: "smooth" });
 
     // Fetch lại sản phẩm theo category hoặc subcategory đang chọn
@@ -189,7 +184,6 @@ function Categories() {
     return pages;
   };
 
-  // Hàm để cắt ngắn văn bản
   function truncateText(text, maxLength) {
     if (!text) return "";
     if (text.length > maxLength) {
@@ -198,13 +192,11 @@ function Categories() {
     return text;
   }
 
-  // Hàm để sắp xếp sản phẩm dựa trên selectBtn (tùy chọn frontend)
   const sortedProducts = React.useMemo(() => {
     let sorted = [...currentProducts];
 
     switch (selectBtn) {
       case "Mới nhất":
-        // Giả sử sản phẩm mới nhất có id lớn nhất
         sorted.sort((a, b) => b.id - a.id);
         break;
       case "Giá tăng dần":
@@ -213,7 +205,6 @@ function Categories() {
       case "Giá giảm dần":
         sorted.sort((a, b) => b.price_origin - a.price_origin);
         break;
-      // Thêm các case khác nếu cần
       default:
         break;
     }
@@ -232,7 +223,15 @@ function Categories() {
                 {/* Phần Hiển Thị Danh Mục và Danh Mục Phụ */}
                 <div className="widget widget_services style-2">
                   <h5 className="widget-title">Danh mục</h5>
-                  {loading && <p>Đang tải...</p>}
+                  {loading && (
+                    <div>
+                      <Skeleton
+                        height={30}
+                        count={5}
+                        style={{ marginBottom: "10px" }}
+                      />
+                    </div>
+                  )}
                   {error && <p className="text-danger">{error}</p>}
                   {!loading && !error && combinedCategories.length === 0 && (
                     <p>Không có danh mục nào.</p>
@@ -573,7 +572,38 @@ function Categories() {
 
                 {/* Hiển Thị Sản Phẩm */}
                 <div className="row book-grid-row">
-                  {loadingProducts && <p>Đang tải dữ liệu sản phẩm...</p>}
+                  {loadingProducts && (
+                    <div className="row book-grid-row">
+                      {Array.from({ length: 12 }).map((_, index) => (
+                        <div className="col-book style-2" key={index}>
+                          <div className="dz-shop-card style-1">
+                            <div className="dz-media">
+                              <Skeleton height={200} />
+                            </div>
+                            <div className="dz-content">
+                              <h5 className="title" style={{ height: "56px" }}>
+                                <Skeleton />
+                              </h5>
+                              <ul className="dz-tags flex-column">
+                                <li>
+                                  <Skeleton width={100} />
+                                </li>
+                                <li style={{ height: "52px" }}>
+                                  <Skeleton width={80} />
+                                </li>
+                              </ul>
+                              <div className="price mb-3">
+                                <Skeleton width={60} />
+                              </div>
+                              <div className="book-footer">
+                                <Skeleton width={100} height={36} />
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                   {errorProducts && (
                     <p className="text-danger">{errorProducts}</p>
                   )}
@@ -594,19 +624,6 @@ function Categories() {
                               style={{ width: "100%", height: "auto" }}
                             />
                           </div>
-                          {/* <div className="bookmark-btn style-2">
-                            <input
-                              className="form-check-input"
-                              type="checkbox"
-                              id={`flexCheckDefault${product.id}`}
-                            />
-                            <label
-                              className="form-check-label"
-                              htmlFor={`flexCheckDefault${product.id}`}
-                            >
-                              <i className="flaticon-heart"></i>
-                            </label>
-                          </div> */}
                           <div className="dz-content">
                             <h5 className="title" style={{ height: "56px" }}>
                               <Link to={`/books-detail/?product=${product.id}`}>
@@ -632,19 +649,6 @@ function Categories() {
                                   Tác giả: {product.author}
                                 </Link>
                               </li>
-                            </ul>
-                            <ul className="dz-rating">
-                              {/* Hiển thị rating nếu có */}
-                              {/* {Array.isArray(product.rating) ? (
-                                product.rating.map((rate, index) => (
-                                  <li key={index}>
-                                    <i className="flaticon-star text-yellow"></i>
-                                  </li>
-                                ))
-                              ) : (
-                                // Nếu không có rating, có thể hiển thị 0 sao hoặc thông báo
-                                <li>Chưa có đánh giá</li>
-                              )} */}
                             </ul>
                             <div className="price mb-3">
                               <span className="price-num fs-5 text-primary fw-bold m-r10">
