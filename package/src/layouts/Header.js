@@ -14,10 +14,6 @@ import "react-toastify/dist/ReactToastify.css";
 //images
 
 import logo from "./../assets/images/_logo.png";
-// import profile from "./../assets/images/profile1.jpg";
-// import pic1 from "./../assets/images/books/small/pic1.jpg";
-// import pic2 from "./../assets/images/books/small/pic2.jpg";
-// import pic3 from "./../assets/images/books/small/pic3.jpg";
 
 import Collapse from "react-bootstrap/Collapse";
 import { MenuListArray2 } from "./MenuListArray2";
@@ -326,9 +322,7 @@ function Header({ onSearch }) {
     });
   }, []);
 
-  // Kiểm tra người dùng đã đăng nhập chưa khi component mount
   useEffect(() => {
-    // Kiểm tra token access trong cookie
     const token = Cookies.get("access");
     if (!token) {
       // Nếu không có token, chuyển hướng đến trang login
@@ -339,39 +333,6 @@ function Header({ onSearch }) {
       setUserEmail(email);
     }
   }, [navigate]);
-
-  // useEffect(() => {
-  //   const fetchCartData = async () => {
-  //     const accessToken = Cookies.get("access");
-  //     if (!accessToken) {
-  //       console.error("Access token not found");
-  //       return;
-  //     }
-  //     const headers = {
-  //       "Content-Type": "application/json",
-  //       Authorization: `Bearer ${accessToken}`,
-  //     };
-  //     try {
-  //       const response = await fetch(
-  //         `${process.env.REACT_APP_API_DOMAIN}/cart/carts/`,
-  //         {
-  //           method: "GET",
-  //           headers: headers,
-  //         }
-  //       );
-  //       if (response.ok) {
-  //         const data = await response.json();
-  //         setShopDataLength(data[0].cart_items.length);
-  //         console.log(data[0].cart_items.length);
-  //       } else {
-  //         console.error("Failed to fetch cart data");
-  //       }
-  //     } catch (error) {
-  //       console.error("Error fetching cart data:", error);
-  //     }
-  //   };
-  //   fetchCartData();
-  // }, []);
 
   /* for open menu Toggle btn  */
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -641,19 +602,6 @@ function Header({ onSearch }) {
             <div className="extra-cell">
               <ul className="navbar-nav header-right">
                 <li className="nav-item">
-                  {/* <Link to={"/wishlist"} className="nav-link"> */}
-                  {/* <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      height="24px"
-                      viewBox="0 0 24 24"
-                      width="24px"
-                      fill="#000000"
-                    >
-                      <path d="M0 0h24v24H0V0z" fill="none" />
-                      <path d="M16.5 3c-1.74 0-3.41.81-4.5 2.09C10.91 3.81 9.24 3 7.5 3 4.42 3 2 5.42 2 8.5c0 3.78 3.4 6.86 8.55 11.54L12 21.35l1.45-1.32C18.6 15.36 22 12.28 22 8.5 22 5.42 19.58 3 16.5 3zm-4.4 15.55l-.1.1-.1-.1C7.14 14.24 4 11.39 4 8.5 4 6.5 5.5 5 7.5 5c1.54 0 3.04.99 3.57 2.36h1.87C13.46 5.99 14.96 5 16.5 5c2 0 3.5 1.5 3.5 3.5 0 2.89-3.14 5.74-7.9 10.05z" />
-                    </svg> */}
-                  {/* <span className="badge">{shopDataLength || 0}</span> */}
-                  {/* </Link> */}
                   <Button onClick={handleShow}>Tìm kiếm nâng cao</Button>
                 </li>
                 <Dropdown as="li" className="nav-item">
@@ -703,10 +651,6 @@ function Header({ onSearch }) {
                   <Dropdown.Menu className="dropdown-menu py-0 dropdown-menu-end">
                     {userEmail && (
                       <>
-                        {/* <div className="dropdown-header">
-                          <h6 className="m-0">Xin chào!</h6>
-                          <span>{userEmail}</span>
-                        </div> */}
                         <div className="dropdown-body">
                           <Link
                             to={"/my-profile"}
@@ -724,14 +668,6 @@ function Header({ onSearch }) {
                               <span className="ms-2">Đơn hàng</span>
                             </div>
                           </Link>
-                          {/* <Link
-                            to={"/wishlist"}
-                            className="dropdown-item d-flex justify-content-between align-items-center ai-icon"
-                          >
-                            <div>
-                              <span className="ms-2">Danh sách</span>
-                            </div>
-                          </Link> */}
                         </div>
                         <div className="dropdown-footer">
                           <Link
@@ -849,15 +785,6 @@ function Header({ onSearch }) {
               <span></span>
               <span></span>
             </button>
-
-            {/* <!-- EXTRA NAV --> */}
-            {/* <div className="extra-nav">
-							<div className="extra-cell">
-								<Link to={"/contact-us"} className="btn btn-primary btnhover">Get In Touch</Link>	
-							</div>
-						</div> */}
-
-            {/* <!-- Main Nav --> */}
             <div
               className={`header-nav navbar-collapse collapse justify-content-start ${
                 sidebarOpen ? "show" : ""

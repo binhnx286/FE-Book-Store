@@ -6,14 +6,6 @@ import Cookies from "js-cookie";
 // Components
 import PageTitle from "./../layouts/PageTitle";
 
-// Images
-import book1 from "./../assets/images/books/grid/book1.jpg";
-
-// Mapping product ID to images
-const productImages = {
-  90: book1,
-};
-
 const SingleInput = ({
   title,
   changeClass,

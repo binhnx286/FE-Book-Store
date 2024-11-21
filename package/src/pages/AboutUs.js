@@ -5,13 +5,6 @@ import CountUp from 'react-countup';
 
 //Components 
 import PageTitle from './../layouts/PageTitle';
-// import TestimonialSlider from './../components/Home/TestimonialSlider';
-// import ClientsSlider from './../components/Home/ClientsSlider';
-// import NewsLetter from '../components/NewsLetter';
-
-//element
-// import CounterSection from './../elements/CounterSection';
-
 //Imgaes
 import about1 from './../assets/images/about/about1.jpg';
 import about2 from './../assets/images/about/about2.jpg';
@@ -106,28 +99,3 @@ function AboutUs(){
         )
     }
 export default AboutUs;
-//                             ))}
-//                         </div>
-//                     </div>
-//                 </section>
-//                 <section className="content-inner-1 testimonial-wrapper">
-// 					<TestimonialSlider />	
-// 				</section>	
-//                 <section className="content-inner bg-light">
-//                     <div className="container">
-// 				        <div className="row sp15">
-//                             <CounterSection /> 
-//                          </div>
-//                     </div>        
-//                 </section>
-//                 <div className="py-5">
-// 			        <div className="container">
-//                          <ClientsSlider />       
-//                     </div>
-//                 </div>    
-//                 <NewsLetter />             
-//             </div>
-//         </>
-//     )
-// }
-// export default AboutUs;

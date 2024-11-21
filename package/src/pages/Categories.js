@@ -345,16 +345,6 @@ function Categories() {
                   <div className="grid-area"></div>
                   <div className="category">
                     <div className="filter-category">
-                      {/* Bạn có thể thêm chức năng collapse nếu cần */}
-                      {/* <Link
-                        to="#"
-                        data-bs-toggle="collapse"
-                        onClick={() => setAccordBtn(!accordBtn)}
-                        style={{ cursor: "pointer" }}
-                      >
-                        <i className="fas fa-list me-2"></i>
-                        Categories
-                      </Link> */}
                     </div>
                     <div className="form-group m-r50">
                       <i className="fas fa-sort-amount-down me-2 text-secondary"></i>
