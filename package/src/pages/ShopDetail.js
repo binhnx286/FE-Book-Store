@@ -135,7 +135,6 @@ function ShopDetail() {
     const fetchRecommendedProducts = async () => {
       const user_id = Cookies.get("user_id");
       if (!user_id) {
-        setRecommendedProducts([]); // Ẩn phần đề xuất nếu người dùng chưa đăng nhập
         return;
       }
       try {
@@ -147,14 +146,13 @@ function ShopDetail() {
         }
         const data = await response.json();
         if (data.message) {
-          // Không có sản phẩm đề xuất
           setRecommendedProducts([]);
         } else {
           setRecommendedProducts(data);
         }
       } catch (error) {
         console.error("Error fetching recommendations:", error);
-        setRecommendedProducts([]); // Ẩn phần đề xuất khi có lỗi
+        setRecommendedProducts([]);
       }
     };
     fetchRecommendedProducts();
@@ -263,6 +261,7 @@ function ShopDetail() {
       })
       .then((data) => {
         // Handle success (e.g., show a success message or update cart count)
+        console.log(data);
         toast.success("Thêm sản phẩm thành công!");
       })
       .catch((error) => {

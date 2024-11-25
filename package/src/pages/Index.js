@@ -22,6 +22,7 @@ import ContactUs from "./ContactUs";
 import PromotionsPage from "./Promotion";
 import ErrorPage from "./ErrorPage";
 import PromotionDetail from "./PromotionDetail";
+import OrderHistory from "./Order";
 
 //images
 import logo from "./../assets/images/logo.png";
@@ -46,6 +47,7 @@ function Index() {
           <Route path="/shop-checkout" exact element={<ShopCheckout />} />
           <Route path="/books-detail" exact element={<ShopDetail />} />
           <Route path="/contact-us" exact element={<ContactUs />} />
+          <Route path="/order" exact element={<OrderHistory />} />
         </Route>
       </Routes>
       <ScrollToTop />
