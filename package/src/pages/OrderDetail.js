@@ -127,9 +127,7 @@ function OrderDetail() {
                 <div className="col-md-2">
                   {/* Giả sử bạn có URL hình ảnh sản phẩm trong item.product_image */}
                   <img
-                    src={
-                      item.product_image || "https://via.placeholder.com/100"
-                    }
+                    src={item.product_image || "https://placehold.co/100"}
                     alt={item.product_name}
                     className="img-fluid rounded"
                   />
