@@ -179,7 +179,16 @@ function ShopDetail() {
       : [];
 
   if (!productData) {
-    return <div>Loading...</div>;
+    return (
+      <div
+        className="d-flex justify-content-center align-items-center"
+        style={{ minHeight: "200px" }}
+      >
+        <div className="spinner-border text-primary" role="status">
+          <span className="visually-hidden">Đang tải...</span>
+        </div>
+      </div>
+    );
   }
 
   const handleIncrement = () => {

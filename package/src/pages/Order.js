@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Cookies from "js-cookie";
+import { Link } from "react-router-dom";
 
 function OrderHistory() {
   const [orders, setOrders] = useState([]);
@@ -19,7 +20,11 @@ function OrderHistory() {
             },
           }
         );
-        setOrders(response.data);
+        const sortedOrders = response.data.sort((a, b) => {
+          return new Date(b.create_time) - new Date(a.create_time);
+        });
+
+        setOrders(sortedOrders);
       } catch (error) {
         console.error("Lỗi khi lấy dữ liệu đơn hàng:", error);
       }
@@ -85,12 +90,12 @@ function OrderHistory() {
                     <strong>Thời Gian Tạo:</strong>{" "}
                     {new Date(order.create_time).toLocaleString("vi-VN")}
                   </p>
-                  <a
-                    href={`/orders/${order.id}`}
+                  <Link
+                    to={`/order-detail/${order.id}`}
                     className="btn btn-primary mt-3"
                   >
                     Xem Chi Tiết
-                  </a>
+                  </Link>
                 </div>
               </div>
             </div>

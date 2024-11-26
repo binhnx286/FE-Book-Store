@@ -661,7 +661,7 @@ function Header({ onSearch }) {
                             </div>
                           </Link>
                           <Link
-                            to={"/cart"}
+                            to={"/order"}
                             className="dropdown-item d-flex justify-content-between align-items-center ai-icon"
                           >
                             <div>

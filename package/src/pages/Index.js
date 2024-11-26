@@ -23,6 +23,7 @@ import PromotionsPage from "./Promotion";
 import ErrorPage from "./ErrorPage";
 import PromotionDetail from "./PromotionDetail";
 import OrderHistory from "./Order";
+import OrderDetail from "./OrderDetail";
 
 //images
 import logo from "./../assets/images/logo.png";
@@ -45,9 +46,10 @@ function Index() {
           <Route path="/login" exact element={<Login />} />
           <Route path="/signup" exact element={<Registration />} />
           <Route path="/shop-checkout" exact element={<ShopCheckout />} />
-          <Route path="/books-detail" exact element={<ShopDetail />} />
+          <Route path="/books-detail/" exact element={<ShopDetail />} />
           <Route path="/contact-us" exact element={<ContactUs />} />
           <Route path="/order" exact element={<OrderHistory />} />
+          <Route path="/order-detail/:orderId" exact element={<OrderDetail />} />
         </Route>
       </Routes>
       <ScrollToTop />
