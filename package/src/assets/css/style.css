@@ -46,7 +46,7 @@
   --gradient: linear-gradient(to right, rgb(37, 99, 235) 0%, rgb(6, 132, 245) 100%);
   --gradient-sec: linear-gradient(to right, rgb(15, 53, 171) 0%, rgb(6, 132, 245) 100%);
   --primary: #2563EB;
-  --secondary: #F97316;
+  --secondary: #1D4ED8;
   --primary-hover: #1E50C7;
   /* màu tương tự nhưng tối hơn */
   --primary-dark: #193D92;
@@ -7597,7 +7597,7 @@ fieldset:disabled .woocommerce #place_order,
 .page-link {
   position: relative;
   display: block;
-  color: #EAA451;
+  color: #1D4ED8;
   text-decoration: none;
   background-color: #ffffff;
   border: 1px solid #dee2e6;
@@ -7632,8 +7632,8 @@ fieldset:disabled .woocommerce #place_order,
 .page-item.active .page-link {
   z-index: 3;
   color: #ffffff;
-  background-color: #EAA451;
-  border-color: #EAA451;
+  background-color: #1D4ED8;
+  border-color: #1D4ED8;
 }
 
 .page-item.disabled .page-link {

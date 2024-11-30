@@ -102,7 +102,7 @@ function ShopDetail() {
             headers: {
               "Content-Type": "application/json",
             },
-            body: JSON.stringify({ viewed: newViewed }),
+            body: JSON.stringify({ viewed: newViewed.toString() }),
           }
         );
 

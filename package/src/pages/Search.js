@@ -156,6 +156,84 @@ function Search() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
+  const renderPagination = () => {
+    const pageNumbers = [];
+    if (totalPages <= 5) {
+      // Nếu tổng số trang ít hơn hoặc bằng 5, hiển thị tất cả các trang
+      for (let i = 1; i <= totalPages; i++) {
+        pageNumbers.push(i);
+      }
+    } else {
+      // Nếu tổng số trang lớn hơn 5, chỉ hiển thị một số trang
+      if (currentPage <= 3) {
+        pageNumbers.push(1, 2, 3, 4, "...", totalPages);
+      } else if (currentPage > totalPages - 3) {
+        pageNumbers.push(
+          1,
+          "...",
+          totalPages - 3,
+          totalPages - 2,
+          totalPages - 1,
+          totalPages
+        );
+      } else {
+        pageNumbers.push(
+          1,
+          "...",
+          currentPage - 1,
+          currentPage,
+          currentPage + 1,
+          "...",
+          totalPages
+        );
+      }
+    }
+
+    return (
+      <ul className="pagination justify-content-end">
+        <li className={`page-item ${currentPage === 1 ? "disabled" : ""}`}>
+          <button
+            className="page-link"
+            onClick={() => paginate(currentPage - 1)}
+          >
+            Previous
+          </button>
+        </li>
+        {pageNumbers.map((pageNumber, index) => (
+          <li
+            key={index}
+            className={`page-item ${
+              pageNumber === currentPage ? "active" : ""
+            } ${pageNumber === "..." ? "disabled" : ""}`}
+          >
+            {pageNumber === "..." ? (
+              <span className="page-link">...</span>
+            ) : (
+              <button
+                className="page-link"
+                onClick={() => paginate(pageNumber)}
+              >
+                {pageNumber}
+              </button>
+            )}
+          </li>
+        ))}
+        <li
+          className={`page-item ${
+            currentPage === totalPages ? "disabled" : ""
+          }`}
+        >
+          <button
+            className="page-link"
+            onClick={() => paginate(currentPage + 1)}
+          >
+            Next
+          </button>
+        </li>
+      </ul>
+    );
+  };
+
   const BookCardSkeleton = () => (
     <div className="col-book style-2">
       <div className="dz-shop-card style-1" style={{ minHeight: "573px" }}>
@@ -359,49 +437,7 @@ function Search() {
                 {/* Pagination */}
                 <div className="col-md-6 offset-6 m-b30">
                   <div className="pagination-container">
-                    <nav aria-label="Page navigation">
-                      <ul className="pagination justify-content-center">
-                        <li
-                          className={`page-item ${
-                            currentPage === 1 ? "disabled" : ""
-                          }`}
-                        >
-                          <button
-                            className="page-link"
-                            onClick={() => paginate(currentPage - 1)}
-                          >
-                            Previous
-                          </button>
-                        </li>
-                        {[...Array(totalPages)].map((_, index) => (
-                          <li
-                            key={index}
-                            className={`page-item ${
-                              currentPage === index + 1 ? "active" : ""
-                            }`}
-                          >
-                            <button
-                              className="page-link"
-                              onClick={() => paginate(index + 1)}
-                            >
-                              {index + 1}
-                            </button>
-                          </li>
-                        ))}
-                        <li
-                          className={`page-item ${
-                            currentPage === totalPages ? "disabled" : ""
-                          }`}
-                        >
-                          <button
-                            className="page-link"
-                            onClick={() => paginate(currentPage + 1)}
-                          >
-                            Next
-                          </button>
-                        </li>
-                      </ul>
-                    </nav>
+                    <nav aria-label="Page navigation">{renderPagination()}</nav>
                   </div>
                 </div>
 
@@ -526,47 +562,7 @@ function Search() {
                   <div className="col-md-6">
                     <div className="pagination-container">
                       <nav aria-label="Page navigation">
-                        <ul className="pagination justify-content-center">
-                          <li
-                            className={`page-item ${
-                              currentPage === 1 ? "disabled" : ""
-                            }`}
-                          >
-                            <button
-                              className="page-link"
-                              onClick={() => paginate(currentPage - 1)}
-                            >
-                              Previous
-                            </button>
-                          </li>
-                          {[...Array(totalPages)].map((_, index) => (
-                            <li
-                              key={index}
-                              className={`page-item ${
-                                currentPage === index + 1 ? "active" : ""
-                              }`}
-                            >
-                              <button
-                                className="page-link"
-                                onClick={() => paginate(index + 1)}
-                              >
-                                {index + 1}
-                              </button>
-                            </li>
-                          ))}
-                          <li
-                            className={`page-item ${
-                              currentPage === totalPages ? "disabled" : ""
-                            }`}
-                          >
-                            <button
-                              className="page-link"
-                              onClick={() => paginate(currentPage + 1)}
-                            >
-                              Next
-                            </button>
-                          </li>
-                        </ul>
+                        {renderPagination()}
                       </nav>
                     </div>
                   </div>

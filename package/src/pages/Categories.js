@@ -166,21 +166,33 @@ function Categories() {
   // Hàm để tạo mảng các trang hiển thị (tối đa 3 trang)
   const getPagination = () => {
     const pages = [];
-
-    if (totalPages <= 3) {
+    if (totalPages <= 5) {
       for (let i = 1; i <= totalPages; i++) {
         pages.push(i);
       }
     } else {
-      if (currentPage === 1) {
-        pages.push(1, 2, 3);
-      } else if (currentPage === totalPages) {
-        pages.push(totalPages - 2, totalPages - 1, totalPages);
+      if (currentPage <= 3) {
+        pages.push(1, 2, 3, 4, "...");
+      } else if (currentPage >= totalPages - 2) {
+        pages.push(
+          "...",
+          totalPages - 3,
+          totalPages - 2,
+          totalPages - 1,
+          totalPages
+        );
       } else {
-        pages.push(currentPage - 1, currentPage, currentPage + 1);
+        pages.push(
+          1,
+          "...",
+          currentPage - 1,
+          currentPage,
+          currentPage + 1,
+          "...",
+          totalPages
+        );
       }
     }
-
     return pages;
   };
 
@@ -344,8 +356,7 @@ function Categories() {
                 <div className="filter-area m-b10">
                   <div className="grid-area"></div>
                   <div className="category">
-                    <div className="filter-category">
-                    </div>
+                    <div className="filter-category"></div>
                     <div className="form-group m-r50">
                       <i className="fas fa-sort-amount-down me-2 text-secondary"></i>
                       <Dropdown>
@@ -378,9 +389,9 @@ function Categories() {
                 {/* Phân Trang */}
                 <div className="row page mt-0 m-b30">
                   <div className="col-md-6">
-                    <p className="page-text">
+                    {/* <p className="page-text">
                       {`Hiển thị ${sortedProducts.length} sản phẩm trong tổng số ${totalPages} trang`}
-                    </p>
+                    </p> */}
                   </div>
                   <div className="col-md-6">
                     <nav aria-label="Product Pagination">
@@ -666,9 +677,9 @@ function Categories() {
                 {/* Phân Trang */}
                 <div className="row page mt-0">
                   <div className="col-md-6">
-                    <p className="page-text">
+                    {/* <p className="page-text">
                       {`Hiển thị ${sortedProducts.length} sản phẩm trong tổng số ${totalPages} trang`}
-                    </p>
+                    </p> */}
                   </div>
                   <div className="col-md-6">
                     <nav aria-label="Product Pagination">

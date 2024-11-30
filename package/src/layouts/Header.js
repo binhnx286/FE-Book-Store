@@ -450,6 +450,14 @@ function Header({ onSearch }) {
     };
   }, []);
 
+  useEffect(() => {
+    function handleSubmit() {
+      window.location.assign(
+        `/search/?type=${searchParams.type}&value=${searchParams.term}`
+      );
+    }
+  }, []);
+
   return (
     <header className="site-header mo-left header style-1">
       {/* modal advance search */}
@@ -724,6 +732,14 @@ function Header({ onSearch }) {
                   placeholder="Tìm kiếm của bạn"
                   value={searchParams.term}
                   onChange={handleChange}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      e.preventDefault(); // Ngăn chặn hành vi mặc định của form
+                      window.location.assign(
+                        `/search/?type=${searchParams.type}&value=${searchParams.term}`
+                      );
+                    }
+                  }}
                 />
                 <Link
                   className="btn"
