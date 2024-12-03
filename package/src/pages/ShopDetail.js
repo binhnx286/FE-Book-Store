@@ -333,7 +333,7 @@ function ShopDetail() {
         <section className="content-inner-1">
           <div className="container">
             <div className="row book-grid-row style-4 m-b60">
-              <div className="col">
+              <div className="col mb-4">
                 <div className="dz-box">
                   <div className="dz-media">
                     <img src={productData.image} alt="book" />

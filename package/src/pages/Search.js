@@ -190,42 +190,58 @@ function Search() {
     }
 
     return (
-      <ul className="pagination justify-content-end">
+      <ul className="pagination pagination-sm style-1 p-t20 justify-content-end">
+        {/* Nút Prev */}
         <li className={`page-item ${currentPage === 1 ? "disabled" : ""}`}>
           <button
-            className="page-link"
+            className="page-link prev"
             onClick={() => paginate(currentPage - 1)}
+            disabled={currentPage === 1}
           >
-            Previous
+            Prev
           </button>
         </li>
-        {pageNumbers.map((pageNumber, index) => (
-          <li
-            key={index}
-            className={`page-item ${
-              pageNumber === currentPage ? "active" : ""
-            } ${pageNumber === "..." ? "disabled" : ""}`}
-          >
-            {pageNumber === "..." ? (
+
+        {/* Hiển thị các số trang */}
+        {pageNumbers.map((page, index) =>
+          page === "..." ? (
+            <li key={`ellipsis-${index}`} className="page-item disabled">
               <span className="page-link">...</span>
-            ) : (
+            </li>
+          ) : (
+            <li
+              key={page}
+              className={`page-item ${currentPage === page ? "active" : ""}`}
+            >
               <button
                 className="page-link"
-                onClick={() => paginate(pageNumber)}
+                onClick={() => paginate(page)}
+                style={
+                  currentPage === page
+                    ? {
+                        backgroundColor: "#007bff",
+                        color: "#fff",
+                        borderColor: "#007bff",
+                      }
+                    : {}
+                }
               >
-                {pageNumber}
+                {page}
               </button>
-            )}
-          </li>
-        ))}
+            </li>
+          )
+        )}
+
+        {/* Nút Next */}
         <li
           className={`page-item ${
             currentPage === totalPages ? "disabled" : ""
           }`}
         >
           <button
-            className="page-link"
+            className="page-link next"
             onClick={() => paginate(currentPage + 1)}
+            disabled={currentPage === totalPages}
           >
             Next
           </button>
@@ -437,7 +453,9 @@ function Search() {
                 {/* Pagination */}
                 <div className="col-md-6 offset-6 m-b30">
                   <div className="pagination-container">
-                    <nav aria-label="Page navigation">{renderPagination()}</nav>
+                    <nav aria-label="Product Pagination">
+                      {renderPagination()}
+                    </nav>
                   </div>
                 </div>
 

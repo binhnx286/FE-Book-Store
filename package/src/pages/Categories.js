@@ -395,7 +395,7 @@ function Categories() {
                   </div>
                   <div className="col-md-6">
                     <nav aria-label="Product Pagination">
-                      <ul className="pagination style-1 p-t20 justify-content-end">
+                      <ul className="pagination pagination-sm style-1 p-t20 justify-content-end">
                         {/* Nút Prev */}
                         <li
                           className={`page-item ${
@@ -683,7 +683,7 @@ function Categories() {
                   </div>
                   <div className="col-md-6">
                     <nav aria-label="Product Pagination">
-                      <ul className="pagination style-1 p-t20 justify-content-end">
+                      <ul className="pagination pagination-sm style-1 p-t20 justify-content-end">
                         {/* Nút Prev */}
                         <li
                           className={`page-item ${
