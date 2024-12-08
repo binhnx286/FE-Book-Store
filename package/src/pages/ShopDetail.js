@@ -27,7 +27,7 @@ const relatedBook = [
 function CommentBlog({ title, image, rating, feedback, date }) {
   return (
     <>
-      <div className="comment-body">
+      <div className="comment-body mb-1 pb-1 pt-5 border-top border-bottom-0">
         <div className="comment-author vcard">
           {/* <img src={image} alt="" className="avatar" /> */}
           <cite className="fn">{title}</cite>{" "}
@@ -67,10 +67,38 @@ function ShopDetail() {
   const commentsPerPage = 5; // Number of comments per page
   const [viewed, setViewed] = useState(1);
   const [recommendedProducts, setRecommendedProducts] = useState([]);
+  const [productBasedRecommendations, setProductBasedRecommendations] =
+    useState([]);
+  const [showReplyForm, setShowReplyForm] = useState({});
+
+  // State để lưu phản hồi cho từng rating
+  const [ratingResponses, setRatingResponses] = useState({});
+  // State để lưu text phản hồi mới cho từng rating
+  const [newResponseText, setNewResponseText] = useState({});
 
   const location = useLocation();
   const queryParams = queryString.parse(location.search);
   const { product } = queryParams;
+
+  useEffect(() => {
+    const fetchProductRecommendations = async () => {
+      if (!product) return;
+      try {
+        const response = await fetch(
+          `${process.env.REACT_APP_API_DOMAIN}/book/recommendations/${product}`
+        );
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        // Lưu dữ liệu vào state mới
+        setProductBasedRecommendations(data);
+      } catch (error) {
+        console.error("Error fetching product-based recommendations:", error);
+      }
+    };
+    fetchProductRecommendations();
+  }, [product]);
 
   useEffect(() => {
     const fetchProductData = async () => {
@@ -177,6 +205,91 @@ function ShopDetail() {
     ratingsData && ratingsData.ratings
       ? ratingsData.ratings.slice(indexOfFirstComment, indexOfLastComment)
       : [];
+
+  // Hàm lấy responses cho tất cả comment đang được hiển thị
+  const fetchRatingResponses = async (ratingId) => {
+    const accessToken = Cookies.get("access");
+    if (!accessToken) return; // Nếu chưa đăng nhập thì không gọi, hoặc có thể xử lý khác
+
+    try {
+      const response = await fetch(
+        `${process.env.REACT_APP_API_DOMAIN}/rating/rating-responses/${ratingId}/`,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const data = await response.json();
+      // Cập nhật state
+      setRatingResponses((prev) => ({
+        ...prev,
+        [ratingId]: data,
+      }));
+    } catch (error) {
+      console.error("Error fetching rating responses:", error);
+    }
+  };
+
+  // Mỗi khi currentComments thay đổi, ta fetch response cho từng rating
+  useEffect(() => {
+    if (currentComments && currentComments.length > 0) {
+      currentComments.forEach((comment) => {
+        if (!ratingResponses[comment.id]) {
+          fetchRatingResponses(comment.id);
+        }
+      });
+    }
+  }, [currentComments]);
+
+  // Hàm xử lý gửi phản hồi
+  const handleSubmitRatingResponse = async (e, ratingId) => {
+    e.preventDefault();
+    const accessToken = Cookies.get("access");
+    if (!accessToken) {
+      toast.error("Hãy đăng nhập để gửi phản hồi");
+      return;
+    }
+
+    const bodyData = {
+      response_text: newResponseText[ratingId] || "",
+    };
+
+    try {
+      const response = await fetch(
+        `${process.env.REACT_APP_API_DOMAIN}/rating/rating-responses/${ratingId}/`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
+          },
+          body: JSON.stringify(bodyData),
+        }
+      );
+      if (!response.ok) {
+        throw new Error("Không thể gửi phản hồi");
+      }
+      toast.success("Gửi phản hồi thành công!");
+      // Xóa nội dung input
+      setNewResponseText((prev) => ({ ...prev, [ratingId]: "" }));
+      // Lấy lại danh sách phản hồi sau khi post
+      fetchRatingResponses(ratingId);
+    } catch (error) {
+      console.error(error);
+      toast.error("Gửi phản hồi thất bại!");
+    }
+  };
+
+  const toggleReplyForm = (ratingId) => {
+    setShowReplyForm((prev) => ({
+      ...prev,
+      [ratingId]: !prev[ratingId],
+    }));
+  };
 
   if (!productData) {
     return (
@@ -488,6 +601,47 @@ function ShopDetail() {
                 </div>
               </div>
 
+              <div className="container my- bg-white p-4 rounded-4">
+                <h4 className="widget-title">Sản phẩm tương tự</h4>
+                <div className="row row-cols-2 row-cols-sm-3 row-cols-md-3 g-3">
+                  {productBasedRecommendations.map((item, index) => (
+                    <div className="col" key={index}>
+                      <div className="dz-shop-card style-5">
+                        <div className="dz-media">
+                          <img
+                            src={item.product.image}
+                            alt={item.product.name}
+                            className="img-fluid"
+                          />
+                        </div>
+                        <div className="dz-content">
+                          <h5 className="subtitle">{item.product.name}</h5>
+                          <ul className="dz-tags">
+                            <li>{item.product.sub_category}</li>
+                          </ul>
+                          <div className="price">
+                            <span className="price-num">
+                              {item.product.new_price.toLocaleString()}₫
+                            </span>
+                            {item.product.discount_percent > 0 && (
+                              <del>
+                                {item.product.price_origin.toLocaleString()}₫
+                              </del>
+                            )}
+                          </div>
+                          <Link
+                            to={`/books-detail/?product=${item.product.id}`}
+                            className="btn btn-outline-primary btn-sm btnhover btnhover2"
+                          >
+                            Xem chi tiết
+                          </Link>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
               {/* Product Details and Reviews */}
               <div className="row mt-4">
                 <div className="col-xl-8">
@@ -552,8 +706,8 @@ function ShopDetail() {
                                     {currentComments.map((rating) => (
                                       <li
                                         key={rating.id}
-                                        className="comment even thread-even depth-1 comment"
-                                        id={`comment-${rating.id}`}
+                                        className="comment even thread-even depth-1 comment pb-4"
+                                        id={`${rating.id}`}
                                       >
                                         <CommentBlog
                                           title={rating.user.name}
@@ -564,6 +718,106 @@ function ShopDetail() {
                                           //   rating.created_at || "Ngày đăng"
                                           // }
                                         />
+                                        {/* Hiển thị phản hồi của comment này */}
+                                        {ratingResponses[rating.id] &&
+                                          ratingResponses[rating.id].length >
+                                            0 && (
+                                            // <div className="mt-3 pt-3">
+                                            <div className="">
+                                              <h5
+                                                className="mb-3"
+                                                style={{ fontSize: "16px" }}
+                                              >
+                                                Phản hồi
+                                              </h5>
+                                              <ul className=" m-l100 children list-unstyled">
+                                                {ratingResponses[rating.id].map(
+                                                  (res, idx) => (
+                                                    <li
+                                                      key={idx}
+                                                      className="comment mb-2"
+                                                    >
+                                                      <div className="p-2 border rounded bg-light">
+                                                        <div className="comment-author vcard mb-1">
+                                                          <strong>
+                                                            {res.user_email}
+                                                          </strong>{" "}
+                                                          {/* <span
+                                                            className="text-muted"
+                                                            style={{
+                                                              fontSize: "12px",
+                                                            }}
+                                                          >
+                                                            {res.created_at}
+                                                          </span> */}
+                                                        </div>
+                                                        <div className="comment-content">
+                                                          <p className="mb-0">
+                                                            {res.response_text}
+                                                          </p>
+                                                        </div>
+                                                      </div>
+                                                    </li>
+                                                  )
+                                                )}
+                                              </ul>
+                                            </div>
+                                          )}
+
+                                        <div className="mt-3  m-l100">
+                                          <Button
+                                            variant="outline-secondary"
+                                            size="sm"
+                                            onClick={() =>
+                                              toggleReplyForm(rating.id)
+                                            }
+                                          >
+                                            {showReplyForm[rating.id]
+                                              ? "Đóng"
+                                              : "Viết phản hồi"}
+                                          </Button>
+                                        </div>
+
+                                        {showReplyForm[rating.id] && (
+                                          <div className="mt-3  m-l100 p-3 border rounded bg-light">
+                                            <form
+                                              onSubmit={(e) =>
+                                                handleSubmitRatingResponse(
+                                                  e,
+                                                  rating.id
+                                                )
+                                              }
+                                            >
+                                              <div className="mb-3">
+                                                <textarea
+                                                  className="form-control"
+                                                  rows="2"
+                                                  placeholder="Viết phản hồi của bạn"
+                                                  value={
+                                                    newResponseText[
+                                                      rating.id
+                                                    ] || ""
+                                                  }
+                                                  onChange={(e) =>
+                                                    setNewResponseText(
+                                                      (prev) => ({
+                                                        ...prev,
+                                                        [rating.id]:
+                                                          e.target.value,
+                                                      })
+                                                    )
+                                                  }
+                                                ></textarea>
+                                              </div>
+                                              <button
+                                                type="submit"
+                                                className="btn btn-primary btn-sm"
+                                              >
+                                                Gửi phản hồi
+                                              </button>
+                                            </form>
+                                          </div>
+                                        )}
                                       </li>
                                     ))}
                                   </ol>
