@@ -30,7 +30,7 @@ const BlogGrid = () => {
   return (
     <>
       <div className="page-content">
-        <PageTitle parentPage="Promotions" childPage="Promotion Grid" />
+        <PageTitle parentPage="Trang chủ" childPage="Chương trình khuyến mãi" />
         <section className="content-inner-1 bg-img-fix">
           <Container>
             <Row>
