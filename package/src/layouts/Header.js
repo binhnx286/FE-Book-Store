@@ -375,10 +375,17 @@ function Header({ onSearch }) {
   // Hàm gọi API tìm kiếm
   const fetchSearchResults = async (term) => {
     try {
+      // const response = await fetch(
+      //   `${process.env.REACT_APP_API_DOMAIN}/book/search/?${
+      //     searchParams.type
+      //   }=${encodeURIComponent(term)}`
+      // );
       const response = await fetch(
-        `${process.env.REACT_APP_API_DOMAIN}/book/search/?${
+        `${
+          process.env.REACT_APP_API_DOMAIN
+        }/book/advanced-search/?q=${encodeURIComponent(term)}&search_field=${
           searchParams.type
-        }=${encodeURIComponent(term)}`
+        }`
       );
       if (response.ok) {
         const data = await response.json();
@@ -460,139 +467,6 @@ function Header({ onSearch }) {
 
   return (
     <header className="site-header mo-left header style-1">
-      {/* modal advance search */}
-      <Modal show={show} onHide={handleClose} size="lg">
-        <Modal.Header closeButton>
-          <Modal.Title>Tìm kiếm nâng cao</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <Form>
-            {/* Tên sách */}
-            <Form.Group className="mb-3" controlId="product_name">
-              <Form.Label>Tên sách</Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="Tên sách mà bạn muốn tìm kiếm"
-                value={bookName}
-                onChange={(e) => setBookName(e.target.value)}
-                isInvalid={!!errors.bookName}
-              />
-              <Form.Control.Feedback type="invalid">
-                {errors.bookName}
-              </Form.Control.Feedback>
-            </Form.Group>
-
-            {/* Tác giả */}
-            <Form.Group className="mb-3" controlId="author">
-              <Form.Label>Tác giả</Form.Label>
-              {authors.map((author, index) => (
-                <div key={author.id} className="d-flex align-items-center mb-2">
-                  {/* Select mối quan hệ (không hiển thị cho tác giả đầu tiên) */}
-                  {index !== 0 && (
-                    <Form.Select
-                      className="me-2"
-                      value={author.relation}
-                      onChange={(e) =>
-                        handleRelationChange(author.id, e.target.value)
-                      }
-                      style={{ width: "100px" }}
-                    >
-                      <option value="AND">Và</option>
-                      <option value="OR">Hoặc</option>
-                    </Form.Select>
-                  )}
-                  <Form.Control
-                    type="text"
-                    placeholder={`Tác giả ${index + 1}`}
-                    value={author.value}
-                    onChange={(e) =>
-                      handleAuthorChange(author.id, e.target.value)
-                    }
-                    isInvalid={index === 0 && !!errors.authors}
-                  />
-                  {authors.length > 1 && (
-                    <Button
-                      variant="danger"
-                      className="ms-2"
-                      onClick={() => removeAuthorField(author.id)}
-                    >
-                      Xóa
-                    </Button>
-                  )}
-                </div>
-              ))}
-              <Button variant="secondary" onClick={addAuthorField}>
-                Thêm tác giả
-              </Button>
-              {errors.authors && (
-                <div className="text-danger mt-1">{errors.authors}</div>
-              )}
-            </Form.Group>
-
-            {/* Nhà xuất bản */}
-            <Form.Group className="mb-3" controlId="publisher">
-              <Form.Label>Nhà xuất bản</Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="Nhà xuất bản mà bạn muốn tìm kiếm"
-                value={publisher}
-                onChange={(e) => setPublisher(e.target.value)}
-                isInvalid={!!errors.publisher}
-              />
-              <Form.Control.Feedback type="invalid">
-                {errors.publisher}
-              </Form.Control.Feedback>
-            </Form.Group>
-
-            {/* Năm xuất bản */}
-            <Form.Group className="mb-3" controlId="publicationYear">
-              <Form.Label>Năm xuất bản</Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="Mặc định sẽ tìm kiếm theo năm bạn nhập"
-                value={yearValue}
-                onChange={(e) => setYearValue(e.target.value)}
-                isInvalid={!!errors.yearValue || !!errors.yearOption}
-              />
-              <Form.Control.Feedback type="invalid">
-                {errors.yearValue || errors.yearOption}
-              </Form.Control.Feedback>
-              <div className="mt-2">
-                <Form.Check
-                  type="checkbox"
-                  label="Trước khoảng thời gian này"
-                  checked={beforeYear}
-                  onChange={(e) => {
-                    setBeforeYear(e.target.checked);
-                    if (e.target.checked && afterYear) {
-                      setAfterYear(false); // Nếu chọn trước thì bỏ chọn sau
-                    }
-                  }}
-                />
-                <Form.Check
-                  type="checkbox"
-                  label="Sau khoảng thời gian này"
-                  checked={afterYear}
-                  onChange={(e) => {
-                    setAfterYear(e.target.checked);
-                    if (e.target.checked && beforeYear) {
-                      setBeforeYear(false); // Nếu chọn sau thì bỏ chọn trước
-                    }
-                  }}
-                />
-              </div>
-            </Form.Group>
-          </Form>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
-            Đóng
-          </Button>
-          <Button variant="primary" onClick={handleSearch}>
-            Tìm kiếm
-          </Button>
-        </Modal.Footer>
-      </Modal>
       <ToastContainer />
 
       <div className="header-info-bar">
@@ -609,9 +483,9 @@ function Header({ onSearch }) {
           <div className="extra-nav">
             <div className="extra-cell">
               <ul className="navbar-nav header-right">
-                <li className="nav-item">
+                {/* <li className="nav-item">
                   <Button onClick={handleShow}>Tìm kiếm nâng cao</Button>
-                </li>
+                </li> */}
                 <Dropdown as="li" className="nav-item">
                   <Link to={"/cart"}>
                     <Dropdown.Toggle
@@ -785,7 +659,7 @@ function Header({ onSearch }) {
           <div className="container clearfix">
             {/* <!-- Website Logo --> */}
             <div className="logo-header logo-dark">
-              <Link to={"#"}>
+              <Link to={"/"}>
                 <img src={logo} alt="logo" />
               </Link>
             </div>
@@ -808,21 +682,63 @@ function Header({ onSearch }) {
               id="navbarNavDropdown"
             >
               <div className="logo-header logo-dark">
-                <Link to={"#"}>
+                <Link to={"/"}>
                   <img src={logo} alt="" />
                 </Link>
               </div>
-              <form className="search-input">
-                <div className="input-group">
+              <form
+                className="header-item-search mt-3 mb-3 px-2 w-100 d-md-block d-lg-none"
+                ref={searchRef}
+              >
+                <div className="input-group d-flex flex-column align-items-center">
+                  <Dropdown className="dropdown me-2">
+                    <Dropdown.Toggle
+                      as="button"
+                      type="button"
+                      className="btn btn-light btn-sm"
+                    >
+                      {SearchTypeStr()}
+                    </Dropdown.Toggle>
+                    <Dropdown.Menu>
+                      <Dropdown.Item
+                        onClick={() => handleSearchTypeChange("name")}
+                      >
+                        Tên sách
+                      </Dropdown.Item>
+                      <Dropdown.Item
+                        onClick={() => handleSearchTypeChange("publisher")}
+                      >
+                        Nhà xuất bản
+                      </Dropdown.Item>
+                      <Dropdown.Item
+                        onClick={() => handleSearchTypeChange("author")}
+                      >
+                        Tác giả
+                      </Dropdown.Item>
+                    </Dropdown.Menu>
+                  </Dropdown>
                   <input
                     type="text"
-                    className="form-control"
+                    className="form-control form-control-sm w-100 my-4"
                     aria-label="Text input with dropdown button"
-                    placeholder="Search Books Here"
+                    placeholder="Nhập thông tin tìm kiếm"
+                    value={searchParams.term}
+                    onChange={handleChange}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        e.preventDefault(); // Ngăn chặn hành vi mặc định của form
+                        window.location.assign(
+                          `/search/?type=${searchParams.type}&value=${searchParams.term}`
+                        );
+                      }
+                    }}
                   />
-                  <button className="btn" type="button">
+                  <Link
+                    className="btn btn-primary btn-sm ms-2 w-25 rounded-md"
+                    to={`/search/?type=${searchParams.type}&value=${searchParams.term}`}
+                  >
                     <i className="flaticon-loupe"></i>
-                  </button>
+                  </Link>
                 </div>
               </form>
               <ul className="nav navbar-nav">
@@ -861,43 +777,66 @@ function Header({ onSearch }) {
                     </li>
                   );
                 })}
+                <li className="nav-item d-md-block d-lg-none">
+                  <Dropdown
+                    as="li"
+                    className="nav-item dropdown profile-dropdown ms-4"
+                  >
+                    <Dropdown.Toggle as="div" className="nav-link i-false">
+                      <div className="profile-info">
+                        {userEmail ? (
+                          <>
+                            <h6 className="title">Xin chào!</h6>
+                            <span>{userEmail}</span>
+                          </>
+                        ) : (
+                          <>
+                            <button
+                              onClick={() => navigate("/login")}
+                              className="btn btn-sm btn-primary ms-2"
+                            >
+                              Đăng nhập
+                            </button>
+                          </>
+                        )}
+                      </div>
+                    </Dropdown.Toggle>
+                    <Dropdown.Menu className="dropdown-menu py-0 dropdown-menu-end">
+                      {userEmail && (
+                        <>
+                          <div className="dropdown-body">
+                            <Link
+                              to={"/my-profile"}
+                              className="dropdown-item d-flex justify-content-between align-items-center ai-icon"
+                            >
+                              <div>
+                                <span className="ms-2">Hồ sơ cá nhân</span>
+                              </div>
+                            </Link>
+                            <Link
+                              to={"/order"}
+                              className="dropdown-item d-flex justify-content-between align-items-center ai-icon"
+                            >
+                              <div>
+                                <span className="ms-2">Đơn hàng</span>
+                              </div>
+                            </Link>
+                          </div>
+                          <div className="dropdown-footer">
+                            <Link
+                              // to={"/shop-login"}
+                              onClick={logout}
+                              className="btn btn-primary w-100 btnhover btn-sm"
+                            >
+                              Đăng Xuất
+                            </Link>
+                          </div>
+                        </>
+                      )}
+                    </Dropdown.Menu>
+                  </Dropdown>
+                </li>
               </ul>
-              <div className="dz-social-icon">
-                <ul>
-                  <li>
-                    <a
-                      className="fab fa-facebook-f"
-                      target="_blank"
-                      rel="noreferrer"
-                      href="https://www.facebook.com/dexignzone"
-                    ></a>
-                  </li>
-                  <li>
-                    <a
-                      className="fab fa-twitter"
-                      target="_blank"
-                      rel="noreferrer"
-                      href="https://twitter.com/dexignzones"
-                    ></a>
-                  </li>
-                  <li>
-                    <a
-                      className="fab fa-linkedin-in"
-                      target="_blank"
-                      rel="noreferrer"
-                      href="https://www.linkedin.com/showcase/3686700/admin/"
-                    ></a>
-                  </li>
-                  <li>
-                    <a
-                      className="fab fa-instagram"
-                      target="_blank"
-                      rel="noreferrer"
-                      href="https://www.instagram.com/website_templates__/"
-                    ></a>
-                  </li>
-                </ul>
-              </div>
             </div>
           </div>
         </div>

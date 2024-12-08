@@ -4,7 +4,7 @@ export const MenuListArray2 = [
     to: "/",
   },
   {
-    title: "Danh Mục Sản Phẩm",
+    title: "Danh Mục",
     to: "/categories",
   },
   {

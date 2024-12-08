@@ -41,6 +41,20 @@ function Search() {
   const queryParams = queryString.parse(location.search);
   const { type, value } = queryParams;
 
+  const [collapsedSections, setCollapsedSections] = useState({
+    subCategories: false,
+    publishers: true,
+    authors: true,
+    publicationYears: true,
+  });
+
+  const toggleSection = (section) => {
+    setCollapsedSections((prevState) => ({
+      ...prevState,
+      [section]: !prevState[section],
+    }));
+  };
+
   // Tim kiem
   // const { searchParams } = useOutletContext();
   const [cardBookDetails, setBooks] = useState(cardDetials); // data test mac dinh
@@ -211,7 +225,9 @@ function Search() {
           ) : (
             <li
               key={page}
-              className={`page-item ${currentPage === page ? "active" : ""}`}
+              className={`page-item z-0 ${
+                currentPage === page ? "active" : ""
+              }`}
             >
               <button
                 className="page-link"
@@ -310,122 +326,167 @@ function Search() {
         <div className="content-inner-1 border-bottom">
           <div className="container">
             <div className="row ">
-              <div className="col-xl-3 bg-white border rounded-1">
-                {/* <ShopSidebar /> */}
-                {isLoading ? (
-                  <SidebarSkeleton />
-                ) : (
-                  <div className="sidebar my-3">
-                    <h3>Thể loại</h3>
-                    <ul>
+              <div className="col-xl-3 col-md-12 col-sm-12">
+                {/* Sidebar */}
+                <div className="bg-white border rounded-1 p-3">
+                  {/* Thể loại */}
+                  <h3
+                    className="fs-5 border-bottom pb-2 d-flex justify-content-between align-items-center"
+                    onClick={() => toggleSection("subCategories")}
+                    style={{ cursor: "pointer" }}
+                  >
+                    Thể loại
+                    <i
+                      className={`fas ${
+                        collapsedSections.subCategories
+                          ? "fa-chevron-down"
+                          : "fa-chevron-up"
+                      }`}
+                    ></i>
+                  </h3>
+                  {!collapsedSections.subCategories && (
+                    <ul className="list-unstyled mb-4">
                       {subCategories.map((category, index) => (
                         <li
                           key={index}
                           onClick={() => handleCategoryClick(category)}
-                          style={{
-                            cursor: "pointer",
-                            fontWeight: selectedCategories.includes(category)
-                              ? "bold"
-                              : "normal",
-                            color: selectedCategories.includes(category)
-                              ? "blue"
-                              : "black",
-                          }}
+                          className={`py-2 px-3 ${
+                            selectedCategories.includes(category)
+                              ? "fw-bold text-primary"
+                              : "text-dark"
+                          }`}
+                          style={{ cursor: "pointer" }}
                         >
                           {selectedCategories.includes(category) && (
-                            <i className="fas fa-check-circle"></i>
-                          )}{" "}
+                            <i className="fas fa-check-circle me-2"></i>
+                          )}
                           {category}
                         </li>
                       ))}
                     </ul>
+                  )}
 
-                    <h3>Nhà xuất bản</h3>
-                    <ul>
+                  {/* Nhà xuất bản */}
+                  <h3
+                    className="fs-5 border-bottom pb-2 d-flex justify-content-between align-items-center"
+                    onClick={() => toggleSection("publishers")}
+                    style={{ cursor: "pointer" }}
+                  >
+                    Nhà xuất bản
+                    <i
+                      className={`fas ${
+                        collapsedSections.publishers
+                          ? "fa-chevron-down"
+                          : "fa-chevron-up"
+                      }`}
+                    ></i>
+                  </h3>
+                  {!collapsedSections.publishers && (
+                    <ul className="list-unstyled mb-4">
                       {publishers.map((publisher, index) => (
                         <li
                           key={index}
                           onClick={() => handlePublisherClick(publisher)}
-                          style={{
-                            cursor: "pointer",
-                            fontWeight: selectedPublishers.includes(publisher)
-                              ? "bold"
-                              : "normal",
-                            color: selectedPublishers.includes(publisher)
-                              ? "blue"
-                              : "black",
-                          }}
+                          className={`py-2 px-3 ${
+                            selectedPublishers.includes(publisher)
+                              ? "fw-bold text-primary"
+                              : "text-dark"
+                          }`}
+                          style={{ cursor: "pointer" }}
                         >
                           {selectedPublishers.includes(publisher) && (
-                            <i className="fas fa-check-circle"></i>
-                          )}{" "}
+                            <i className="fas fa-check-circle me-2"></i>
+                          )}
                           {publisher}
                         </li>
                       ))}
                     </ul>
+                  )}
 
-                    <h3>Tác giả</h3>
-                    <ul>
+                  {/* Tác giả */}
+                  <h3
+                    className="fs-5 border-bottom pb-2 d-flex justify-content-between align-items-center"
+                    onClick={() => toggleSection("authors")}
+                    style={{ cursor: "pointer" }}
+                  >
+                    Tác giả
+                    <i
+                      className={`fas ${
+                        collapsedSections.authors
+                          ? "fa-chevron-down"
+                          : "fa-chevron-up"
+                      }`}
+                    ></i>
+                  </h3>
+                  {!collapsedSections.authors && (
+                    <ul className="list-unstyled mb-4">
                       {authors.map((author, index) => (
                         <li
                           key={index}
                           onClick={() => handleAuthorClick(author)}
-                          style={{
-                            cursor: "pointer",
-                            fontWeight: selectedAuthors.includes(author)
-                              ? "bold"
-                              : "normal",
-                            color: selectedAuthors.includes(author)
-                              ? "blue"
-                              : "black",
-                          }}
+                          className={`py-2 px-3 ${
+                            selectedAuthors.includes(author)
+                              ? "fw-bold text-primary"
+                              : "text-dark"
+                          }`}
+                          style={{ cursor: "pointer" }}
                         >
                           {selectedAuthors.includes(author) && (
-                            <i className="fas fa-check-circle"></i>
-                          )}{" "}
+                            <i className="fas fa-check-circle me-2"></i>
+                          )}
                           {author}
                         </li>
                       ))}
                     </ul>
+                  )}
 
-                    <h3>Năm xuất bản</h3>
-                    <ul>
+                  {/* Năm xuất bản */}
+                  <h3
+                    className="fs-5 border-bottom pb-2 d-flex justify-content-between align-items-center"
+                    onClick={() => toggleSection("publicationYears")}
+                    style={{ cursor: "pointer" }}
+                  >
+                    Năm xuất bản
+                    <i
+                      className={`fas ${
+                        collapsedSections.publicationYears
+                          ? "fa-chevron-down"
+                          : "fa-chevron-up"
+                      }`}
+                    ></i>
+                  </h3>
+                  {!collapsedSections.publicationYears && (
+                    <ul className="list-unstyled">
                       {publicationYears.map((year, index) => (
                         <li
                           key={index}
                           onClick={() => handleYearClick(year)}
-                          style={{
-                            cursor: "pointer",
-                            fontWeight: selectedYears.includes(year)
-                              ? "bold"
-                              : "normal",
-                            color: selectedYears.includes(year)
-                              ? "blue"
-                              : "black",
-                          }}
+                          className={`py-2 px-3 ${
+                            selectedYears.includes(year)
+                              ? "fw-bold text-primary"
+                              : "text-dark"
+                          }`}
+                          style={{ cursor: "pointer" }}
                         >
                           {selectedYears.includes(year) && (
-                            <i className="fas fa-check-circle"></i>
-                          )}{" "}
+                            <i className="fas fa-check-circle me-2"></i>
+                          )}
                           {year}
                         </li>
                       ))}
                     </ul>
-                  </div>
-                )}
+                  )}
+                </div>
               </div>
 
               <div className="col-xl-9">
                 <div className="d-flex justify-content-between align-items-center">
                   <h4 className="name">Kết quả tìm kiếm</h4>
-                  <Link to={"#"} className="btn btn-primary panel-btn">
-                    Filter
-                  </Link>
                 </div>
-                <div className="filter-area m-b30">
+                <div className="filter-area m-b30 d-flex">
                   <div className="grid-area"></div>
                   <div className="category">
-                    <Dropdown className="sort-dropdown">
+                    <Dropdown className="sort-dropdown z-3">
                       {" "}
                       Sắp xếp theo giá:{" "}
                       <Dropdown.Toggle id="dropdown-sort">

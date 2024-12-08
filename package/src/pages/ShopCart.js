@@ -197,82 +197,136 @@ function ShopCart() {
               <>
                 <div className="row mb-5">
                   <div className="col-lg-12">
-                    <div className="table-responsive">
-                      <table className="table check-tbl">
-                        <thead>
-                          <tr>
-                            <th></th>
-                            <th>Tên sản phẩm</th>
-                            <th>Đơn giá</th>
-                            <th>Số lượng</th>
-                            <th>Tổng cộng</th>
-                            <th className="text-end">Xóa</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {cartItems.map((item) => (
-                            <tr key={item.id}>
-                              <td className="product-item-img">
-                                {/* <img
-                                  src={item.image || defaultImage}
-                                  alt={item.product_name}
-                                  style={{
-                                    width: "50px",
-                                    height: "50px",
-                                    objectFit: "cover",
-                                  }}
-                                /> */}
-                              </td>
-                              <td className="product-item-name">
-                                {item.product_name}
-                              </td>
-                              <td className="product-item-price">
-                                {Number(
-                                  item.total / item.quantity
-                                ).toLocaleString("vi-VN", {
-                                  style: "currency",
-                                  currency: "VND",
-                                })}
-                              </td>
-                              <td className="product-item-quantity">
-                                <div className="quantity btn-quantity style-1 me-3">
-                                  <button
-                                    className="btn btn-plus"
-                                    type="button"
-                                    onClick={() => handleNumPlus(item.id)}
-                                  >
-                                    <i className="ti-plus"></i>
-                                  </button>
-                                  <input
-                                    type="text"
-                                    className="quantity-input"
-                                    value={item.quantity}
-                                  />
-                                  <button
-                                    className="btn btn-minus"
-                                    type="button"
-                                    onClick={() => handleNumMinus(item.id)}
-                                  >
-                                    <i className="ti-minus"></i>
-                                  </button>
-                                </div>
-                              </td>
-                              <td className="product-item-total">
-                                {Number(item.total).toLocaleString("vi-VN", {
-                                  style: "currency",
-                                  currency: "VND",
-                                })}
-                              </td>
-                              <td className="product-item-close">
-                                <button
-                                  className="ti-close"
-                                  onClick={() => handleDeleteClick(item.id)}
-                                ></button>
-                              </td>
+                    {/* Trên màn hình md trở lên hiển thị dạng bảng */}
+                    <div className="d-none d-md-block">
+                      <div className="table-responsive">
+                        <table className="table check-tbl">
+                          <thead>
+                            <tr>
+                              <th>Tên sản phẩm</th>
+                              <th>Đơn giá</th>
+                              <th>Số lượng</th>
+                              {/* Ẩn cột Tổng cộng trên màn hình nhỏ (ở đây ẩn dưới md) */}
+                              <th className="d-none d-lg-table-cell">
+                                Tổng cộng
+                              </th>
+                              {/* Ẩn cột Xóa trên màn hình nhỏ (chỉ hiển thị khi từ md trở lên) */}
+                              <th className="text-end d-none d-lg-table-cell">
+                                Xóa
+                              </th>
                             </tr>
-                          ))}
-                        </tbody>
-                      </table>
+                          </thead>
+                          <tbody>
+                            {cartItems.map((item) => (
+                              <tr key={item.id}>
+                                <td className="product-item-name">
+                                  {item.product_name}
+                                </td>
+                                <td className="product-item-price">
+                                  {Number(
+                                    item.total / item.quantity
+                                  ).toLocaleString("vi-VN", {
+                                    style: "currency",
+                                    currency: "VND",
+                                  })}
+                                </td>
+                                <td className="product-item-quantity">
+                                  <div className="quantity btn-quantity style-1 me-3">
+                                    <button
+                                      className="btn btn-plus"
+                                      type="button"
+                                      onClick={() => handleNumPlus(item.id)}
+                                    >
+                                      <i className="ti-plus"></i>
+                                    </button>
+                                    <input
+                                      type="text"
+                                      className="quantity-input"
+                                      value={item.quantity}
+                                    />
+                                    <button
+                                      className="btn btn-minus"
+                                      type="button"
+                                      onClick={() => handleNumMinus(item.id)}
+                                    >
+                                      <i className="ti-minus"></i>
+                                    </button>
+                                  </div>
+                                </td>
+                                <td className="product-item-total d-none d-lg-table-cell">
+                                  {Number(item.total).toLocaleString("vi-VN", {
+                                    style: "currency",
+                                    currency: "VND",
+                                  })}
+                                </td>
+                                <td className="product-item-close text-end d-none d-lg-table-cell">
+                                  <button
+                                    className="ti-close"
+                                    onClick={() => handleDeleteClick(item.id)}
+                                  ></button>
+                                </td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+
+                    {/* Trên màn hình nhỏ (dưới md), hiển thị dạng thẻ */}
+                    <div className="d-block d-md-none">
+                      {cartItems.map((item) => (
+                        <div key={item.id} className="card mb-3">
+                          <div className="card-body">
+                            <h5 className="card-title">{item.product_name}</h5>
+                            <p className="card-text">
+                              Đơn giá:{" "}
+                              {Number(
+                                item.total / item.quantity
+                              ).toLocaleString("vi-VN", {
+                                style: "currency",
+                                currency: "VND",
+                              })}
+                            </p>
+                            <div className="d-flex align-items-center mb-2">
+                              <span className="me-2">Số lượng:</span>
+                              <div className="quantity btn-quantity style-1">
+                                <button
+                                  className="btn btn-plus"
+                                  type="button"
+                                  onClick={() => handleNumPlus(item.id)}
+                                >
+                                  <i className="ti-plus"></i>
+                                </button>
+                                <input
+                                  type="text"
+                                  className="quantity-input"
+                                  value={item.quantity}
+                                />
+                                <button
+                                  className="btn btn-minus"
+                                  type="button"
+                                  onClick={() => handleNumMinus(item.id)}
+                                >
+                                  <i className="ti-minus"></i>
+                                </button>
+                              </div>
+                            </div>
+                            <p className="card-text">
+                              Tổng cộng:{" "}
+                              {Number(item.total).toLocaleString("vi-VN", {
+                                style: "currency",
+                                currency: "VND",
+                              })}
+                            </p>
+                            <button
+                              className="btn btn-danger"
+                              onClick={() => handleDeleteClick(item.id)}
+                            >
+                              Xóa
+                            </button>
+                          </div>
+                        </div>
+                      ))}
                     </div>
                   </div>
                 </div>

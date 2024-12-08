@@ -416,14 +416,14 @@ function Categories() {
                           page === "..." ? (
                             <li
                               key={`ellipsis-${index}`}
-                              className="page-item disabled"
+                              className="page-item disabled d-none d-sm-block"
                             >
                               <span className="page-link">...</span>
                             </li>
                           ) : (
                             <li
                               key={page}
-                              className={`page-item ${
+                              className={`page-item z-0 ${
                                 currentPage === page ? "active" : ""
                               }`}
                             >
@@ -704,7 +704,7 @@ function Categories() {
                           page === "..." ? (
                             <li
                               key={`ellipsis-${index}`}
-                              className="page-item disabled"
+                              className="page-item disabled d-none d-sm-block"
                             >
                               <span className="page-link">...</span>
                             </li>
