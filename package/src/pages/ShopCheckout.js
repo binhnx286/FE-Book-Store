@@ -59,6 +59,22 @@ function ShopCheckout() {
   const [provinces, setProvinces] = useState([]);
   const [districts, setDistricts] = useState([]);
   const [wards, setWards] = useState([]);
+  // Xác định các trường bắt buộc
+  const requiredFields = [
+    "province",
+    "district",
+    "ward",
+    "address",
+    "firstName",
+    "email",
+    "phone",
+    "cardType",
+  ];
+
+  // Kiểm tra tất cả các trường đã được điền chưa
+  const allFieldsFilled = requiredFields.every(
+    (field) => formData[field] && formData[field].trim() !== ""
+  );
 
   // State lưu trữ phí vận chuyển
   const [shippingFee, setShippingFee] = useState(0);
@@ -572,7 +588,7 @@ function ShopCheckout() {
                     >
                       <option value="">Chọn phương thức thanh toán</option>
                       <option value="Momo">Thanh toán qua Momo</option>
-                      <option value="COD">Thanh toán khi nhận hàng</option>
+                      {/* <option value="COD">Thanh toán khi nhận hàng</option> */}
                     </Form.Select>
                   </div>
                   <div className="form-group">
@@ -580,6 +596,7 @@ function ShopCheckout() {
                       className="btn btn-primary btnhover"
                       type="button"
                       onClick={handlePlaceOrder}
+                      disabled={!allFieldsFilled}
                     >
                       Đặt hàng
                     </button>

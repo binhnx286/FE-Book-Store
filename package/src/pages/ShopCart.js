@@ -9,14 +9,17 @@ function ShopCart() {
   const [shopData, setShopData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  let isLogin = true;
 
   useEffect(() => {
     const fetchCartData = async () => {
       const accessToken = Cookies.get("access");
+
       if (!accessToken) {
         console.error("Access token not found");
         setError("Vui lòng đăng nhập để xem giỏ hàng.");
         setLoading(false);
+        isLogin = false;
         return;
       }
       const headers = {
@@ -391,11 +394,17 @@ function ShopCart() {
                   </div>
                 </div>
               </>
-            ) : (
+            ) : isLogin ? (
               <div className="text-center">
                 <p>Giỏ hàng của bạn đang trống.</p>
-                <Link to="/shop" className="btn btn-primary">
+                <Link to="/" className="btn btn-primary">
                   Tiếp tục mua sắm
+                </Link>
+              </div>
+            ) : (
+              <div className="text-center">
+                <Link to="/login" className="btn btn-primary">
+                  Đăng nhập
                 </Link>
               </div>
             )}
