@@ -601,46 +601,50 @@ function ShopDetail() {
                 </div>
               </div>
 
-              <div className="container my- bg-white p-4 rounded-4">
-                <h4 className="widget-title">Sản phẩm tương tự</h4>
-                <div className="row row-cols-2 row-cols-sm-3 row-cols-md-3 g-3">
-                  {productBasedRecommendations.map((item, index) => (
-                    <div className="col" key={index}>
-                      <div className="dz-shop-card style-5">
-                        <div className="dz-media">
-                          <img
-                            src={item.product.image}
-                            alt={item.product.name}
-                            className="img-fluid"
-                          />
-                        </div>
-                        <div className="dz-content">
-                          <h5 className="subtitle">{item.product.name}</h5>
-                          <ul className="dz-tags">
-                            <li>{item.product.sub_category}</li>
-                          </ul>
-                          <div className="price">
-                            <span className="price-num">
-                              {item.product.new_price.toLocaleString()}₫
-                            </span>
-                            {item.product.discount_percent > 0 && (
-                              <del>
-                                {item.product.price_origin.toLocaleString()}₫
-                              </del>
-                            )}
+              {productBasedRecommendations &&
+                productBasedRecommendations.length > 0 && (
+                  <div className="container my- bg-white p-4 rounded-4">
+                    <h4 className="widget-title">Sản phẩm tương tự</h4>
+                    <div className="row row-cols-2 row-cols-sm-3 row-cols-md-3 g-3">
+                      {productBasedRecommendations.map((item, index) => (
+                        <div className="col" key={index}>
+                          <div className="dz-shop-card style-5">
+                            <div className="dz-media">
+                              <img
+                                src={item.product.image}
+                                alt={item.product.name}
+                                className="img-fluid"
+                              />
+                            </div>
+                            <div className="dz-content">
+                              <h5 className="subtitle">{item.product.name}</h5>
+                              <ul className="dz-tags">
+                                <li>{item.product.sub_category}</li>
+                              </ul>
+                              <div className="price">
+                                <span className="price-num">
+                                  {item.product.new_price.toLocaleString()}₫
+                                </span>
+                                {item.product.discount_percent > 0 && (
+                                  <del>
+                                    {item.product.price_origin.toLocaleString()}
+                                    ₫
+                                  </del>
+                                )}
+                              </div>
+                              <Link
+                                to={`/books-detail/?product=${item.product.id}`}
+                                className="btn btn-outline-primary btn-sm btnhover btnhover2"
+                              >
+                                Xem chi tiết
+                              </Link>
+                            </div>
                           </div>
-                          <Link
-                            to={`/books-detail/?product=${item.product.id}`}
-                            className="btn btn-outline-primary btn-sm btnhover btnhover2"
-                          >
-                            Xem chi tiết
-                          </Link>
                         </div>
-                      </div>
+                      ))}
                     </div>
-                  ))}
-                </div>
-              </div>
+                  </div>
+                )}
 
               {/* Product Details and Reviews */}
               <div className="row mt-4">
