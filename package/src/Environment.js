@@ -1,6 +1,6 @@
 export class Environment {
-    static API_URL = process.env.REACT_APP_API_DOMAIN || 'http://localhost:3000/api';
-    
+    //static API_URL = process.env.REACT_APP_API_DOMAIN || 'http://localhost:3000/api';
+
     static getApiUrl(endpoint) {
       return `${this.API_URL}${endpoint}`;
     }

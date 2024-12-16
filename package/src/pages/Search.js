@@ -63,7 +63,8 @@ function Search() {
     const fetchBooks = async () => {
       setIsLoading(true); // Bắt đầu tải dữ liệu
 
-      let url = `${Environment.getSearchEndpoint()}/?${type}=${value}`;
+      // let url = `${Environment.getSearchEndpoint()}/?${type}=${value}`;
+      let url = `${process.env.REACT_APP_API_LOCAL}/book/advanced-search/?q=${value}&search_field=${type}`;
       const response = await fetch(url, {
         headers: {
           "Content-Type": "application/json",
