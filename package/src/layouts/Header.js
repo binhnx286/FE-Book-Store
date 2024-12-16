@@ -609,7 +609,7 @@ function Header({ onSearch }) {
                   onKeyDown={(e) => {
                     if (e.key === "Enter") {
                       e.preventDefault(); // Ngăn chặn hành vi mặc định của form
-                      window.location.assign(
+                      navigate(
                         `/search/?type=${searchParams.type}&value=${searchParams.term}`
                       );
                     }
