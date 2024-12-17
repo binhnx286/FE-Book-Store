@@ -544,22 +544,23 @@ function Search() {
                   </div>
                 </Collapse>
                 <div className="row book-grid-row">
-                  {isLoading
-                    ? Array.from({ length: itemsPerPage }).map((_, i) => (
-                        <BookCardSkeleton key={i} />
-                      ))
-                    : currentProducts.map((data, i) => (
-                        <div className="col-book style-2" key={i}>
-                          <div
-                            className="dz-shop-card style-1"
-                            style={{
-                              "min-height": "573px",
-                            }}
-                          >
-                            <div className="dz-media">
-                              <img src={data.image} alt="book" />
-                            </div>
-                            {/* <div className="bookmark-btn style-2">
+                  {isLoading ? (
+                    Array.from({ length: itemsPerPage }).map((_, i) => (
+                      <BookCardSkeleton key={i} />
+                    ))
+                  ) : currentProducts.length > 0 ? (
+                    currentProducts.map((data, i) => (
+                      <div className="col-book style-2" key={i}>
+                        <div
+                          className="dz-shop-card style-1"
+                          style={{
+                            "min-height": "573px",
+                          }}
+                        >
+                          <div className="dz-media">
+                            <img src={data.image} alt="book" />
+                          </div>
+                          {/* <div className="bookmark-btn style-2">
                           <input
                             className="form-check-input"
                             type="checkbox"
@@ -572,68 +573,87 @@ function Search() {
                             <i className="flaticon-heart"></i>
                           </label>
                         </div> */}
-                            <div className="dz-content">
-                              <h5
-                                className="name"
-                                style={{
-                                  height: "56px",
-                                }}
-                              >
-                                <Link to={`/books-detail/?product=${data.id}`}>
-                                  {truncateText(data.name, 30)}
-                                </Link>
-                              </h5>
-                              <ul>
-                                <li>{data.sub_category}</li>
-                                <li style={{ height: "52px" }}>
-                                  Tác giả: {data.author}
-                                </li>
-                                {/* <li style={{ height: "52px" }}>{data.publisher}</li> */}
-                              </ul>
-                              <ul className="dz-rating">
-                                <li>
-                                  <i className="flaticon-star text-yellow"></i>
-                                </li>
-                                <li>
-                                  <i className="flaticon-star text-yellow"></i>
-                                </li>
-                                <li>
-                                  <i className="flaticon-star text-yellow"></i>
-                                </li>
-                                <li>
-                                  <i className="flaticon-star text-yellow"></i>
-                                </li>
-                                <li>
-                                  <i className="flaticon-star text-yellow"></i>
-                                </li>
-                              </ul>
-                              <div className="price mb-3">
-                                <span className="price-num fs-5 text-primary fw-bold m-r10">
-                                  {data.price_origin.toLocaleString("vi-VN")}₫
-                                </span>
-                                <del>
-                                  {data.new_price.toLocaleString("vi-VN")}₫
-                                </del>
-                              </div>
-                              <div className="book-footer">
-                                {/* <div className="price">
+                          <div className="dz-content">
+                            <h5
+                              className="name"
+                              style={{
+                                height: "56px",
+                              }}
+                            >
+                              <Link to={`/books-detail/?product=${data.id}`}>
+                                {truncateText(data.name, 30)}
+                              </Link>
+                            </h5>
+                            <ul>
+                              <li>{data.sub_category}</li>
+                              <li style={{ height: "52px" }}>
+                                Tác giả: {data.author}
+                              </li>
+                              {/* <li style={{ height: "52px" }}>{data.publisher}</li> */}
+                            </ul>
+                            <ul className="dz-rating">
+                              <li>
+                                <i className="flaticon-star text-yellow"></i>
+                              </li>
+                              <li>
+                                <i className="flaticon-star text-yellow"></i>
+                              </li>
+                              <li>
+                                <i className="flaticon-star text-yellow"></i>
+                              </li>
+                              <li>
+                                <i className="flaticon-star text-yellow"></i>
+                              </li>
+                              <li>
+                                <i className="flaticon-star text-yellow"></i>
+                              </li>
+                            </ul>
+                            <div className="price mb-3">
+                              <span className="price-num fs-5 text-primary fw-bold m-r10">
+                                {data.price_origin.toLocaleString("vi-VN")}₫
+                              </span>
+                              <del>
+                                {data.new_price.toLocaleString("vi-VN")}₫
+                              </del>
+                            </div>
+                            <div className="book-footer">
+                              {/* <div className="price">
                               <span className="price-num">
                                 ${data.price_origin}
                               </span>
                               <del>${data.new_price}</del>
                             </div> */}
-                                <Link
-                                  to={`/books-detail/?product=${data.id}`}
-                                  className="btn btn-secondary box-btn btnhover btnhover2"
-                                >
-                                  <i className="flaticon-shopping-cart-1 m-r10"></i>{" "}
-                                  Xem chi tiết
-                                </Link>
-                              </div>
+                              <Link
+                                to={`/books-detail/?product=${data.id}`}
+                                className="btn btn-secondary box-btn btnhover btnhover2"
+                              >
+                                <i className="flaticon-shopping-cart-1 m-r10"></i>{" "}
+                                Xem chi tiết
+                              </Link>
                             </div>
                           </div>
                         </div>
-                      ))}
+                      </div>
+                    ))
+                  ) : (
+                    <div className="text-center w-100 my-5">
+                      <img
+                        src="https://via.placeholder.com/150"
+                        alt="No products"
+                        style={{ maxWidth: "150px", marginBottom: "20px" }}
+                      />
+                      <h3 className="text-muted">
+                        Rất tiếc, không tìm thấy sản phẩm nào phù hợp.
+                      </h3>
+                      <p className="text-muted">
+                        Hãy thử điều chỉnh bộ lọc hoặc tìm kiếm với từ khóa
+                        khác.
+                      </p>
+                      <Link to="/" className="btn btn-primary mt-3">
+                        Quay lại trang chủ
+                      </Link>
+                    </div>
+                  )}
                 </div>
                 <div className="row page mt-0">
                   <div className="col-md-6">
