@@ -637,11 +637,6 @@ function Search() {
                     ))
                   ) : (
                     <div className="text-center w-100 my-5">
-                      <img
-                        src="https://via.placeholder.com/150"
-                        alt="No products"
-                        style={{ maxWidth: "150px", marginBottom: "20px" }}
-                      />
                       <h3 className="text-muted">
                         Rất tiếc, không tìm thấy sản phẩm nào phù hợp.
                       </h3>
