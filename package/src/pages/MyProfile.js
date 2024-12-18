@@ -114,7 +114,7 @@ function MyProfile() {
                     <div className="shop-account">
                       <div className="account-detail text-center">
                         <div className="my-image">
-                          <Link to={"#"}>
+                          {/* <Link to={"#"}>
                             {image ? (
                               <img alt="profile" src={image} />
                             ) : (
@@ -123,7 +123,20 @@ function MyProfile() {
                                 src="/path/to/default/image.jpg"
                               />
                             )}
-                          </Link>
+                          </Link> */}
+                          {image ? (
+                            <img
+                              alt="profile"
+                              src={image}
+                              style={{ height: "100%" }}
+                            />
+                          ) : (
+                            <img
+                              alt="profile"
+                              src="/path/to/default/image.jpg"
+                              style={{ height: "100%" }}
+                            />
+                          )}
                         </div>
                       </div>
                       <ul className="account-list">
