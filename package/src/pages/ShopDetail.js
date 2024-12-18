@@ -603,13 +603,15 @@ function ShopDetail() {
 
               {productBasedRecommendations &&
                 productBasedRecommendations.length > 0 && (
-                  <div className="container my- bg-white p-4 rounded-4">
+                  <div className="container bg-white p-4 rounded-4">
                     <h4 className="widget-title">Sản phẩm tương tự</h4>
-                    <div className="row row-cols-2 row-cols-sm-3 row-cols-md-3 g-3">
+                    <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
                       {productBasedRecommendations.map((item, index) => (
                         <div className="col" key={index}>
-                          <div className="dz-shop-card style-5">
-                            <div className="dz-media">
+                          {/* Dùng d-flex và các lớp flex responsive */}
+                          <div className="d-flex flex-row flex-md-column flex-lg-row">
+                            {/* Ảnh đặt trước để ở xs, sm: ảnh trái - text phải; md: ảnh trên - text dưới; lg: ảnh trái - text phải */}
+                            <div className="dz-media me-3 mb-3 mb-md-0 me-lg-3">
                               <img
                                 src={item.product.image}
                                 alt={item.product.name}
@@ -634,7 +636,7 @@ function ShopDetail() {
                               </div>
                               <Link
                                 to={`/books-detail/?product=${item.product.id}`}
-                                className="btn btn-outline-primary btn-sm btnhover btnhover2"
+                                className="btn btn-outline-primary btn-sm btnhover btnhover2 mt-2"
                               >
                                 Xem chi tiết
                               </Link>

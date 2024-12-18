@@ -114,16 +114,6 @@ function MyProfile() {
                     <div className="shop-account">
                       <div className="account-detail text-center">
                         <div className="my-image">
-                          {/* <Link to={"#"}>
-                            {image ? (
-                              <img alt="profile" src={image} />
-                            ) : (
-                              <img
-                                alt="profile"
-                                src="/path/to/default/image.jpg"
-                              />
-                            )}
-                          </Link> */}
                           {image ? (
                             <img
                               alt="profile"
