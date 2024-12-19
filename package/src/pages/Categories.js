@@ -653,10 +653,10 @@ function Categories() {
                             </ul>
                             <div className="price mb-3">
                               <span className="price-num fs-5 text-primary fw-bold m-r10">
-                                {product.price_origin.toLocaleString("vi-VN")}₫
+                                {product.new_price.toLocaleString("vi-VN")}₫
                               </span>
                               <del>
-                                {product.new_price.toLocaleString("vi-VN")}₫
+                                {product.price_origin.toLocaleString("vi-VN")}₫
                               </del>
                             </div>
                             <div className="book-footer">
