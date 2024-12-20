@@ -560,19 +560,6 @@ function Search() {
                           <div className="dz-media">
                             <img src={data.image} alt="book" />
                           </div>
-                          {/* <div className="bookmark-btn style-2">
-                          <input
-                            className="form-check-input"
-                            type="checkbox"
-                            id={`flexCheckDefault${i + 21}`}
-                          />
-                          <label
-                            className="form-check-label"
-                            htmlFor={`flexCheckDefault${i + 21}`}
-                          >
-                            <i className="flaticon-heart"></i>
-                          </label>
-                        </div> */}
                           <div className="dz-content">
                             <h5
                               className="name"
@@ -610,19 +597,13 @@ function Search() {
                             </ul>
                             <div className="price mb-3">
                               <span className="price-num fs-5 text-primary fw-bold m-r10">
-                                {data.price_origin.toLocaleString("vi-VN")}₫
+                                {data.new_price.toLocaleString("vi-VN")}₫
                               </span>
                               <del>
-                                {data.new_price.toLocaleString("vi-VN")}₫
+                                {data.price_origin.toLocaleString("vi-VN")}₫
                               </del>
                             </div>
                             <div className="book-footer">
-                              {/* <div className="price">
-                              <span className="price-num">
-                                ${data.price_origin}
-                              </span>
-                              <del>${data.new_price}</del>
-                            </div> */}
                               <Link
                                 to={`/books-detail/?product=${data.id}`}
                                 className="btn btn-secondary box-btn btnhover btnhover2"

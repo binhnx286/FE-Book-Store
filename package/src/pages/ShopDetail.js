@@ -234,7 +234,7 @@ function ShopDetail() {
     }
   };
 
-  // Mỗi khi currentComments thay đổi, ta fetch response cho từng rating
+  // Mỗi khi currentComments thay đổi, fetch response cho từng rating
   useEffect(() => {
     if (currentComments && currentComments.length > 0) {
       currentComments.forEach((comment) => {
@@ -581,19 +581,6 @@ function ShopDetail() {
                               Thêm vào giỏ hàng
                             </span>
                           </Button>
-                          {/* <div className="bookmark-btn style-1 d-none d-sm-block">
-                            <input
-                              className="form-check-input"
-                              type="checkbox"
-                              id="flexCheckDefault1"
-                            />
-                            <label
-                              className="form-check-label"
-                              htmlFor="flexCheckDefault1"
-                            >
-                              <i className="flaticon-heart"></i>
-                            </label>
-                          </div> */}
                         </div>
                       </div>
                     </div>
@@ -608,9 +595,7 @@ function ShopDetail() {
                     <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
                       {productBasedRecommendations.map((item, index) => (
                         <div className="col" key={index}>
-                          {/* Dùng d-flex và các lớp flex responsive */}
                           <div className="d-flex flex-row flex-md-column flex-lg-row">
-                            {/* Ảnh đặt trước để ở xs, sm: ảnh trái - text phải; md: ảnh trên - text dưới; lg: ảnh trái - text phải */}
                             <div className="dz-media me-3 mb-3 mb-md-0 me-lg-3">
                               <img
                                 src={item.product.image}
@@ -748,14 +733,6 @@ function ShopDetail() {
                                                           <strong>
                                                             {res.user_email}
                                                           </strong>{" "}
-                                                          {/* <span
-                                                            className="text-muted"
-                                                            style={{
-                                                              fontSize: "12px",
-                                                            }}
-                                                          >
-                                                            {res.created_at}
-                                                          </span> */}
                                                         </div>
                                                         <div className="comment-content">
                                                           <p className="mb-0">
