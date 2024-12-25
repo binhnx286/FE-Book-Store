@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import Cookies from "js-cookie";
+import { toast } from "react-toastify";
 
 // Components
 import PageTitle from "./../layouts/PageTitle";
@@ -89,10 +90,14 @@ function ShopCart() {
     }
   };
 
-  const handleNumPlus = (itemId) => {
+  const handleNumPlus = async (itemId) => {
     const item = cartItems.find((item) => item.id === itemId);
-    if (item) {
-      const newQuantity = item.quantity + 1;
+    if (!item) return;
+
+    const newQuantity = item.quantity + 1;
+
+    const success = await updateCartItemQuantity(itemId, newQuantity);
+    if (success) {
       updateCartItemQuantity(itemId, newQuantity);
       const updatedCartItems = cartItems.map((item) =>
         item.id === itemId
@@ -104,24 +109,31 @@ function ShopCart() {
           : item
       );
       setShopData({ ...shopData, cart_items: updatedCartItems });
+    } else {
     }
   };
 
-  const handleNumMinus = (itemId) => {
+  const handleNumMinus = async (itemId) => {
     const item = cartItems.find((item) => item.id === itemId);
-    if (item && item.quantity > 1) {
-      const newQuantity = item.quantity - 1;
-      updateCartItemQuantity(itemId, newQuantity);
-      const updatedCartItems = cartItems.map((item) =>
-        item.id === itemId
+    if (!item) return;
+    if (item.quantity <= 1) return; // Số lượng tối thiểu là 1
+
+    const newQuantity = item.quantity - 1;
+    const success = await updateCartItemQuantity(itemId, newQuantity);
+
+    if (success) {
+      const updatedCartItems = cartItems.map((cartItem) =>
+        cartItem.id === itemId
           ? {
-              ...item,
+              ...cartItem,
               quantity: newQuantity,
-              total: (item.total / item.quantity) * newQuantity,
+              total: (cartItem.total / cartItem.quantity) * newQuantity,
             }
-          : item
+          : cartItem
       );
       setShopData({ ...shopData, cart_items: updatedCartItems });
+    } else {
+      // Không cập nhật UI
     }
   };
 
@@ -144,6 +156,7 @@ function ShopCart() {
   };
 
   const updateCartItemQuantity = async (itemId, newQuantity) => {
+    const item = cartItems.find((item) => item.id === itemId);
     const accessToken = Cookies.get("access");
     if (!accessToken) {
       console.error("Access token not found");
@@ -156,20 +169,29 @@ function ShopCart() {
     };
     try {
       const response = await fetch(
-        `${process.env.REACT_APP_API_DOMAIN}/cart/cart-items/${itemId}/`,
+        `${process.env.REACT_APP_API_DOMAIN}/cart/cart-items/${item.product}/`,
         {
           method: "PATCH",
           headers: headers,
           body: JSON.stringify({ quantity: newQuantity }),
         }
       );
-      if (!response.ok) {
+      // if (!response.ok) {
+      //   console.error("Failed to update cart item quantity");
+      //   //setError("Không thể cập nhật số lượng sản phẩm.");
+      //   toast.error("Vượt quá số lượng sản phẩm cho phép!");
+      // }
+      if (response.ok) {
+        return true;
+      } else {
         console.error("Failed to update cart item quantity");
-        setError("Không thể cập nhật số lượng sản phẩm.");
+        toast.error("Vượt quá số lượng sản phẩm cho phép!");
+        return false;
       }
     } catch (error) {
       console.error("Error updating cart item quantity:", error);
       setError("Đã xảy ra lỗi khi cập nhật số lượng sản phẩm.");
+      return false;
     }
   };
 
