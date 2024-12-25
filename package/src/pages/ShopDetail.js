@@ -382,12 +382,10 @@ function ShopDetail() {
         return response.json();
       })
       .then((data) => {
-        // Handle success (e.g., show a success message or update cart count)
         console.log(data);
         toast.success("Thêm sản phẩm thành công!");
       })
       .catch((error) => {
-        // Handle errors (e.g., show an error message)
         toast.error("Thêm sản phẩm thất bại!");
       });
   };
