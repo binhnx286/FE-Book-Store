@@ -156,7 +156,7 @@ function ShopCart() {
   };
 
   const updateCartItemQuantity = async (itemId, newQuantity) => {
-    const item = cartItems.find((item) => item.id === itemId);
+    // const item = cartItems.find((item) => item.id === itemId);
     const accessToken = Cookies.get("access");
     if (!accessToken) {
       console.error("Access token not found");
@@ -169,7 +169,7 @@ function ShopCart() {
     };
     try {
       const response = await fetch(
-        `${process.env.REACT_APP_API_DOMAIN}/cart/cart-items/${item.product}/`,
+        `${process.env.REACT_APP_API_DOMAIN}/cart/cart-items/${itemId}/`,
         {
           method: "PATCH",
           headers: headers,
